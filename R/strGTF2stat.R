@@ -7,7 +7,7 @@
 #' @examples
 #' strGTF2stat('GTF from stringtie by 'importGFF()')
 
-require(dplyr)
+
 
 strGTF2stat <- function(stringtieGTF){
   stats <- merge(strGTF2ExonsN(stringtieGTF), strGTF2TransLen(stringtieGTF), by="transcript_id", all=T)
@@ -16,6 +16,7 @@ strGTF2stat <- function(stringtieGTF){
 
 
 strGTF2TransLen <- function(stringtieGTF){
+require(dplyr)
   strGTF <- as.data.frame(stringtieGTF)
   strGTF_ex <- strGTF[strGTF$type %in% "exon",]
   trans_len <- strGTF_ex %>%
@@ -27,6 +28,7 @@ return(trans_len)
 
 
 strGTF2ExonsN <- function(stringtieGTF){
+require(dplyr)
   strGTF <- as.data.frame(stringtieGTF)
   exons_n <- strGTF_ex %>%
     group_by(transcript_id) %>%
