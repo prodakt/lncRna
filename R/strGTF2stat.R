@@ -1,6 +1,6 @@
 #' A strGTF2stat function
 #'
-#' This function allows you to express your love of cats.
+#' This function allows you to extract some statistics from GTF file
 #' @param stringtieGTF is the GTF merged by stringtie and imported with 'importGFF()' function from 'rtracklayer' package
 #' @keywords GTF stringtie lncRNA
 #' @export
