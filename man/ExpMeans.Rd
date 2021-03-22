@@ -10,10 +10,10 @@ ExpMeans(ExprTab)
 \item{ExprTab}{is the table with expression valules}
 }
 \description{
-This function allows you to sum expression values.
+This function allows you to calculate the mean values of the expression.
 }
 \examples{
-ExprTab()
+ExpMeans()
 }
 \keyword{expression}
 \keyword{lncRNA}

@@ -13,7 +13,7 @@ ExpSums(ExprTab)
 This function allows you to sum expression values.
 }
 \examples{
-ExprTab()
+ExpSums()
 }
 \keyword{expression}
 \keyword{lncRNA}
