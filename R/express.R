@@ -5,7 +5,7 @@
 #' @keywords expression lncRNA
 #' @export
 #' @examples
-#' ExprTab()
+#' ExpSums()
 
 ExpSums <- function(ExprTab){
   sums <- rowSums(ExprTab)
@@ -16,12 +16,12 @@ return(sums)
 
 #' ExpMeans function
 #'
-#' This function allows you to sum expression values.
+#' This function allows you to calculate the mean values of the expression.
 #' @param ExprTab is the table with expression valules
 #' @keywords expression lncRNA
 #' @export
 #' @examples
-#' ExprTab()
+#' ExpMeans()
 
 ExpMeans <- function(ExprTab){
   means <- rowMeans(ExprTab)
