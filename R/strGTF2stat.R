@@ -27,9 +27,11 @@ return(trans_len)
 }
 
 
+
 strGTF2ExonsN <- function(stringtieGTF){
 require(dplyr)
   strGTF <- as.data.frame(stringtieGTF)
+  strGTF_ex <- strGTF[strGTF$type %in% "exon",]
   exons_n <- strGTF_ex %>%
     group_by(transcript_id) %>%
     summarise(exons = max(exon_number))
