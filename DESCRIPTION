@@ -1,6 +1,6 @@
 Package: lncRna
 Title: Long Non-coding RNA Identification
-Version: 0.0.0.9000
+Version: 0.0.0.1978
 Authors@R: 
     person(given = "Jan Pawel",
            family = "Jastrzebski",
