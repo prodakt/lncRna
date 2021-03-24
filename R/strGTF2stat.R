@@ -27,7 +27,6 @@ return(trans_len)
 }
 
 
-
 strGTF2ExonsN <- function(stringtieGTF){
 require(dplyr)
   strGTF <- as.data.frame(stringtieGTF)

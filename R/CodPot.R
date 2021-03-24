@@ -1,0 +1,113 @@
+#' A CodPot2tbl function
+#'
+#' This function reads several outputs from coding potential programs and join all tesults in table, where 0 is coding and 1 - noncoding
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @keywords coding potential lncRNA
+#' @export
+#' @examples
+#' CodPot2tbl()
+#'
+CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364){
+  if (!is.null(CPC2_outfile))    CPC2 <- read.CPC2(CPC2_outfile) else CPC2 <- ""
+  if (!is.null(PLEK_outfile))    PLEK <- read.PLEK(PLEK_outfile) else PLEK <- ""
+  if (!is.null(FEELnc_outfile))  FEELnc <- read.FEELnc(FEELnc_outfile) else FEELnc <- ""
+  if (!is.null(CPAT_outfile))    CPAT <- read.CPAT(CPAT_outfile, CPAT_cutoff) else CPAT <- ""
+
+  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc))
+  seqID <- seqID[!is.na(seqID)]
+
+  CodPotTbl <- data.frame(seqIDs = seqID,
+                          CPC2 = 0,
+                          PLEK = 0,
+                          FEELnc = 0,
+                          CPAT = 0)
+
+  CodPotTbl[CodPotTbl$seqIDs %in% CPC2,]$CPC2 <- 1
+  CodPotTbl[CodPotTbl$seqIDs %in% PLEK,]$PLEK <- 1
+  CodPotTbl[CodPotTbl$seqIDs %in% FEELnc,]$FEELnc <- 1
+  CodPotTbl[CodPotTbl$seqIDs %in% CPAT,]$CPAT <- 1
+
+return(CodPotTbl)
+}
+
+
+
+#' A read.CPC2 function
+#'
+#' This function reads CPC2 output and list all noncoding transcripts IDs
+#' @param CPC2_outfile is the CPC2 output file localization including filename
+#' @keywords CPC2 lncRNA
+#' @export
+#' @examples
+#' read.CPC2()
+#'
+read.CPC2 <- function(CPC2_outfile){
+  CPC2 <- read.table(CPC2_outfile)
+  CPC2 <- CPC2[CPC2$V8 %in% "noncoding",]$V1
+  CPC2 <- unique(as.character(CPC2))
+return(CPC2)
+}
+
+#' A read.PLEK function
+#'
+#' This function reads PLEK output and list all noncoding transcripts IDs
+#' @param PLEK_outfile is the PLEK output file localization including filename
+#' @keywords PLEK lncRNA
+#' @export
+#' @examples
+#' read.PLEK()
+#'
+read.PLEK <- function(PLEK_outfile){
+  PLEK <- read.table(PLEK_outfile)
+  PLEK$V3 <- gsub(">", "", PLEK$V3)
+  PLEK <- PLEK[PLEK$V1 %in% "Non-coding",]$V3
+  PLEK <- unique(as.character(PLEK))
+return(PLEK)
+}
+
+#' A read.FEELnc function
+#'
+#' This function reads FEELnc output and list all noncoding transcripts IDs
+#' @param FEELnc_outfile is the FEELnc output file (table containing 'lable' collumn inticating coding = 1 and noncoding = 0 transcripts) localization including filename
+#' @keywords FEELnc lncRNA
+#' @export
+#' @examples
+#' read.FEELnc()
+#'
+read.FEELnc <- function(FEELnc_outfile){
+  FEELnc <- read.table(FEELnc_outfile, header = T)
+  FEELnc <- FEELnc[FEELnc$label %in% 0,]$name
+  FEELnc <- unique(as.character(FEELnc))
+return(FEELnc)
+}
+
+
+
+#' A read.CPAT function
+#'
+#' This function reads CPAT output and list all noncoding transcripts IDs
+#' @param CPAT_outfile is the CPAT output file (table containing 'lable' collumn inticating coding = 1 and noncoding = 0 transcripts) localization including filename
+#' @param CPAT_cutoff is the cutoff value predefined (https://cpat.readthedocs.io/en/latest/#how-to-choose-cutoff) or computed i.e. using 'CPATcutoff()' function.
+#' The default value is equal to predefined for human 0.364
+#' @keywords CPAT lncRNA
+#' @export
+#' @examples
+#' read.CPAT()
+#'
+read.CPAT <- function(CPAT_outfile, CPAT_cutoff = 0.364){
+  CPAT <- read.table(CPAT_outfile, header = T)
+  # WAZNE!!! 10Fold_CrossValidation_lncJJ.r tam jest estymacja progu mRNA/ncRNA
+  # http://rna-cpat.sourceforge.net/#how-to-choose-cutoff
+  #CPAT_cutoff <- 0.785 # i ta wartosc wynika z grafiki Figure3 z 10Fold_CrossValidation_lncJJ.r
+  CPAT <- rownames(CPAT[CPAT$coding_prob < CPAT_cutoff,])
+return(CPAT)
+}
+
+
+
