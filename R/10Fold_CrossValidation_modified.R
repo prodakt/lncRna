@@ -198,9 +198,7 @@ CPATcutoff <- function(CPATout.xls){
   ROCR_data = list(predictions=Response,Labels=Labls)
   pred <- prediction(ROCR_data$predictions, ROCR_data$Labels)
 
-  dev.off()
-
-
+  
   pdf("CPATcutoff_Fig3_from_CPAT.pdf")
   par(mfrow=c(2,2),mar=c(5,4,2,2),cex.axis=1.2, cex.lab=1.2)
   #ROC curve
