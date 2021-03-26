@@ -21,6 +21,7 @@ CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile 
 
   seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc))
   seqID <- seqID[!is.na(seqID)]
+  seqID <- seqID[seqID != ""]
 
   CodPotTbl <- data.frame(seqIDs = seqID,
                           CPC2 = 0,
@@ -32,6 +33,8 @@ CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile 
   CodPotTbl[CodPotTbl$seqIDs %in% PLEK,]$PLEK <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% FEELnc,]$FEELnc <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% CPAT,]$CPAT <- 1
+
+  CodPotTbl <- CodPotTbl[,colSums(CodPotTbl[,-1]) > 0]
 
 return(CodPotTbl)
 }
