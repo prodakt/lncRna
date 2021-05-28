@@ -9,7 +9,8 @@ CodPot2tbl(
   PLEK_outfile = NULL,
   FEELnc_outfile = NULL,
   CPAT_outfile = NULL,
-  CPAT_cutoff = 0.364
+  CPAT_cutoff = 0.364,
+  CNCI_outfile = NULL
 )
 }
 \description{
