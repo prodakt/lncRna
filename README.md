@@ -42,7 +42,7 @@ library("lncRna")
 
 1. First you need to install/load the '[rtracklayer](https://www.bioconductor.org/packages/release/bioc/html/rtracklayer.html)' library to import any GTF and GFF files in a acurate format.
 ```
-install.packages("BiocManager")
+install.packages("rtracklayer")
 library("rtracklayer")
 ```
 2. Run `??lncRna` to list the available functions in the library.
@@ -52,7 +52,7 @@ I. the first stage is to read annotation files (reference GTF - prefered downloa
 ```
 # reading GTF files
 stringtieGTF <- import.gff("stringtie/stringtie_merged.gtf")
-refGTF <- import.gff("reference.gtf") 
+refGTF <- import.gff("reference.gtf") # prefered downloaded from ENSEMBL
 
 # extracting from GTF merged with stringtie the basic features for lncRNA identification
 tab1 <- strGTF2stat(stringtieGTF = stringtieGTF)
