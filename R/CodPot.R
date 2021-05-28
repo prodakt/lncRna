@@ -13,14 +13,15 @@
 #' @examples
 #' CodPot2tbl()
 #'
-CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL){
+CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL, LncFinder_outfile = NULL){
   if (!is.null(CPC2_outfile))    CPC2 <- read.CPC2(CPC2_outfile) else CPC2 <- ""
   if (!is.null(PLEK_outfile))    PLEK <- read.PLEK(PLEK_outfile) else PLEK <- ""
   if (!is.null(FEELnc_outfile))  FEELnc <- read.FEELnc(FEELnc_outfile) else FEELnc <- ""
   if (!is.null(CPAT_outfile))    CPAT <- read.CPAT(CPAT_outfile, CPAT_cutoff) else CPAT <- ""
   if (!is.null(CNCI_outfile))    CNCI <- read.CNCI(CNCI_outfile) else CNCI <- ""
+  if (!is.null(LncFinder_outfile))    LncFinder <- read.LncFinder(LncFinder_outfile) else LncFinder <- ""
 
-  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc, CNCI))
+  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc, CNCI, LncFinder))
   #seqID <- seqID[!is.na(seqID)]
   #seqID <- seqID[seqID != ""]
 
@@ -29,13 +30,15 @@ CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile 
                           PLEK = 0,
                           FEELnc = 0,
                           CPAT = 0,
-                          CNCI = 0)
+                          CNCI = 0,
+                          LncFinder = 0)
 
   CodPotTbl[CodPotTbl$seqIDs %in% CPC2,]$CPC2 <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% PLEK,]$PLEK <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% FEELnc,]$FEELnc <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% CPAT,]$CPAT <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% CNCI,]$CNCI <- 1
+  CodPotTbl[CodPotTbl$seqIDs %in% LncFinder,]$LncFinder <- 1
 
   CodPotTbl <- CodPotTbl[CodPotTbl$seqIDs != "", ]
   CodPotTbl <- CodPotTbl[!is.na(CodPotTbl$seqIDs), ]
@@ -133,4 +136,20 @@ read.CNCI <- function(CNCI_outfile){
   CNCI <- CNCI[CNCI$index %in% "noncoding",]$Transcript
   CNCI <- unique(as.character(CNCI))
   return(CNCI)
+}
+
+#' A read.LncFinder function
+#'
+#' This function reads LncFinder output and list all noncoding transcripts IDs
+#' @param LncFinder_outfile is the LncFinder output file localization including filename
+#' @keywords LncFinder lncRNA
+#' @export
+#' @examples
+#' read.LncFinder()
+#'
+read.LncFinder <- function(LncFinder_outfile){
+  LncFinder <- read.csv2(LncFinder_outfile, header = T, row.names = 1)
+  LncFinder <- rownames(LncFinder[LncFinder$Pred %in% "NonCoding",])
+  LncFinder <- unique(as.character(LncFinder))
+  return(LncFinder)
 }
