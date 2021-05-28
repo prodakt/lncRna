@@ -1,4 +1,4 @@
-# lncRna <img src="https://github.com/prodakt/lncRna/blob/main/lncRna_logo_small.png" align="right" height = 150/>
+# lncRna <img src="img/lncRna_logo_small.png" align="right" height = 150/>
 
 is the package for lncRNA identification i a simple way.
 
