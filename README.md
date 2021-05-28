@@ -96,7 +96,7 @@ tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out",
 
 head(tbl2)
 ```
-It is not necessary to read all mentioned files. If you don't have some of the results you can simply ommit arguments, i.e.:
+It is not necessary to read all mentioned files. If you don't have some of the results you can simply omit arguments, i.e.:
 ```
 tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out", PLEK_outfile = ".../PLEK.out")
 ```
