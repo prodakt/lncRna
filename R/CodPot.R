@@ -13,15 +13,16 @@
 #' @examples
 #' CodPot2tbl()
 #'
-CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL, LncFinder_outfile = NULL){
-  if (!is.null(CPC2_outfile))    CPC2 <- read.CPC2(CPC2_outfile) else CPC2 <- ""
-  if (!is.null(PLEK_outfile))    PLEK <- read.PLEK(PLEK_outfile) else PLEK <- ""
-  if (!is.null(FEELnc_outfile))  FEELnc <- read.FEELnc(FEELnc_outfile) else FEELnc <- ""
-  if (!is.null(CPAT_outfile))    CPAT <- read.CPAT(CPAT_outfile, CPAT_cutoff) else CPAT <- ""
-  if (!is.null(CNCI_outfile))    CNCI <- read.CNCI(CNCI_outfile) else CNCI <- ""
-  if (!is.null(LncFinder_outfile))    LncFinder <- read.LncFinder(LncFinder_outfile) else LncFinder <- ""
+CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL, LncFinder_outfile = NULL, lncRNA_Mdeep_outfile = NULL){
+  if (!is.null(CPC2_outfile))                  CPC2 <- read.CPC2(CPC2_outfile) else CPC2 <- ""
+  if (!is.null(PLEK_outfile))                  PLEK <- read.PLEK(PLEK_outfile) else PLEK <- ""
+  if (!is.null(FEELnc_outfile))                FEELnc <- read.FEELnc(FEELnc_outfile) else FEELnc <- ""
+  if (!is.null(CPAT_outfile))                  CPAT <- read.CPAT(CPAT_outfile, CPAT_cutoff) else CPAT <- ""
+  if (!is.null(CNCI_outfile))                  CNCI <- read.CNCI(CNCI_outfile) else CNCI <- ""
+  if (!is.null(LncFinder_outfile))             LncFinder <- read.LncFinder(LncFinder_outfile) else LncFinder <- ""
+  if (!is.null(lncRNA_Mdeep_outfile))          lncRNA_Mdeep <- read.lncRNA_Mdeep(lncRNA_Mdeep_outfile) else lncRNA_Mdeep <- ""
 
-  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc, CNCI, LncFinder))
+  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc, CNCI, LncFinder, lncRNA_Mdeep))
   #seqID <- seqID[!is.na(seqID)]
   #seqID <- seqID[seqID != ""]
 
@@ -31,7 +32,8 @@ CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile 
                           FEELnc = 0,
                           CPAT = 0,
                           CNCI = 0,
-                          LncFinder = 0)
+                          LncFinder = 0,
+                          lncRNA_Mdeep = 0)
 
   CodPotTbl[CodPotTbl$seqIDs %in% CPC2,]$CPC2 <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% PLEK,]$PLEK <- 1
@@ -39,6 +41,7 @@ CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile 
   CodPotTbl[CodPotTbl$seqIDs %in% CPAT,]$CPAT <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% CNCI,]$CNCI <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% LncFinder,]$LncFinder <- 1
+  CodPotTbl[CodPotTbl$seqIDs %in% lncRNA_Mdeep,]$lncRNA_Mdeep <- 1
 
   CodPotTbl <- CodPotTbl[CodPotTbl$seqIDs != "", ]
   CodPotTbl <- CodPotTbl[!is.na(CodPotTbl$seqIDs), ]
@@ -152,4 +155,20 @@ read.LncFinder <- function(LncFinder_outfile){
   LncFinder <- rownames(LncFinder[LncFinder$Pred %in% "NonCoding",])
   LncFinder <- unique(as.character(LncFinder))
   return(LncFinder)
+}
+
+#' A read.lncRNA_Mdeep function
+#'
+#' This function reads lncRNA_Mdeep output and list all noncoding transcripts IDs
+#' @param lncRNA_Mdeep_outfile is the lncRNA_Mdeep output file localization including filename
+#' @keywords lncRNA_Mdeep lncRNA
+#' @export
+#' @examples
+#' read.lncRNA_Mdeep()
+#'
+read.lncRNA_Mdeep <- function(lncRNA_Mdeep_outfile){
+  lncRNA_Mdeep <- read.table(lncRNA_Mdeep_outfile)
+  lncRNA_Mdeep <- lncRNA_Mdeep[lncRNA_Mdeep$V2 %in% "noncoding",]$V1
+  lncRNA_Mdeep <- unique(as.character(lncRNA_Mdeep))
+  return(lncRNA_Mdeep)
 }
