@@ -11,7 +11,8 @@ CodPot2tbl(
   CPAT_outfile = NULL,
   CPAT_cutoff = 0.364,
   CNCI_outfile = NULL,
-  LncFinder_outfile = NULL
+  LncFinder_outfile = NULL,
+  lncRNA_Mdeep_outfile = NULL
 )
 }
 \description{
