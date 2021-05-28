@@ -1,4 +1,5 @@
-# lncRna
+# lncRna <img src="https://github.com/prodakt/lncRna/blob/main/lncRna_logo_small.png" align="right" height = 150/>
+
 is the package for lncRNA identification i a simple way.
 
 This package allows to carry out the lncRNA identification pipeline in a few very simple steps. In general the pipieline consist of three stages:
