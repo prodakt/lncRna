@@ -13,8 +13,7 @@
 #' @examples
 #' CodPot2tbl()
 #'
-CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL, 
-                       LncFinder_outfile = NULL, lncRNA_Mdeep_outfile = NULL){
+CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL, LncFinder_outfile = NULL, lncRNA_Mdeep_outfile = NULL){
   if (!is.null(CPC2_outfile))                  CPC2 <- read.CPC2(CPC2_outfile) else CPC2 <- ""
   if (!is.null(PLEK_outfile))                  PLEK <- read.PLEK(PLEK_outfile) else PLEK <- ""
   if (!is.null(FEELnc_outfile))                FEELnc <- read.FEELnc(FEELnc_outfile) else FEELnc <- ""
