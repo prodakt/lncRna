@@ -13,13 +13,14 @@
 #' @examples
 #' CodPot2tbl()
 #'
-CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364){
+CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile = NULL, CPAT_outfile = NULL, CPAT_cutoff = 0.364, CNCI_outfile = NULL){
   if (!is.null(CPC2_outfile))    CPC2 <- read.CPC2(CPC2_outfile) else CPC2 <- ""
   if (!is.null(PLEK_outfile))    PLEK <- read.PLEK(PLEK_outfile) else PLEK <- ""
   if (!is.null(FEELnc_outfile))  FEELnc <- read.FEELnc(FEELnc_outfile) else FEELnc <- ""
   if (!is.null(CPAT_outfile))    CPAT <- read.CPAT(CPAT_outfile, CPAT_cutoff) else CPAT <- ""
+  if (!is.null(CNCI_outfile))    CNCI <- read.CNCI(CNCI_outfile) else CNCI <- ""
 
-  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc))
+  seqID <- unique(c(CPC2, PLEK, CPAT, FEELnc, CNCI))
   #seqID <- seqID[!is.na(seqID)]
   #seqID <- seqID[seqID != ""]
 
@@ -27,12 +28,14 @@ CodPot2tbl <- function(CPC2_outfile = NULL, PLEK_outfile = NULL, FEELnc_outfile 
                           CPC2 = 0,
                           PLEK = 0,
                           FEELnc = 0,
-                          CPAT = 0)
+                          CPAT = 0,
+                          CNCI = 0)
 
   CodPotTbl[CodPotTbl$seqIDs %in% CPC2,]$CPC2 <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% PLEK,]$PLEK <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% FEELnc,]$FEELnc <- 1
   CodPotTbl[CodPotTbl$seqIDs %in% CPAT,]$CPAT <- 1
+  CodPotTbl[CodPotTbl$seqIDs %in% CNCI,]$CNCI <- 1
 
   CodPotTbl <- CodPotTbl[CodPotTbl$seqIDs != "", ]
   CodPotTbl <- CodPotTbl[!is.na(CodPotTbl$seqIDs), ]
@@ -116,3 +119,18 @@ return(CPAT)
 
 
 
+#' A read.CNCI function
+#'
+#' This function reads CNCI output and list all noncoding transcripts IDs
+#' @param CNCI_outfile is the CNCI output file localization including filename
+#' @keywords CNCI lncRNA
+#' @export
+#' @examples
+#' read.CNCI()
+#'
+read.CNCI <- function(CNCI_outfile){
+  CNCI <- read.table(CNCI_outfile, header = T)
+  CNCI <- CNCI[CNCI$index %in% "noncoding",]$Transcript
+  CNCI <- unique(as.character(CNCI))
+  return(CNCI)
+}
