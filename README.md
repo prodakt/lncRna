@@ -63,12 +63,14 @@ head(pot_lncRNA)
 
 
 # extraction of known lncRNA
-known_lncRNA <- refBiotypes(refGTF = refGTF)
+known_biotypes <- refBiotypes(refGTF = refGTF)
 # what kind and quantity of biotypes do we have in the reference genome
-table(known_lncRNA$transcript_biotype) 
+table(known_biotypes$transcript_biotype) 
 # the list of known lncRNA transcripts ID 
-known_lncRNA <- known_lncRNA[known_lncRNA$transcript_biotype %in% "lncRNA",]$transcript_id # lista id lncRNA
-head(known_lncRNA)
+known_lncRNA <- known_biotypes[known_biotypes$transcript_biotype %in% "lncRNA",]$transcript_id # the list of lncRNA ID's
+#
+# extraction of known protein coding transcripts
+known_pcRNA <- known_biotypes[known_biotypes$transcript_biotype %in% "protein coding",]$transcript_id # the list of protein coding RNA ID's
 ```
 
 ### Ib. Expression level
