@@ -10,7 +10,8 @@ CodPot2tbl(
   FEELnc_outfile = NULL,
   CPAT_outfile = NULL,
   CPAT_cutoff = 0.364,
-  CNCI_outfile = NULL
+  CNCI_outfile = NULL,
+  LncFinder_outfile = NULL
 )
 }
 \description{
