@@ -48,7 +48,7 @@ library("rtracklayer")
 2. Run `??lncRna` to list the available functions in the library.
 3. Run the functions of 'lncRna' library:
 
-### I. Annotated features 
+### Ia. Annotated features 
 the first stage is to read annotation files (reference GTF - prefered downloaded from ENSEMBL database and GTF generated during or after mapping reads - prefered GTF file merged by Stringtie)
 ```
 # reading GTF files
@@ -69,6 +69,17 @@ table(known_lncRNA$transcript_biotype)
 # the list of known lncRNA transcripts ID 
 known_lncRNA <- known_lncRNA[known_lncRNA$transcript_biotype %in% "lncRNA",]$transcript_id # lista id lncRNA
 head(known_lncRNA)
+```
+
+### Ib. Expression level
+To filter out low expressed transcripts you can use 'count_matrix" file:
+```
+transcripts_counts <- read.table("../transcript_count_matrix.csv", header = T, sep = ",", row.names = 1)
+expr <- rownames(transcripts_counts[rowSums(transcripts_counts) > 10,])
+```
+or you can use 'strtie2expr()' function, but this function works only if you used counting option with [Stringtie](http://ccb.jhu.edu/software/stringtie/index.shtml?t=manual)
+```
+strtie2expr(strdir = "stringtie_folder/", expunit = "FPKM" or "TPM")
 ```
 
 ### IIa. Coding potential
@@ -108,7 +119,10 @@ in this stage you can read the Pfam scanning output file to filter out transcrip
 pfam <- read.pfam(pfam_outfile = ".../PFAM.out", eval_cutoff = 0.001)
 head(pfam)
 ```
-
+The 'read.rfam()' function allows you to read Rfam output to tabular format.
+```
+rfam <- read.rfam(rfam_outfile = ".../Rfam.out")
+```
 ### III. Functions
 the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
 ```
