@@ -1,11 +1,27 @@
 # lncRna <img src="img/lncRna_logo_small.png" align="right" height = 150/>
 
-is the package for lncRNA identification i a simple way.
+is the R package for lncRNA identification i a simple way.
 
-This package allows to carry out the lncRNA identification pipeline in a few very simple steps. In general the pipieline consist of three stages:
-- extraction of known lncRNA from reference GTF
-- filtering potential (unknown) lncRNA based on the features such as sequence length, exon number
-- lncRNA classification based on the coding potential and the simmilarity with known nucleotide and peptide sequences (homologues in databases).
+This package allows to carry out the lncRNA identification pipeline in a few very simple steps. In general the pipieline consist of a few stages:
+<ul>
+  <b>I. Annotated features:</b>
+  <li>extraction of known lncRNA from reference GTF,</li>
+  <li>filtering potential (unknown) lncRNA based on the features such as sequence length, exon number,</li>
+</ul>
+<ul>  
+  <b>II. Coding potential</b>
+  <li>lncRNA classification based on the coding potential</li>
+  <li>filtering transcripts basing on the simmilarity with known nucleotide and peptide sequences (homologues in databases),</li>
+</ul>
+<ul>  
+  <b>III. Functions</b>
+  <li>detection of cis and trans acting genes,</li>
+  <li>functional analyses</li>
+</ul>
+<ul>  
+  <b>IV. Structure</b>
+  <li>under construction</li>
+</ul>
 
 
 ## How to install
