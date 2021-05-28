@@ -8,12 +8,12 @@
 #' @examples
 #' read.rfam()
 #'
-read.rfam <- function(rfam_outfile, eval_cutoff = 10e-3){
+read.rfam <- function(rfam_outfile){
   require('rhmmer')
   rfam <- read_domtblout(file = rfam_outfile)
   #
   # rfam <- rfam[rfam$sequence_evalue < eval_cutoff,]$query_name
-  rfam <- rfam[rfam$sequence_evalue < eval_cutoff,]
+  # rfam <- rfam[rfam$sequence_evalue < eval_cutoff,]
   rfam <- as.data.frame(rfam)
   rfam <- unique(rfam)
   return(rfam)
