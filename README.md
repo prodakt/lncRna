@@ -113,6 +113,16 @@ It is not necessary to read all mentioned files. If you don't have some of the r
 ```
 tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out", PLEK_outfile = ".../PLEK.out")
 ```
+You can easily draw the venn diagram for all used methods:
+```
+venn.CodPot(CodPot = CodPot)
+```
+
+
+or you can selet which results you wish to include in the venn diagram:
+```
+venn.CodPot(CodPot = CodPot, selmet = c(1,1,0,1,1,0,0))
+```
 
 ### IIb. Filtering by simmilarity
 in this stage you can read the Pfam scanning output file to filter out transcripts containing protein domains
