@@ -123,7 +123,7 @@ or you can selet which results you wish to include in the venn diagram:
 ```
 venn.CodPot(CodPot = tbl2, selmet = c(1,1,0,1,1,0,0))
 ```
-<img src="img/venn_4.png" align="left" height = 500/>
+![venn_4]("img/venn_4.png")
 <br>
 
 ### IIb. Filtering by simmilarity
