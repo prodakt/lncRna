@@ -1,6 +1,7 @@
 # lncRna <img src="img/lncRna_logo_small.png" align="right" height = 150/>
 
 ![GitHub](https://img.shields.io/github/license/prodakt/lncRna)
+![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna)
 
 is the R package for lncRNA identification i a simple way.
 
