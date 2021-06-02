@@ -115,13 +115,13 @@ tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out", PLEK_outfile = ".../PLEK.out")
 ```
 You can easily draw the venn diagram for all used methods:
 ```
-venn.CodPot(CodPot = CodPot)
+venn.CodPot(CodPot = tbl2)
 ```
-
+![venn_all](/img/venn_4.png)
 
 or you can selet which results you wish to include in the venn diagram:
 ```
-venn.CodPot(CodPot = CodPot, selmet = c(1,1,0,1,1,0,0))
+venn.CodPot(CodPot = tbl2, selmet = c(1,1,0,1,1,0,0))
 ```
 
 ### IIb. Filtering by simmilarity
