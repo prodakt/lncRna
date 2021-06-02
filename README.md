@@ -117,14 +117,14 @@ You can easily draw the venn diagram for all used methods:
 ```
 venn.CodPot(CodPot = tbl2)
 ```
-![venn_4]("https://github.com/prodakt/lncRna/blob/main/img/venn_all.png")
+![venn_all]("https://github.com/prodakt/lncRna/blob/main/img/venn_all.png")
 
 or you can selet which results you wish to include in the venn diagram:
 ```
 venn.CodPot(CodPot = tbl2, selmet = c(1,1,0,1,1,0,0))
 ```
 ![venn_4]("https://github.com/prodakt/lncRna/blob/main/img/venn_4.png")
-<br>
+
 
 ### IIb. Filtering by simmilarity
 in this stage you can read the Pfam scanning output file to filter out transcripts containing protein domains
