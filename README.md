@@ -85,7 +85,7 @@ strtie2expr(strdir = "stringtie_folder/", expunit = "FPKM" or "TPM")
 ```
 
 ### Ic. Selection of transcripts for coding potential analyses
-The final step in tne first stage is to filter out these transcripts which are definitely not lncRNA.
+The final step in tne first stage is to filter out these transcripts which are definitely NOT lncRNA.
 ```
 # remove known protein coding transcripts
 pot_lncRNA <- tab1[tab1$transcript_id %!in% known_pcRNA,] 
@@ -154,11 +154,38 @@ The 'read.rfam()' function allows you to read Rfam output to tabular format.
 ```
 rfam <- read.rfam(rfam_outfile = ".../Rfam.out")
 ```
+
+The final list of predicted lncRNA should contains transcripts which:
+- are not protein coding
+- are longer than 200 nucleotides (but you can change it)
+- it is recommended to select transcripts consist of more than 1 exon
+- it is reccomended to filter out low expressed transcripts
+- passed the potential coding tests (it is recommended to run a few independed methods to strengthen this step)
+- have no significant simmilarity with protein domains.
+
+
+```
+# if the coding potential tests were done on the whole transcriptome you should run:
+predicted_lncRNA <- tbl2[tbl2$seqIDs %in% pot_lncRNA,]
+
+# non-coding potential prooved by at least 5 methods
+predicted_lncRNA <- predicted_lncRNA[rowsums(predicted_lncRNA[2:ncol(predicted_lncRNA)]) >= 5,] 
+
+# filter out pfam records
+predicted_lncRNA <- predicted_lncRNA[predicted_lncRNA$seqIDs %!in% pfam,]
+
+# extract only the ID list
+predicted_lncRNA <- predicted_lncRNA$seqIDs
+```
+
+
 ### III. Functions
 the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
 ```
+# combine tle list of both predicted and known lncRNA's
+lncRNA_transcripts <- unique(c(predicted_lncRNA, known_lncRNA))
+
 # cis acting genes
-lncRNA_transcripts <- tbl2[SELECT_ROWS,]$seqIDs
 cis <- filter.CisAct(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts)  
 
 ```
