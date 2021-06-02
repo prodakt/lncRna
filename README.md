@@ -117,7 +117,7 @@ You can easily draw the venn diagram for all used methods:
 ```
 venn.CodPot(CodPot = tbl2)
 ```
-<img src="img/venn_all.png" align="left" height = 500/>)
+![venn_4]("img/venn_all.png")
 
 or you can selet which results you wish to include in the venn diagram:
 ```
