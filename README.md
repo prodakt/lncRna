@@ -1,5 +1,7 @@
 # lncRna <img src="img/lncRna_logo_small.png" align="right" height = 150/>
 
+![GitHub](https://img.shields.io/github/license/prodakt/lncRna)
+
 is the R package for lncRNA identification i a simple way.
 
 This package allows to carry out the lncRNA identification pipeline in a few very simple steps. In general the pipieline consist of a few stages:
