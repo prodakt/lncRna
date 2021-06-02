@@ -117,13 +117,13 @@ You can easily draw the venn diagram for all used methods:
 ```
 venn.CodPot(CodPot = tbl2)
 ```
-![venn_all](/img/venn_all.png)
+<img src="img/venn_all.png" align="left" height = 500/>)
 
 or you can selet which results you wish to include in the venn diagram:
 ```
 venn.CodPot(CodPot = tbl2, selmet = c(1,1,0,1,1,0,0))
 ```
-![venn_all](/img/venn_4.png)
+<img src="img/venn_4.png" align="left" height = 500/>
 <br>
 
 ### IIb. Filtering by simmilarity
