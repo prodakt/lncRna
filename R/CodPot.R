@@ -172,3 +172,36 @@ read.lncRNA_Mdeep <- function(lncRNA_Mdeep_outfile){
   lncRNA_Mdeep <- unique(as.character(lncRNA_Mdeep))
   return(lncRNA_Mdeep)
 }
+
+
+#' A venn.CodPot function
+#'
+#' This function reads venn.CodPot output and list all noncoding transcripts IDs
+#' @param lncRNA_Mdeep_outfile is the venn.CodPot output file localization including filename
+#' @keywords venn.CodPot lncRNA
+#' @param CodPot is the table generated usig CodPot2tbl() function
+#' @param selmet is the vector argument indicatin which methods you select to venn diagram - i.e.: c(1,1,1,1) or c(1,0,1,0).
+#' @param
+#' @param
+#' @export
+#' @examples
+#' venn.CodPot(CodPot = CodPot_table, selmet = c(1,1,0,0,1))
+#'
+require("venn")
+venn.CodPot <- function(CodPot, venncolors = c("green", "red", "blue", "yellow", "magenta", "black", "orange", "white", "darkgreen"), selmet=NULL){
+ if(is.null(selmet)) selmet <- rep(1, ncol(CodPot)-1)
+
+ lista <- list()
+ index <- 1
+
+ for (i in which(selmet == 1)+1) {
+   lista[[index]] <- CodPot[CodPot[,i] %in% "1",]$seqIDs
+   index <- index+1
+ }
+
+ venn::venn(lista,
+            zcolor = venncolors[1:sum(selmet)],
+            snames = colnames(CodPot[which(selmet == 1)+1])
+ )
+}
+
