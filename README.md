@@ -1,4 +1,4 @@
-# lncRna <img src="img/lncRna_logo_small.png" align="right" height = 150/>
+# lncRna <img src="img/lncRna_logo.png" align="right" height = 150/>
 
 ![GitHub](https://img.shields.io/github/license/prodakt/lncRna)
 ![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna)
@@ -186,7 +186,7 @@ the third stage is to predict or estimate some functions and functional connecti
 lncRNA_transcripts <- unique(c(predicted_lncRNA, known_lncRNA))
 
 # cis acting genes
-cis <- filter.CisAct(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts)  
+cis <- filter.CisAct(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene")  
 
 ```
 
