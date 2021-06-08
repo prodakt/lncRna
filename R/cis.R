@@ -13,7 +13,7 @@
 #' @examples
 #' filter.CisAct()
 #'
-filter.CisAct <-function(lncRNAs = NULL, mRNAs = NULL, FEELnc.classes, is.best=T, lncRNA.level = "transcript", mRNA.level = "gene"){
+filter.CisAct <-function(lncRNAs = NULL, mRNAs = NULL, FEELnc.classes, is.best=T, lncRNA.level = "transcript", mRNA.level = "gene", max.dist = 100000){
   cis <- read.table(FEELnc.classes, header = T)
   if (is.best) cis <- cis[cis$isBest %in% 1,]
 
@@ -34,6 +34,6 @@ filter.CisAct <-function(lncRNAs = NULL, mRNAs = NULL, FEELnc.classes, is.best=T
     }
 
   }
-
+  cis <- cis[cis$distance <= max.dist,]
   return(cis)
 }
