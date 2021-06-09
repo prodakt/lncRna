@@ -186,7 +186,29 @@ the third stage is to predict or estimate some functions and functional connecti
 lncRNA_transcripts <- unique(c(predicted_lncRNA, known_lncRNA))
 
 # cis acting genes
-cis <- filter.CisAct(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene")  
+cis <- filter.CisAct(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene", max.dist = 10000)  
+head(cis)
+
+     isBest lncRNA_gene lncRNA_transcript    partnerRNA_gene partnerRNA_transcript direction       type distance     subtype location
+276       1 MSTRG.13837     MSTRG.13837.9 ENSMGAG00000000862    ENSMGAT00000000882 antisense intergenic    13338   divergent upstream
+433       1 MSTRG.37986     MSTRG.37986.9 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    51659 same_strand upstream
+1112      1 MSTRG.37986    MSTRG.37986.14 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    74766 same_strand upstream
+1430      1 MSTRG.26440     MSTRG.26440.4 ENSMGAG00000002759    ENSMGAT00000003192     sense      genic        0      nested intronic
+1518      1 MSTRG.43740     MSTRG.43740.4 ENSMGAG00000015916    ENSMGAT00000017829     sense      genic        0  containing intronic
+1561      1 MSTRG.37986    MSTRG.37986.11 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    51659 same_strand upstream
+
+# trans acting genes
+trans <- TransAct(expr.matrix = expr, rval = 0.9, pval = 0.05, lncRNA.list = lncRNA_genes, tarRNA.list = pcRNA_genes)
+head(trans)
+
+      lncRNA.id targetRNA.id   r.value      p.value
+193 MSTRG.14959  MSTRG.10009 0.9129956 3.387791e-05
+333 MSTRG.18834  MSTRG.10009 0.9011705 6.277291e-05
+397 MSTRG.20790  MSTRG.10009 0.9126770 3.448375e-05
+591 MSTRG.26440  MSTRG.10009 0.9556676 1.251677e-06
+690 MSTRG.28330  MSTRG.10009 0.9243804 1.713508e-05
+819 MSTRG.31990  MSTRG.10009 0.9151334 3.002583e-05
+
 
 ```
 
