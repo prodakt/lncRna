@@ -169,7 +169,7 @@ The final list of predicted lncRNA should contains transcripts which:
 predicted_lncRNA <- tbl2[tbl2$seqIDs %in% pot_lncRNA,]
 
 # non-coding potential prooved by at least 5 methods
-predicted_lncRNA <- predicted_lncRNA[rowsums(predicted_lncRNA[2:ncol(predicted_lncRNA)]) >= 5,] 
+predicted_lncRNA <- predicted_lncRNA[rowSums(predicted_lncRNA[2:ncol(predicted_lncRNA)]) >= 5,] 
 
 # filter out pfam records
 predicted_lncRNA <- predicted_lncRNA[predicted_lncRNA$seqIDs %!in% pfam,]
