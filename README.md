@@ -3,7 +3,7 @@
 ![GitHub](https://img.shields.io/github/license/prodakt/lncRna)
 ![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna)
 
-is the R package for lncRNA identification i a simple way.
+is the R package for lncRNA identification in a simple way.
 
 This package allows to carry out the lncRNA identification pipeline in a few very simple steps. In general the pipieline consist of a few stages:
 <ul>
@@ -179,7 +179,7 @@ predicted_lncRNA <- predicted_lncRNA$seqIDs
 ```
 
 
-### III. Functions
+### III. Functional annotation
 the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
 ```
 # combine tle list of both predicted and known lncRNA's
