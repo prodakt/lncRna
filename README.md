@@ -74,7 +74,7 @@ head(tab1)
 ```
 
 ### Ib. Expression level
-To filter out low expressed transcripts you can use 'count_matrix" file:
+To filter out low expressed transcripts you can use 'count_matrix' file:
 ```
 transcripts_counts <- read.table("../transcript_count_matrix.csv", header = T, sep = ",", row.names = 1)
 expr <- rownames(transcripts_counts[rowSums(transcripts_counts) > 10,])
