@@ -28,15 +28,13 @@ strtie2expr_units <- function(strdir = "stringtie/", pattern = "gtab"){
 strtie2expr <- function(strdir = "stringtie/", pattern = "gtab", expunit = "FPKM"){
   pliki <- list.files(paste0(strdir), pattern = pattern)
   tab <- read.table(paste0(strdir,pliki[1]), sep = "\t", header = T)
-  tab <- data.frame(Gene.ID = tab$Gene.ID)
+  tab <- tab[c("Gene.ID", "Gene.Name", "Reference", "Strand", "Start", "End")]
   for (f in pliki) {
     tabtmp <- read.table(paste0(strdir,f), sep = "\t", header = T)
     tabtmp <- tabtmp[,c("Gene.ID", paste0(expunit))]
     colnames(tabtmp)[2] <- gsub(pattern = ".gtab", replacement = "", x = f)
     tab <- merge(tab, tabtmp, by = "Gene.ID", all = T)
   }
-  rownames(tab) <- tab$Gene.ID
-  tab <- tab[,-1]
   return(tab)
 }
 
