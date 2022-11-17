@@ -135,7 +135,7 @@ return(CPAT)
 #' read.CNCI()
 #'
 read.CNCI <- function(CNCI_outfile){
-  CNCI <- read.table(CNCI_outfile, header = T)
+  CNCI <- read.table(CNCI_outfile, header = T, sep = "\t")
   CNCI <- CNCI[CNCI$index %in% "noncoding",1]
  # CNCI <- CNCI[CNCI$index %in% "noncoding",]$Transcript # it generates ERROR
   CNCI <- unique(as.character(CNCI))
