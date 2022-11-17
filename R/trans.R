@@ -20,6 +20,7 @@
 TransAct <- function(expr.matrix, cor.method = "pearson", rval = 0.7, pval = 0.05, lncRNA.list=NULL, tarRNA.list=NULL, full.cor.matrix.filename = NULL){
 
   require("Hmisc")
+  require("reshape2")
 
   if (is.null(lncRNA.list)) {
     lncRNA.list=rownames(expr.matrix)
