@@ -41,6 +41,7 @@ TransAct <- function(expr.matrix, cor.method = "pearson", rval = 0.7, pval = 0.0
   trans_res <- trans_res[trans_res$targetRNA.id %in% tarRNA.list,]
   trans_res <- trans_res[trans_res$p.value < pval,]
   trans_res <- trans_res[abs(trans_res$r.value) >= rval,]
+  trans_res <- trans_res[!is.na(trans_res$lncRNA.id),]
 
   message(paste0("Number of trans lncRNA vs. target genes interactions: ", nrow(trans_res)))
 
