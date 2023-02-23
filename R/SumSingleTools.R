@@ -9,7 +9,6 @@
 #' @examples
 #' BestPat1 <- SumSingleTools(CodPot.tbl2 = tbl2, nc_test = nc_tt$nc.test, cds_test = cds_tt$cds.test)
 
-
 SumSingleTools <- function(CodPot.tbl2, nc_test, cds_test){
   BestPat <- CodPot.tbl2
   usedTools <- colnames(CodPot.tbl2)[-1]
