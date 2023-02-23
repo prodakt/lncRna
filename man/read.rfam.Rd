@@ -4,7 +4,7 @@
 \alias{read.rfam}
 \title{A read.rfam function}
 \usage{
-read.rfam(rfam_outfile, eval_cutoff = 0.01)
+read.rfam(rfam_outfile)
 }
 \arguments{
 \item{rfam_outfile}{is the hmmscan pfam output file localization including filename}

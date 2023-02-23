@@ -10,7 +10,8 @@ filter.CisAct(
   FEELnc.classes,
   is.best = T,
   lncRNA.level = "transcript",
-  mRNA.level = "gene"
+  mRNA.level = "gene",
+  max.dist = 1e+05
 )
 }
 \arguments{
