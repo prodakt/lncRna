@@ -1,6 +1,6 @@
 #' BestTool function
 #'
-#' This function computes confusion matrix and accuracy for single methods .
+#' This function computes confusion matrix and accuracy for single methods.
 #' @param BestPat the table with summarized data generated with SumSingleTools() function
 #' @param tools the list of names of tools to compute the accuracy
 #' @keywords training test lncRNA

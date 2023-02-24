@@ -12,7 +12,7 @@ BestTool(BestPat, tools)
 \item{tools}{the list of names of tools to compute the accuracy}
 }
 \description{
-This function computes confusion matrix and accuracy for single methods .
+This function computes confusion matrix and accuracy for single methods.
 }
 \examples{
 selectedTools <- c("CPC2", "PLEK", "FEELnc", "CPAT", "CNCI", "LncFinder")
