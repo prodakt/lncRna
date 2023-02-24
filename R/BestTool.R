@@ -15,14 +15,13 @@ BestTool <- function(BestPat, tools){
   cm <- confusionMatrix(data = as.factor(BestPat[,2]),
                         reference = as.factor(BestPat$isNC), mode = "prec_recall")
   BP.cpt <- data.frame(torem = cm$overall)
-  for(i in which(colnames(BestPat) %in% usedTools)) {
+  for(i in which(colnames(BestPat) %in% tools)) {
     cm <- confusionMatrix(data = as.factor(BestPat[,i]),
                           reference = as.factor(BestPat$isNC),
                           mode = "prec_recall")
     cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
     BP.cpt <- cbind(BP.cpt,cm)
-    #  colnames(BP.cpt)[ncol(BP.cpt)] <- cat(colnames(dane)[i])
   }
   BP.cpt <- BP.cpt[,colnames(BP.cpt) %!in% "torem"]
   colnames(BP.cpt)[1:ntools] <- colnames(BestPat)[c(1:ntools+1)]
