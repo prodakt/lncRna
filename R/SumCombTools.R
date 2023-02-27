@@ -8,7 +8,6 @@
 #' @examples
 #' BestPat3 <- SumAtLeast(BestPat = BestPat2, tools = selectedTools)
 #' head(BestPat3)
-#'
 
 SumCombTools <- function(BestPat, selectedTools){
   met2comb <- BestPat[,selectedTools]

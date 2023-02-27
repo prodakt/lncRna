@@ -7,17 +7,16 @@
 #' @examples
 #' BP.cmb <- BestTool.comb(BestPat = BestPat3)
 #' BP.cmb
-#'
 
 BestTool.comb <- function(BestPat, selectComb){
   cm <- confusionMatrix(data = as.factor(BestPat[,selectComb[1]]),
-                        reference = as.factor(BestPat$isNC), mode = "prec_recall")
+                        reference = as.factor(BestPat$isNC), mode = "prec_recall", positive = "1")
   BP.cmb <- data.frame(torem = cm$overall)
 
   for(i in which(colnames(BestPat) %in% selectComb)) {
     cm <- confusionMatrix(data = as.factor(BestPat[,i]),
                           reference = as.factor(BestPat$isNC),
-                          mode = "prec_recall")
+                          mode = "prec_recall", positive = "1")
     cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
 

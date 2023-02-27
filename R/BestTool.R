@@ -13,12 +13,12 @@
 BestTool <- function(BestPat, tools){
   ntools <- length(tools)
   cm <- confusionMatrix(data = as.factor(BestPat[,2]),
-                        reference = as.factor(BestPat$isNC), mode = "prec_recall")
+                        reference = as.factor(BestPat$isNC), mode = "prec_recall", positive = "1")
   BP.cpt <- data.frame(torem = cm$overall)
   for(i in which(colnames(BestPat) %in% tools)) {
     cm <- confusionMatrix(data = as.factor(BestPat[,i]),
                           reference = as.factor(BestPat$isNC),
-                          mode = "prec_recall")
+                          mode = "prec_recall", positive = "1")
     cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
     BP.cpt <- cbind(BP.cpt,cm)
