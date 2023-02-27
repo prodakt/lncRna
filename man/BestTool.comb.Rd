@@ -4,7 +4,7 @@
 \alias{BestTool.comb}
 \title{BestTool.comb function}
 \usage{
-BestTool.comb(BestPat)
+BestTool.comb(BestPat, selectComb)
 }
 \arguments{
 \item{BestPat}{the table with summarized data generated with SumSingleTools() function}
@@ -15,7 +15,6 @@ This function computes confusion matrices and accuracy values for all combinatio
 \examples{
 BP.cmb <- BestTool.comb(BestPat = BestPat3)
 BP.cmb
-
 }
 \keyword{accuracy}
 \keyword{confiusion}

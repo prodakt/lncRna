@@ -15,7 +15,6 @@ This function computes confusion matrices and accuracy values for all variants o
 \examples{
 BP.atl <- BestTool.atleast(BestPat = BestPat2)
 BP.atl
-
 }
 \keyword{accuracy}
 \keyword{confiusion}

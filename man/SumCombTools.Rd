@@ -17,7 +17,6 @@ This function summarise coding potential results for all combinations of selecte
 \examples{
 BestPat3 <- SumAtLeast(BestPat = BestPat2, tools = selectedTools)
 head(BestPat3)
-
 }
 \keyword{lncRNA}
 \keyword{test}
