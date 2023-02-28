@@ -9,14 +9,27 @@
 #' BP.atl
 
 BestTool.atleast <- function(BestPat){
-  cm <- confusionMatrix(data = as.factor(BestPat[,2]),
-                        reference = as.factor(BestPat$isNC), mode = "prec_recall", positive = "1")
+
+  dat <- as.factor(BestPat[,2])
+  levels(dat) <- c("0","1")
+  ref <- as.factor(BestPat$isNC)
+  levels(ref) <- c("0","1")
+
+  cm <- confusionMatrix(data = dat,
+                        reference = ref, mode = "prec_recall", positive = "1")
+
   BP.atl <- data.frame(torem = cm$overall)
 
   for(i in which(startsWith(colnames(BestPat), "atl"))) {
-    cm <- confusionMatrix(data = as.factor(BestPat[,i]),
-                          reference = as.factor(BestPat$isNC),
+    dat <- as.factor(BestPat[,i])
+    ref <- as.factor(BestPat$isNC)
+    levels(dat) <- c("0","1")
+    levels(ref) <- c("0","1")
+
+    cm <- confusionMatrix(data = dat,
+                          reference = ref,
                           mode = "prec_recall", positive = "1")
+
     cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
     BP.atl[,ncol(BP.atl) +1] <- cm
