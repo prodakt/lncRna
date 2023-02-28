@@ -9,7 +9,7 @@ test.train.cds(cds.fa, percent_train = 0.6)
 \arguments{
 \item{cds.fa}{the variable containing sequences in fasta format (from read.fasta() function from seqinr library)}
 
-\item{percent_train}{the ratio value to divide the input set (he default is 0.6, which means that 60% of the sequence is to be allocated to the training set)}
+\item{percent_train}{the ratio value to divide the input set (he default is 0.6, which means that 60\% of the sequence is to be allocated to the training set)}
 }
 \description{
 This function allows you to split a fast format sequence file into two sets: test and train.
