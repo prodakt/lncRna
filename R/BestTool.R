@@ -34,7 +34,7 @@ BestTool <- function(BestPat, tools){
                           reference = ref,
                           mode = "prec_recall", positive = "1")
     # cm <- rbind(data.frame(tmp = cm$overall), data.frame(tmp = cm$byClass))
-     cm <- data.frame(cm$overall)
+    cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
     BP.cpt <- cbind(BP.cpt,cm)
   }
