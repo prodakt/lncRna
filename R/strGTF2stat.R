@@ -5,9 +5,7 @@
 #' @keywords GTF stringtie lncRNA
 #' @export
 #' @examples
-#' strGTF2stat('GTF from stringtie by 'importGFF()')
-
-
+#' strGTF2stat('GTF from stringtie by importGFF()')
 
 strGTF2stat <- function(stringtieGTF){
   stats <- merge(strGTF2ExonsN(stringtieGTF), strGTF2TransLen(stringtieGTF), by="transcript_id", all=T)

@@ -7,7 +7,7 @@
 #' @param is.best filtering by the first collumn "is.best" (see https://github.com/tderrien/FEELnc#3--feelnc_classifierpl)
 #' @param lncRNA.level choose the "gene" or "transcript" level for lncRNA filtering
 #' @param mRNA.level choose the "gene" or "transcript" level for mRNA filtering
-#' @param
+#' @param max.dist the distance for cis-relation (default value is 100 000)
 #' @keywords cis acting lncRNA
 #' @export
 #' @examples

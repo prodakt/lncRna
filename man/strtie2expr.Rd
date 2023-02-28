@@ -6,6 +6,11 @@
 \usage{
 strtie2expr(strdir = "stringtie/", pattern = "gtab", expunit = "FPKM")
 }
+\arguments{
+\item{strdir}{the directory with stringtie results (default is strdir = "stringtie/")}
+
+\item{pattern}{the pattern for stringtie uotput files (default is pattern = "gtab")}
+}
 \description{
 This function allows you to extract expression values from the stringtie output file.
 }

@@ -26,6 +26,8 @@ TransAct(
 \item{lncRNA.list}{the list of lncRNA genes/transcripts. The manes shoud be a part of "expr.matrix" rownames.}
 
 \item{tarRNA.list}{the list of target genes/transcripts. The manes shoud be a part of "expr.matrix" rownames.}
+
+\item{full.cor.matrix.filename}{the filename of precalculated corelation matrix}
 }
 \description{
 This function allows to estimate trans interactions between lncRNA's and potential target genes basing on the expression/coexpression levels.

@@ -5,8 +5,7 @@
 #' @keywords GTF lncRNA
 #' @export
 #' @examples
-#' refBiotypes('GTF from stringtie by 'importGFF()')
-
+#' refBiotypes('GTF from stringtie by importGFF()')
 
 refBiotypes <- function(refGTF, genes = F){
   known_biotypes <- as.data.frame(refGTF)

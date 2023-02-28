@@ -1,13 +1,14 @@
 #' A CodPot2tbl function
 #'
 #' This function reads several outputs from coding potential programs and join all tesults in table, where 0 is coding and 1 - noncoding
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
+#' @param CPC2_outfile the output file from the CPC2 tool
+#' @param PLEK_outfile the output file from the PLEK tool
+#' @param FEELnc_outfile the output file from the FEELnc tool
+#' @param CPAT_outfile the output file from the CPAT tool
+#' @param CPAT_cutoff the cutoff value for CPAT output
+#' @param CNCI_outfile the output file from the CNCI tool
+#' @param LncFinder_outfile the output file from the LncFinder tool
+#' @param lncRNA_Mdeep_outfile the output file from the lncRNA_Mdeep tool
 #' @keywords coding potential lncRNA
 #' @export
 #' @examples
@@ -179,9 +180,8 @@ read.lncRNA_Mdeep <- function(lncRNA_Mdeep_outfile){
 #' This function allows to draw Venn diagram od coding potential outputs
 #' @param CodPot is the table generated usig CodPot2tbl() function
 #' @param selmet is the vector argument indicatin which methods you select to venn diagram - i.e.: c(1,1,1,1) or c(1,0,1,0).
+#' @param venncolors the vector of colors
 #' @keywords venn.CodPot lncRNA
-#' @param
-#' @param
 #' @export
 #' @examples
 #' venn.CodPot(CodPot = CodPot_table, selmet = c(1,1,0,0,1))

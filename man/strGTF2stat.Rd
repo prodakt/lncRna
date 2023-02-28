@@ -12,6 +12,9 @@ strGTF2stat(stringtieGTF)
 \description{
 This function allows you to extract some statistics from GTF file
 }
+\examples{
+strGTF2stat('GTF from stringtie by importGFF()')
+}
 \keyword{GTF}
 \keyword{lncRNA}
 \keyword{stringtie}

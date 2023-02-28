@@ -14,6 +14,8 @@ venn.CodPot(
 \arguments{
 \item{CodPot}{is the table generated usig CodPot2tbl() function}
 
+\item{venncolors}{the vector of colors}
+
 \item{selmet}{is the vector argument indicatin which methods you select to venn diagram - i.e.: c(1,1,1,1) or c(1,0,1,0).}
 }
 \description{

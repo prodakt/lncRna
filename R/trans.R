@@ -9,7 +9,7 @@
 #' @param pval the cutoff of estimated p-value for any interaction; default value is 0.05
 #' @param lncRNA.list the list of lncRNA genes/transcripts. The manes shoud be a part of "expr.matrix" rownames.
 #' @param tarRNA.list the list of target genes/transcripts. The manes shoud be a part of "expr.matrix" rownames.
-#' @param full.cor.matrix.filename
+#' @param full.cor.matrix.filename the filename of precalculated corelation matrix
 #' @keywords trans acting lncRNA
 #' @export
 #' @examples transNjJd <- TransAct(expr.matrix = em_NjJd, rval = 0.9, lncRNA.list = DELsNjJd, tarRNA.list = pcDEGsNjJd)

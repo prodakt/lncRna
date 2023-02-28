@@ -14,5 +14,8 @@ refBiotypes(refGTF, genes = F)
 \description{
 This function allows you to extract some statistics from reference GTF file
 }
+\examples{
+refBiotypes('GTF from stringtie by importGFF()')
+}
 \keyword{GTF}
 \keyword{lncRNA}

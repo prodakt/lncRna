@@ -6,6 +6,11 @@
 \usage{
 strtie2expr_units(strdir = "stringtie/", pattern = "gtab")
 }
+\arguments{
+\item{strdir}{the directory with stringtie results (default is strdir = "stringtie/")}
+
+\item{pattern}{the pattern for stringtie uotput files (default is pattern = "gtab")}
+}
 \description{
 This function allows you to list the possible variables from stringtie output file.
 }

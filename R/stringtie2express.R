@@ -1,7 +1,8 @@
 #' strtie2expr_units function
 #'
 #' This function allows you to list the possible variables from stringtie output file.
-#' @param
+#' @param strdir the directory with stringtie results (default is strdir = "stringtie/")
+#' @param pattern the pattern for stringtie uotput files (default is pattern = "gtab")
 #' @keywords expression lncRNA
 #' @export
 #' @examples
@@ -17,7 +18,8 @@ strtie2expr_units <- function(strdir = "stringtie/", pattern = "gtab"){
 #' strtie2expr function
 #'
 #' This function allows you to extract expression values from the stringtie output file.
-#' @param
+#' @param strdir the directory with stringtie results (default is strdir = "stringtie/")
+#' @param pattern the pattern for stringtie uotput files (default is pattern = "gtab")
 #' @keywords expression lncRNA
 #' @export
 #' @examples
@@ -42,7 +44,8 @@ strtie2expr <- function(strdir = "stringtie/", pattern = "gtab", expunit = "FPKM
 #' strtie2glen function
 #'
 #' This function allows you to compute genes length from stringtie output file.
-#' @param
+#' @param strdir the directory with stringtie results (default is strdir = "stringtie/")
+#' @param pattern the pattern for stringtie uotput files (default is pattern = "gtab")
 #' @keywords expression lncRNA
 #' @export
 #' @examples

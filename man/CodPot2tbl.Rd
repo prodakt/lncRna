@@ -15,6 +15,23 @@ CodPot2tbl(
   lncRNA_Mdeep_outfile = NULL
 )
 }
+\arguments{
+\item{CPC2_outfile}{the output file from the CPC2 tool}
+
+\item{PLEK_outfile}{the output file from the PLEK tool}
+
+\item{FEELnc_outfile}{the output file from the FEELnc tool}
+
+\item{CPAT_outfile}{the output file from the CPAT tool}
+
+\item{CPAT_cutoff}{the cutoff value for CPAT output}
+
+\item{CNCI_outfile}{the output file from the CNCI tool}
+
+\item{LncFinder_outfile}{the output file from the LncFinder tool}
+
+\item{lncRNA_Mdeep_outfile}{the output file from the lncRNA_Mdeep tool}
+}
 \description{
 This function reads several outputs from coding potential programs and join all tesults in table, where 0 is coding and 1 - noncoding
 }

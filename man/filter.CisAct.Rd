@@ -26,6 +26,8 @@ filter.CisAct(
 \item{lncRNA.level}{choose the "gene" or "transcript" level for lncRNA filtering}
 
 \item{mRNA.level}{choose the "gene" or "transcript" level for mRNA filtering}
+
+\item{max.dist}{the distance for cis-relation (default value is 100 000)}
 }
 \description{
 This function reads several outputs from coding potential programs and join all tesults in table, where 0 is coding and 1 - noncoding
