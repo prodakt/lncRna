@@ -20,10 +20,9 @@ BestTool <- function(BestPat, tools){
   cm <- confusionMatrix(data = dat,
                         reference = ref, mode = "prec_recall", positive = "1")
 
-  # BP.cpt <- data.frame(torem = cm$overall)
-  # BP.cpt <- rbind(BP.cpt, data.frame(cm$byClass))
+ BP.cpt <- data.frame(torem = cm$overall)
 
-  BP.cpt <- rbind(data.frame(torem = cm$overall), data.frame(torem = cm$byClass))
+ #  BP.cpt <- rbind(data.frame(torem = cm$overall), data.frame(torem = cm$byClass))
 
   for(i in which(colnames(BestPat) %in% tools)) {
     dat <- as.factor(BestPat[,i])
@@ -34,8 +33,8 @@ BestTool <- function(BestPat, tools){
     cm <- confusionMatrix(data = dat,
                           reference = ref,
                           mode = "prec_recall", positive = "1")
-    cm <- rbind(assign(i,data.frame(cm$overall)), assign(i,data.frame(cm$byClass)))
-    #    cm <- data.frame(cm$overall)
+    # cm <- rbind(data.frame(tmp = cm$overall), data.frame(tmp = cm$byClass))
+     cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
     BP.cpt <- cbind(BP.cpt,cm)
   }
