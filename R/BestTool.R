@@ -34,7 +34,7 @@ BestTool <- function(BestPat, tools){
     cm <- confusionMatrix(data = dat,
                           reference = ref,
                           mode = "prec_recall", positive = "1")
-    cm <- rbind(data.frame(cat(paste(i)) = cm$overall), data.frame(cat(paste(i)) = cm$byClass))
+    cm <- rbind(data.frame(cm$overall), data.frame(cm$byClass))
     #    cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
     BP.cpt <- cbind(BP.cpt,cm)
