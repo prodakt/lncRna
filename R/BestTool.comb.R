@@ -21,8 +21,14 @@ BestTool.comb <- function(BestPat, selectComb){
   BP.cmb <- data.frame(torem = cm$overall)
 
   for(i in which(colnames(BestPat) %in% selectComb)) {
-    cm <- confusionMatrix(data = as.factor(BestPat[,i]),
-                          reference = as.factor(BestPat$isNC),
+
+    dat <- as.factor(BestPat[,i])
+    ref <- as.factor(BestPat$isNC)
+    levels(dat) <- c("0","1")
+    levels(ref) <- c("0","1")
+
+    cm <- confusionMatrix(data = dat,
+                          reference = ref,
                           mode = "prec_recall", positive = "1")
     cm <- data.frame(cm$overall)
     cm <- round(cm, 4)
