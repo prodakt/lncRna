@@ -9,10 +9,10 @@ test.train.nc(nc.fa, percent_train = 0.6)
 \arguments{
 \item{nc.fa}{the variable containing sequences in fasta format (from read.fasta() function from seqinr library)}
 
-\item{percent_train}{the ratio value to divide the input set (he default is 0.6, which means that 60% of the sequence is to be allocated to the training set)}
+\item{percent_train}{the ratio value to divide the input set (he default is 0.6, which means that 60\% of the sequence is to be allocated to the training set)}
 }
 \description{
-This function allows you to split a sequences (from FASTA file) into two sets: test and train. As a result, the function outputs a list consisting of two elements "test" and "train" containing sequence names.
+This function allows you to split a sequences \(from FASTA file\) into two sets: test and train. As a result, the function outputs a list consisting of two elements "test" and "train" containing sequence names.
 }
 \examples{
 nc <- read.fasta("lncRNA/Mus_musculus.GRCm39.ncrna.fa", seqtype = "DNA", as.string = T, set.attributes = F)
