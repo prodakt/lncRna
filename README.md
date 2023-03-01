@@ -7,6 +7,7 @@
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/prodakt/lncRna?color=purple&style=plastic)
 ![GitHub repo size](https://img.shields.io/github/repo-size/prodakt/lncRna?color=yellow&label=size)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/prodakt/lncRna?color=white&label=activ)
+![GitHub last commit](https://img.shields.io/github/last-commit/prodakt/lncRna?color=%23FF0000%20&label=last)
 
 
 is the R package for lncRNA identification in a simple way.
