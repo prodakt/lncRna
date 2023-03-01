@@ -100,6 +100,8 @@ length(pot_lncRNA)
 ```
 
 In addition, you can prepare a set of sequences for accuracy analyzes of methods for predicting coding potential (see IIb). For this purpose, non-coding, coding reference sequences should be loaded and divided into a set for training, testing and proper prediction of coding potential.
+Used reference CDS sequences: https://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/cds/Mus_musculus.GRCm39.cds.all.fa.gz
+Used reference nc sequences: https://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/ncrna/Mus_musculus.GRCm39.ncrna.fa.gz
 
 ```
 # loading reference sequences
