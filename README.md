@@ -2,6 +2,7 @@
 
 ![GitHub](https://img.shields.io/github/license/prodakt/lncRna)
 ![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna)
+![GitHub repo file count](https://img.shields.io/github/directory-file-count/prodakt/lncRna?color=purple&style=plastic)
 
 is the R package for lncRNA identification in a simple way.
 
