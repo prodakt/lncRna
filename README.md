@@ -1,7 +1,9 @@
 # lncRna <img src="img/lncRna_logo.png" align="right" height = 150/>
 
-![GitHub](https://img.shields.io/github/license/prodakt/lncRna)
-![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna)
+![GitHub](https://img.shields.io/github/license/prodakt/lncRna?style=plastic)
+![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna?style=plastic)
+![GitHub R package version](https://img.shields.io/github/r-package/v/prodakt/lncRna?color=gree&label=ver&style=plastic)
+
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/prodakt/lncRna?color=purple&style=plastic)
 ![GitHub repo size](https://img.shields.io/github/repo-size/prodakt/lncRna?color=yellow&label=size)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/prodakt/lncRna?color=white&label=activ)
