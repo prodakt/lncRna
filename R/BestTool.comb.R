@@ -10,6 +10,8 @@
 
 BestTool.comb <- function(BestPat, selectComb){
 
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
   dat <- as.factor(BestPat[,selectComb[1]])
   levels(dat) <- c("0","1")
   ref <- as.factor(BestPat$isNC)

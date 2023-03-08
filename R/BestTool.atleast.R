@@ -10,6 +10,8 @@
 
 BestTool.atleast <- function(BestPat){
 
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
   dat <- as.factor(BestPat[,2])
   levels(dat) <- c("0","1")
   ref <- as.factor(BestPat$isNC)
