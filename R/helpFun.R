@@ -1,4 +1,4 @@
-#' \%!in\% function
+#' \!in function
 #'
 #' This function is negation of "contains.
 #' @param x vector of values to be filtered
