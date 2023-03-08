@@ -187,7 +187,7 @@ read.lncRNA_Mdeep <- function(lncRNA_Mdeep_outfile){
 #' venn.CodPot(CodPot = CodPot_table, selmet = c(1,1,0,0,1))
 #'
 venn.CodPot <- function(CodPot, venncolors = c("green", "red", "blue", "yellow", "magenta", "black", "orange", "white", "darkgreen"), selmet=NULL){
-  require("venn")
+
   if(is.null(selmet)) selmet <- rep(1, ncol(CodPot)-1)
 
  lista <- list()
