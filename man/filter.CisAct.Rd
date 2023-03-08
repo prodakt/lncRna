@@ -4,7 +4,7 @@
 \alias{filter.CisAct}
 \title{A filter.CisAct function}
 \usage{
-filter.CisAct(
+\method{filter}{CisAct}(
   lncRNAs = NULL,
   mRNAs = NULL,
   FEELnc.classes,

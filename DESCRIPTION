@@ -11,7 +11,7 @@ Description: This is the package for lncRNA identification in a simple way.
 License: licence
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Depends:
   dplyr (>= 1.1.0)
 Imports:
