@@ -12,7 +12,12 @@ License: licence
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
+Depends:
+  dplyr (>= 1.1.0)
 Imports:
   caret,
   venn,
-  dplyr
+  Hmisc,
+  reshape2,
+  rhmmer,
+  ROCR
