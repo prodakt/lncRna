@@ -21,6 +21,6 @@ h.t <- function(table, n=3) {
 #' @keywords not in
 #' @export
 #' @examples
-#'
+#' A NotIn B
 
-'%!in%' <- function(x,y)!('%in%'(x,y))
+NotIn <- function(x,y)!('%in%'(x,y))
