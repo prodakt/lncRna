@@ -266,7 +266,7 @@ McnemarPValue     0.0000    0.0000    0.0000         0.0000
 You can also select and display or plot more detailed data of selected result
 ```
 selected <- "CPAT+CNCI"
-cm <- confusionMatrix(data = as.factor(BestPat3[,selected]),
+cm <- caret::confusionMatrix(data = as.factor(BestPat3[,selected]),
                       reference = as.factor(BestPat3$isNC),
                       positive = "1")
 cm
