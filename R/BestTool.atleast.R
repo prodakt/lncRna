@@ -15,7 +15,7 @@ BestTool.atleast <- function(BestPat){
   ref <- as.factor(BestPat$isNC)
   levels(ref) <- c("0","1")
 
-  cm <- confusionMatrix(data = dat,
+  cm <- caret::confusionMatrix(data = dat,
                         reference = ref, mode = "prec_recall", positive = "1")
 
   BP.atl <- data.frame(torem = cm$overall)
@@ -26,7 +26,7 @@ BestTool.atleast <- function(BestPat){
     levels(dat) <- c("0","1")
     levels(ref) <- c("0","1")
 
-    cm <- confusionMatrix(data = dat,
+    cm <- caret::confusionMatrix(data = dat,
                           reference = ref,
                           mode = "prec_recall", positive = "1")
 

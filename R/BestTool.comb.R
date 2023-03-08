@@ -15,7 +15,7 @@ BestTool.comb <- function(BestPat, selectComb){
   ref <- as.factor(BestPat$isNC)
   levels(ref) <- c("0","1")
 
-  cm <- confusionMatrix(data = dat,
+  cm <- caret::confusionMatrix(data = dat,
                         reference = ref, mode = "prec_recall", positive = "1")
 
   BP.cmb <- data.frame(torem = cm$overall)
@@ -27,7 +27,7 @@ BestTool.comb <- function(BestPat, selectComb){
     levels(dat) <- c("0","1")
     levels(ref) <- c("0","1")
 
-    cm <- confusionMatrix(data = dat,
+    cm <- caret::confusionMatrix(data = dat,
                           reference = ref,
                           mode = "prec_recall", positive = "1")
     cm <- data.frame(cm$overall)
