@@ -12,3 +12,15 @@ h.t <- function(table, n=3) {
   tbl.tmp <- rbind(head(table,n),"..." = rep("...", ncol(table)) ,tail(table,n))
   return(tbl.tmp)
 }
+
+#' NOTin function
+#'
+#' negation of IN.
+#' @param x vector
+#' @param y vector
+#' @keywords not in
+#' @export
+#' @examples
+#'
+
+'%!in%' <- function(x,y)!('%in%'(x,y))
