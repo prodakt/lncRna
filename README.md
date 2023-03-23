@@ -130,8 +130,8 @@ cds2train <- cds[names(cds) %in% cds_tt$cds.train]
 nc2train <- nc[names(nc) %in% nc_tt$nc.train]
 
 write.fasta(seqs2predict, names(seqs2predict), "seqs2predict.fa", nbchar = 80, as.string = T)
-write.fasta(seqs2train, names(seqs2train), "seqs2train.fa", nbchar = 80, as.string = T)
-write.fasta(seqs2test, names(seqs2test), "seqs2test.fa", nbchar = 80, as.string = T)
+write.fasta(cds2train, names(cds2train), "cds2train.fa", nbchar = 80, as.string = T)
+write.fasta(nc2train, names(nc2train), "nc2train.fa", nbchar = 80, as.string = T)
 ```
 
 ### IIa. Coding potential
