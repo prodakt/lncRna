@@ -73,7 +73,7 @@ table(known_biotypes$transcript_biotype)
 known_lncRNA <- known_biotypes[known_biotypes$transcript_biotype %in% "lncRNA",]$transcript_id # the list of lncRNA ID's
 #
 # extraction of known protein coding transcripts
-known_pcRNA <- known_biotypes[known_biotypes$transcript_biotype %in% "protein coding",]$transcript_id # the list of protein coding RNA ID's
+known_pcRNA <- known_biotypes[known_biotypes$transcript_biotype %in% "protein_coding",]$transcript_id # the list of protein coding RNA ID's
 
 # extracting from GTF merged with stringtie the basic features for lncRNA identification
 tab1 <- strGTF2stat(stringtieGTF = stringtieGTF)
