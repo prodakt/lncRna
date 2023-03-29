@@ -4,7 +4,7 @@
 #' @param lncRNAs the list of lncRNA IDs (genes or transcripts)
 #' @param mRNAs the list of mRNA IDs (genes or transcripts)
 #' @param FEELnc.classes the "classes" output file from FEELnc
-#' @param is.best filtering by the first collumn "is.best" (see https://github.com/tderrien/FEELnc#3--feelnc_classifierpl)
+#' @param is.best filtering by the first collumn "is.best" (see https://github.com/tderrien/FEELnc)
 #' @param lncRNA.level choose the "gene" or "transcript" level for lncRNA filtering
 #' @param mRNA.level choose the "gene" or "transcript" level for mRNA filtering
 #' @param max.dist the distance for cis-relation (default value is 100 000)
