@@ -20,4 +20,3 @@ refBiotypes <- function(refGTF, genes = F){
 
   return(known_biotypes)
 }
-
