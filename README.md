@@ -341,7 +341,7 @@ the third stage is to predict or estimate some functions and functional connecti
 lncRNA_transcripts <- unique(c(predicted_lncRNA, known_lncRNA))
 
 # cis acting genes
-cis <- filter.CisAct(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene", max.dist = 10000)  
+cis <- cisInter(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene", max.dist = 10000)  
 head(cis)
 
      isBest lncRNA_gene lncRNA_transcript    partnerRNA_gene partnerRNA_transcript direction       type distance     subtype location
