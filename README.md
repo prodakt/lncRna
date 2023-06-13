@@ -59,7 +59,7 @@ The package allows researchers to set up individual steps of the lncRNA identifi
 The package enables the combination of results from coding potential analyses in all possible combinations. By integrating multiple algorithms or strategies for coding potential assessment, researchers can leverage the strengths of different approaches and increase the accuracy and reliability of lncRNA predictions.
 - **Statistical Analysis**:<br/> 
 Our package incorporates advanced statistical analysis capabilities to compute key metrics such as accuracy and precision. These statistics provide quantitative measures to assess the performance of different pipelines and combinations of steps. Researchers can objectively evaluate the effectiveness of each pipeline and select the most appropriate combination for their specific research goals.
-- **Most Accurate Pipeline Execution**</br>: 
+- **Most Accurate Pipeline Execution**:</br> 
 Based on the statistical analysis results, the package allows researchers to run the most accurate pipeline for predicting lncRNAs in the most reliable manner. By considering the performance metrics obtained during the evaluation phase, researchers can confidently apply the selected pipeline to their transcriptomic data and obtain highly accurate predictions of lncRNA transcripts.
 
 By providing a user-friendly interface and comprehensive functionalities, our package empowers researchers to streamline the lncRNA identification process, optimize pipeline configurations, and achieve highly accurate predictions. This package serves as a valuable tool for advancing non-coding RNA research and facilitating new discoveries in the field.
