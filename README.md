@@ -10,7 +10,9 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/prodakt/lncRna?color=%23FF0000%20&label=last)
 
 
-is the R package for lncRNA identification in a simple way.
+## Introduction
+The lncRna is an R package designed to simplify the process of lncRNA identification, allowing researchers to set up and perform the analysis in a straightforward manner. This package provides a user-friendly interface for preprocessing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
+
 
 ## General description
 We are pleased to introduce our innovative package that simplifies the process of lncRNA identification in just a few easy steps. Our package is designed to provide researchers with a user-friendly and efficient tool for carrying out the lncRNA identification pipeline, while also allowing for validation of accuracy and precision to select the most appropriate pipeline for their specific needs.
