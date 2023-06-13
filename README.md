@@ -38,8 +38,11 @@ In general the pipieline consist of a few stages:
 </ul>
 <ul>  
   <b>III. Functions</b>
+  <li>under construction</li>
+  <!---
   <li>detection of cis and trans acting genes,</li>
   <li>functional analyses</li>
+-->
 </ul>
 <ul>  
   <b>IV. Structure</b>
