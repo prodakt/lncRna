@@ -53,7 +53,7 @@ In general the pipieline consist of a few stages:
 
 Our package provides a comprehensive set of functionalities to simplify the lncRNA identification process and enable researchers to select the most accurate pipeline for predicting lncRNAs. The key features of the package include:
 
-- Easy Setup of Individual Steps: 
+- **Easy Setup of Individual Steps**:<br/> 
 The package allows researchers to set up individual steps of the lncRNA identification process into pipelines in a simple and intuitive way. Users can easily define and customize each step, such as data preprocessing, feature extraction, and coding potential analysis, based on their specific requirements.
 - Combination of Results: 
 The package enables the combination of results from coding potential analyses in all possible combinations. By integrating multiple algorithms or strategies for coding potential assessment, researchers can leverage the strengths of different approaches and increase the accuracy and reliability of lncRNA predictions.
