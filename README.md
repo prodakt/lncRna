@@ -12,7 +12,18 @@
 
 is the R package for lncRNA identification in a simple way.
 
-This package allows to carry out the lncRNA identification pipeline in a few very simple steps. In general the pipieline consist of a few stages:
+## General description
+We are pleased to introduce our innovative package that simplifies the process of lncRNA identification in just a few easy steps. Our package is designed to provide researchers with a user-friendly and efficient tool for carrying out the lncRNA identification pipeline, while also allowing for validation of accuracy and precision to select the most appropriate pipeline for their specific needs.
+
+With our package, researchers can streamline their lncRNA identification process, saving valuable time and resources. The package offers a comprehensive set of tools and algorithms that have been specifically developed to accurately identify lncRNAs from large-scale transcriptomic data. By following a series of simple steps, researchers can easily preprocess their data, perform the identification analysis, and obtain meaningful results.
+
+One of the key features of our package is its ability to validate the accuracy and precision of the prepared pipelines. Researchers can evaluate the performance of different pipelines using various metrics and statistical analyses. This allows for an objective assessment of the results and facilitates the selection of the most appropriate pipeline for specific research objectives.
+
+This package stands out for its user-friendly interface, which ensures that researchers, regardless of their computational background, can easily navigate through the process. The intuitive design and clear instructions make it accessible to both beginners and experienced users, enhancing the adoption of the package across the scientific community.
+
+In summary,  lncRna package offers a streamlined, efficient, and accurate solution for researchers working in the field. Its simple step-by-step process, combined with the ability to validate and select the most suitable pipeline, ensures that researchers can confidently and successfully identify lncRNAs from their transcriptomic data. We believe that our package will greatly contribute to advancing lncRNA research and foster new discoveries in this exciting field.
+
+In general the pipieline consist of a few stages:
 <ul>
   <b>I. Annotated features:</b>
   <li>extraction of known lncRNA from reference GTF,</li>
