@@ -119,7 +119,7 @@ To filter out low expressed transcripts you can use 'count_matrix' file:
 transcripts_counts <- read.table("../transcript_count_matrix.csv", header = T, sep = ",", row.names = 1)
 expr <- rownames(transcripts_counts[rowSums(transcripts_counts) > 10,])
 ```
-or you can use 'strtie2expr()' function, but this function works only if you used counting option with [Stringtie](http://ccb.jhu.edu/software/stringtie/index.shtml?t=manual)
+You can also use the 'strtie2expr()' function, but this function only works if you have used the count option from [Stringtie](http://ccb.jhu.edu/software/stringtie/index.shtml?t=manual)
 ```
 strtie2expr(strdir = "stringtie_folder/", expunit = "FPKM" or "TPM")
 ```
