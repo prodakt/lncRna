@@ -351,6 +351,8 @@ The 'read.rfam()' function allows you to read Rfam output to tabular format.
 rfam <- read.rfam(rfam_outfile = ".../Rfam.out")
 ```
 
+
+### Summary of stages I and II
 The final list of predicted lncRNA should contains transcripts which:
 - are not protein coding
 - are longer than 200 nucleotides (but you can change it)
@@ -359,7 +361,7 @@ The final list of predicted lncRNA should contains transcripts which:
 - passed the potential coding tests (it is recommended to run a few independed methods to strengthen this step)
 - have no significant simmilarity with protein domains.
 
-
+<!--
 ```
 # if the coding potential tests were done on the whole transcriptome you should run:
 predicted_lncRNA <- tbl2[tbl2$seqIDs %in% pot_lncRNA,]
@@ -373,9 +375,12 @@ predicted_lncRNA <- predicted_lncRNA[predicted_lncRNA$seqIDs %!in% pfam,]
 # extract only the ID list
 predicted_lncRNA <- predicted_lncRNA$seqIDs
 ```
+-->
 
 
 ### III. Functional annotation
+<i>under construction</i>
+ <!--
 the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
 ```
 # combine tle list of both predicted and known lncRNA's
@@ -407,4 +412,7 @@ head(trans)
 
 
 ```
+-->
 
+### IV. Structural analysis
+<i>under construction</i>
