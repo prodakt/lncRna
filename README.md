@@ -139,7 +139,7 @@ pot_lncRNA <- pot_lncRNA[pot_lncRNA %in% rownames(transcripts_counts[rowSums(tra
 length(pot_lncRNA)
 [1] 27019
 ```
-The list of ENSEMBL ID from 'pot_lncRNA' is avaliable in the "test/mouse/pot_lncRNA.tab.tar.gz" file.
+The list of ENSEMBL ID from 'pot_lncRNA' is avaliable [here - the "pot_lncRNA.tab.tar.gz" file in the "test/mouse" folder](https://github.com/prodakt/lncRna/blob/main/test/mouse/pot_lncRNA.tab.tar.gz).
 
 In addition, you can prepare a set of sequences for accuracy analyzes of methods for predicting coding potential (see IIb). For this purpose, non-coding, coding reference sequences should be loaded and divided into a set for training, testing and proper prediction of coding potential.
 - [Used reference CDS sequences](https://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/cds/Mus_musculus.GRCm39.cds.all.fa.gz)
