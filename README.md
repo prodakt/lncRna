@@ -176,7 +176,7 @@ write.fasta(seqs2predict, names(seqs2predict), "seqs2predict.fa", nbchar = 80, a
 write.fasta(cds2train, names(cds2train), "cds2train.fa", nbchar = 80, as.string = T)
 write.fasta(nc2train, names(nc2train), "nc2train.fa", nbchar = 80, as.string = T)
 ```
-To get the 'cds_tt' and 'nc_tt' variables prepared as part of this tutorial, you can use the 'readRDS()' function and load the shared 'cds_tt.rds' and 'nc_tt.rds' files.
+To get the 'cds_tt' and 'nc_tt' variables prepared as part of this tutorial, you can use the 'readRDS()' function and load the shared '[cds_tt.rds](https://github.com/prodakt/lncRna/blob/main/test/mouse/cds_tt.rds)' and '[nc_tt.rds](https://github.com/prodakt/lncRna/blob/main/test/mouse/nc_tt.rds)' files.
 ```
 cds_tt <- readRDS("cds_tt.rds")
 nc_tt <- readRDS("nc_tt.rds")
