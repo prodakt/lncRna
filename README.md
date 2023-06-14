@@ -221,6 +221,7 @@ It is not necessary to read all mentioned files. If you don't have some of the r
 ```
 tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out", PLEK_outfile = ".../PLEK.out")
 ```
+Compressed folders containing selected results of the coding potential analysis are available [here. (lncRna/test/mouse/lncCodPot_MMus.rar and lncRna/test/mouse/lncCodPot_MMus.tar.bz2)](https://github.com/prodakt/lncRna/tree/main/test/mouse).
 
 You can easily draw the venn diagram for all used methods:
 ```
