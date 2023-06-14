@@ -96,6 +96,7 @@ the first stage is to read annotation files (reference GTF - prefered downloaded
 # reading GTF files
 stringtieGTF <- import.gff("stringtie/stringtie_merged.gtf")
 refGTF <- import.gff("reference.gtf") # prefered downloaded from ENSEMBL
+# refGTF <- import.gff("Mus_musculus.GRCm39.107.gtf")
 
 # extraction of known lncRNA
 known_biotypes <- refBiotypes(refGTF = refGTF)
