@@ -204,6 +204,7 @@ It is not necessary to read all mentioned files. If you don't have some of the r
 ```
 tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out", PLEK_outfile = ".../PLEK.out")
 ```
+
 You can easily draw the venn diagram for all used methods:
 ```
 venn.CodPot(CodPot = tbl2)
