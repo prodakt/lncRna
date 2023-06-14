@@ -200,7 +200,7 @@ CPAT <- read.CPAT(CPAT_outfile = ".../CPAT.out", CPAT_cutoff = CPATcutoff)
 tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out",
                    FEELnc_outfile = ".../feelnc_codpot_out/FEELnc_RF.txt",
                    CPAT_outfile = ".../CPAT.out",
-                   CPAT_cutoff = 0.78, # the CPAT_cutor is predefined for some organisms (0.78 for human) or you can calculate it using 'CPATcutoff()' function
+                   CPAT_cutoff = 0.64, # the CPAT_cutor is predefined for some organisms (0.64 for mouse) or you can calculate it using 'CPATcutoff()' function
                    PLEK_outfile = ".../PLEK.out",
                    LncFinder_outfile = ".../LncFinder_results.csv",
                    lncRNA_Mdeep_outfile = ".../Mdeep.out")
