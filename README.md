@@ -111,6 +111,14 @@ known_pcRNA <- known_biotypes[known_biotypes$transcript_biotype %in% "protein_co
 # extracting from GTF merged with stringtie the basic features for lncRNA identification
 tab1 <- strGTF2stat(stringtieGTF = stringtieGTF)
 head(tab1)
+
+       transcript_id exons trans_length
+1 ENSMUST00000000001     9         3262
+2 ENSMUST00000000003     7          902
+3 ENSMUST00000000010     2         2574
+4 ENSMUST00000000028     9         2158
+5 ENSMUST00000000033     4         3708
+6 ENSMUST00000000049     8         1190
 ```
 
 ### Ib. Expression level
@@ -199,6 +207,15 @@ tbl2 <- CodPot2tbl(CPC2_outfile = ".../CPC2.out",
                    
 
 head(tbl2)
+
+
+              seqIDs CPC2 PLEK FEELnc CPAT CNCI LncFinder
+1 ENSMUST00000193812    1    1      0    1    1         0
+2 ENSMUST00000082908    1    0      0    1    1         0
+3 ENSMUST00000192857    1    1      0    1    1         1
+4 ENSMUST00000195335    1    1      0    1    1         0
+5 ENSMUST00000192336    1    1      0    1    1         1
+6 ENSMUST00000194099    1    0      0    1    1         1
 ```
 It is not necessary to read all mentioned files. If you don't have some of the results you can simply omit arguments, i.e.:
 ```
