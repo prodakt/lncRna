@@ -91,6 +91,7 @@ library("rtracklayer")
 
 ### Ia. Annotated features 
 the first stage is to read annotation files (reference GTF - prefered downloaded from ENSEMBL database and GTF generated during or after mapping reads - prefered GTF file merged by Stringtie)
+- [Used reference GTF annotation file](https://ftp.ensembl.org/pub/release-107/gtf/mus_musculus/Mus_musculus.GRCm39.107.gtf.gz)
 ```
 # reading GTF files
 stringtieGTF <- import.gff("stringtie/stringtie_merged.gtf")
