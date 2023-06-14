@@ -7,3 +7,5 @@ Inside this folder, you will find various types of input and output data:
  - stringtie_merged.gtf.tar.gz - compressed stringtie_merged.gtf file
  - transcript_count_matrix.csv.tar.gz - comressed count matrix on transcript level
  - tab1.csv.tar.gz - compressed table 1 (variable named "tab1" in tutorial)
+ - nc_tt.rds - a binary file containing a list of non-coding ENSEMBL identifiers divided into two sets "test" and "train".
+ - cds_tt.rds - a binary file containing a list of protein coding ENSEMBL identifiers divided into two sets "test" and "train".
