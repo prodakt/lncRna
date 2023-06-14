@@ -4,4 +4,6 @@ models with diabetes, enabling researchers to test and train the lncRNA identifi
 
 Inside this folder, you will find various types of input and output data:
  - lncCodPot_MMus.rar and lncCodPot_MMus.tar.bz2 - compressed folders folder containing selected results of coding potential analysis 
- 
+ - stringtie_merged.gtf.tar.gz - compressed stringtie_merged.gtf file
+ - transcript_count_matrix.csv.tar.gz - comressed count matrix on transcript level
+ - 
