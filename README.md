@@ -11,21 +11,21 @@
 
 
 ## Introduction
-The lncRna is an R package designed to simplify the process of lncRNA identification, allowing researchers to set up and perform the analysis in a straightforward manner. This package provides a user-friendly interface for processing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
+The lncRna is an R package designed to simplify the process of lncRNA identification, it allows researchers to set up and perform the analysis in a straightforward manner. This package provides a user-friendly interface for processing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
 
 
 ## General description
-We are pleased to introduce our innovative package that simplifies the process of lncRNA identification in just a few easy steps. Our package is designed to provide researchers with a user-friendly and efficient tool for carrying out the lncRNA identification pipeline, while also allowing for validation of accuracy and precision to select the most appropriate pipeline for their specific needs.
+We are pleased to introduce our innovative package that simplifies the process of lncRNA identification in just a few easy steps. Our package is designed to provide researchers with a user-friendly and efficient tool to carry out the lncRNA identification, while also allowing for accuracy and precision validation to select the most appropriate pipeline for their specific needs.
 
-With our package, researchers can streamline their lncRNA identification process, saving valuable time and resources. The package offers a comprehensive set of tools and algorithms that have been specifically developed to accurately identify lncRNAs from large-scale transcriptomic data. By following a series of simple steps, researchers can easily preprocess their data, perform the identification analysis, and obtain meaningful results.
+With the package, researchers can streamline their lncRNA identification process, saving valuable time and resources. The package offers a comprehensive set of tools and algorithms that have been specifically developed to accurately identify lncRNAs from large-scale transcriptomic data. By following a series of simple steps, researchers can easily preprocess their data, perform the identification analysis, and obtain significant results.
 
-One of the key features of our package is its ability to validate the accuracy and precision of the prepared pipelines. Researchers can evaluate the performance of different pipelines using various metrics and statistical analyses. This allows for an objective assessment of the results and facilitates the selection of the most appropriate pipeline for specific research objectives.
+One of the key features of our package is ability to validate the accuracy and precision of the prepared pipelines. Researchers can evaluate the performance of different pipelines using various metrics and statistical analyses. This allows for an objective assessment of the results and facilitates the selection of the most appropriate pipeline for specific research objectives.
 
-This package stands out for its user-friendly interface, which ensures that researchers, regardless of their computational background, can easily navigate through the process. The intuitive design and clear instructions make it accessible to both beginners and experienced users, enhancing the adoption of the package across the scientific community.
+This package stands out for its user-friendly interface, which ensures that researchers, regardless of their computational background, can easily navigate through the process. The intuitive design and clear instructions make it accessible to both beginners and experienced users, enhancing the acknowledgement of the package across the scientific community.
 
-In summary,  lncRna package offers a streamlined, efficient, and accurate solution for researchers working in the field. Its simple step-by-step process, combined with the ability to validate and select the most suitable pipeline, ensures that researchers can confidently and successfully identify lncRNAs from their transcriptomic data. We believe that our package will greatly contribute to advancing lncRNA research and foster new discoveries in this exciting field.
+In summary, lncRna package offers a streamlined, efficient, and accurate solution for researchers working in the field. Its simple step-by-step process, combined with the ability to validate and select the most suitable pipeline, ensures that researchers can confidently and successfully identify lncRNAs from their transcriptomic data. We believe that our package will greatly contribute to advancing lncRNA research and foster new discoveries in this exciting field.
 
-In general the pipieline consist of a few stages:
+In general the pipeline consist of a few stages:
 <ul>
   <b>I. Annotated features:</b>
   <li>extraction of known lncRNA from reference GTF,</li>
@@ -49,6 +49,7 @@ In general the pipieline consist of a few stages:
   <li>under construction</li>
 </ul>
 
+
 ## Core functionality
 
 Our package provides a comprehensive set of functionalities to simplify the lncRNA identification process and enable researchers to select the most accurate pipeline for predicting lncRNAs. The key features of the package include:
@@ -56,7 +57,7 @@ Our package provides a comprehensive set of functionalities to simplify the lncR
 - **Easy Setup of Individual Steps**:<br/> 
 The package allows researchers to set up individual steps of the lncRNA identification process into pipelines in a simple and intuitive way. Users can easily define and customize each step, such as data preprocessing, feature extraction, and coding potential analysis, based on their specific requirements.
 - **Combination of Results**: <br/> 
-The package enables the combination of results from coding potential analyses in all possible combinations. By integrating multiple algorithms or strategies for coding potential assessment, researchers can leverage the strengths of different approaches and increase the accuracy and reliability of lncRNA predictions.
+The package enables merging of the results from coding potential analyses in all possible combinations. By integrating multiple algorithms or strategies for coding potential assessment, researchers can leverage the strength of different approaches and increase the accuracy and reliability of lncRNA predictions.
 - **Statistical Analysis**:<br/> 
 Our package incorporates advanced statistical analysis capabilities to compute key metrics such as accuracy and precision. These statistics provide quantitative measures to assess the performance of different pipelines and combinations of steps. Researchers can objectively evaluate the effectiveness of each pipeline and select the most appropriate combination for their specific research goals.
 - **Most Accurate Pipeline Execution**:</br> 
