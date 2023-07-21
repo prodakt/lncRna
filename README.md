@@ -331,7 +331,7 @@ AccuracyPValue    0.0000    0.0000    0.0000         0.0000
 McnemarPValue     0.0000    0.0000    0.0000         0.0000
 
 ```
-The functions to perform error analysis (...) were coded based on the confisionmatrix() function of the [CARET library](https://cran.r-project.org/web/packages/caret). Therefore, the output of the created functions is compatible with the format required by CARET library functions. The arguments of this function and the tests used are described in detail in the [CARET library manual](https://cran.r-project.org/web/packages/caret/caret.pdf) and the individual functions:
+The functions to perform error analysis (BestTool.comb(), BestTool.atleast() and BestTool()) were coded based on the confisionmatrix() function of the ['CARET' library](https://cran.r-project.org/web/packages/caret). Therefore, the output of the created functions is compatible with the format required by 'CARET' library functions. The arguments of this function and the tests used are described in detail in the [CARET library manual](https://cran.r-project.org/web/packages/caret/caret.pdf) and the individual functions:
 
 "The overall accuracy and unweighted Kappa statistic are calculated. The p-value from the McNemar test is also calculated using mcnemar.test (which can generate NA values with sparse tables).
 The overall accuracy rate is calculated along with a 95 percent confidence interval for that rate (using binom.test) and a one-sided test to see if the accuracy is better than the "missing information rate," which is taken as the largest percentage of class in the data. "
