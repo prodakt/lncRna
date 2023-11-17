@@ -42,6 +42,7 @@ BestTool <- function(BestPat, tools){
     BP.cpt <- cbind(BP.cpt,cm)
   }
   BP.cpt <- BP.cpt[,colnames(BP.cpt) %!in% "torem"]
-  colnames(BP.cpt)[1:ntools] <- colnames(BestPat)[c(1:ntools+1)]
+  #colnames(BP.cpt)[1:ntools] <- colnames(BestPat)[c(1:ntools+1)]
+  colnames(BP.cpt) <- tools
   return(BP.cpt)
 }
