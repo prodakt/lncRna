@@ -165,7 +165,17 @@ In addition, you can prepare a set of sequences for accuracy analysis of methods
 cds <- read.fasta("Mus_musculus.GRCm39.cds.all.fa", seqtype = "DNA", as.string = T, set.attributes = F)
 nc <- read.fasta("Mus_musculus.GRCm39.ncrna.fa", seqtype = "DNA", as.string = T, set.attributes = F)
 
-# here you can use "pot_lncRNA" or load assembled merged transcriptome 
+# Preparation of the nucleotide sequences files for external programs for the prediction of coding potential
+# Here you are preparing 5 groups of sequences in 3 files:
+# - known non coding sequences to train the models in external tools (the "nc2train.fa" file),
+# - known protein coding sequences to train the models in external tools (the "cds2train.fa" file),
+# - known non coding sequences to test the results (part of the "seqs2predict.fa" file),
+# - known protein coding sequences to test the results (part of the "seqs2predict.fa" file),
+# - unknown/potentially non-coding sequences to predict the coding potential (part of the "seqs2predict.fa" file).
+
+# here you can use the list of sequences previously filtered and stored in the "pot_lncRNA" variable
+seqs2predict <- pot_lncRNA
+# or load assembled merged transcriptome (the whole transcriptome without the first filtering)
 seqs2predict <- read.fasta("lncRNA/merged_transtriptome.fa", seqtype = "DNA", as.string = T, set.attributes = F)
 
 # splitting into training and test sets
