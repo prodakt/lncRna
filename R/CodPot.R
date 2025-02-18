@@ -200,7 +200,8 @@ venn.CodPot <- function(CodPot, venncolors = c("green", "red", "blue", "yellow",
 
  venn::venn(lista,
             zcolor = venncolors[1:sum(selmet)],
-            snames = colnames(CodPot[which(selmet == 1)+1])
+            snames = colnames(CodPot[which(selmet == 1)+1]),
+            ilabels = T
  )
 }
 
