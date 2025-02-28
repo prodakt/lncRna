@@ -30,7 +30,7 @@ standardized format.
 \details{
 \code{predictions} and \code{labels} can simply be vectors of the same
 length. However, in the case of cross-validation data, different
-cross-validation runs can be provided as the *columns* of a matrix or
+cross-validation runs can be provided as the \emph{columns} of a matrix or
 data frame, or as the entries of a list. In the case of a matrix or
 data frame, all cross-validation runs must have the same length, whereas
 in the case of a list, the lengths can vary across the cross-validation

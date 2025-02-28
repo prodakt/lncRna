@@ -1,6 +1,6 @@
-Package: lncRna
+Package: lncRnaV2
 Title: Long Non-coding RNA Identification
-Version: 1.0.0
+Version: 1.2.0
 Authors@R: 
     person(given = "Jan Pawel",
            family = "Jastrzebski",
@@ -11,7 +11,8 @@ Description: This is the package for lncRNA identification in a simple way.
 License: licence
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
 Depends:
   dplyr (>= 1.1.0)
 Imports:
@@ -20,4 +21,16 @@ Imports:
   Hmisc,
   reshape2,
   rhmmer,
-  ROCR
+  ROCR,
+  rtracklayer,
+  seqinr,
+  gprofiler2,
+  ggplot2,
+  tidyr,
+  fmsb,
+  Polychrome,
+  plotly,
+  scales,
+  patchwork
+Suggests: 
+    testthat (>= 3.0.0)

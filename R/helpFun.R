@@ -24,3 +24,4 @@ h.t <- function(table, n=3) {
 #' A NotIn B
 
 NotIn <- function(x,y)!('%in%'(x,y))
+

@@ -6,11 +6,10 @@
 #' @param cds.fa the variable containing sequences in fasta format (from read.fasta() function from seqinr library)
 #' @param percent_train the ratio value to divide the input set (he default is 0.6, which means that 60\% of the sequence is to be allocated to the training set)
 #'
-#' @keywords training test proportion lncRNA
-#' @export
 #' @examples
-#' cds <- read.fasta("lncRNA/Mus_musculus.GRCm39.cds.all.fa", seqtype = "DNA", as.string = T, set.attributes = F)
-#' cds_tt <- test.train.cds(cds.fa = cds, percent_train = 0.6)
+#' # cds <- read.fasta("lncRNA/Mus_musculus.GRCm39.cds.all.fa", seqtype = "DNA", as.string = T, set.attributes = F)
+#' # cds_tt <- test.train.cds(cds.fa = cds, percent_train = 0.6)
+#' @export
 
 test.train.cds <- function(cds.fa, percent_train = 0.6){
   cds <- names(cds)
