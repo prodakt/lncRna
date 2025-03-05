@@ -100,9 +100,9 @@ prepare_data_type_plot <- function(data) {
   link <- rbind(GOprot, LNCprot)
   link$value <- 1
   
-  node <- data.frame(name = unique(c(link$source, link$type)), stringsAsFactors = FALSE)
+  node <- data.frame(name = unique(c(link$source, link$target)), stringsAsFactors = FALSE)
   link$IDsource <- match(link$source, node$name) - 1
-  link$IDtype <- match(link$type, node$name) - 1
+  link$IDtarget <- match(link$target, node$name) - 1
   list(link = link, node = node)
 }
 
