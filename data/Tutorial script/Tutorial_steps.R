@@ -5,7 +5,7 @@ install.packages("devtools")
 library("devtools")
 
 # Next you should download the 'lncRna' library from GitHub and load it in your environment
-install_github("prodakt/lncRna", force = T) # if got error use : options(timeout=400)
+install_github("prodakt/lncRna@test", force = T) # if got error use : options(timeout=400)
 #options(timeout=400) 
 # If you want you can load all packages by yourself on the beginning
 
@@ -318,6 +318,50 @@ trans_gostres <- gost(query = trans_table$targetRNA.id,
 trans_gostres <- trans_gostres$result
 head(trans_gostres)
 
+# lncRNA-mRNA
+LncTar_interact <- read.table(file = "data/DELs_vs_DEGs_LncTar.txt", header = T)
+
+LncTar_gostres <- gost(query = LncTar_interact$Target, 
+                       organism = "mmusculus", ordered_query = FALSE, 
+                       multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                       measure_underrepresentation = FALSE, evcodes = TRUE, 
+                       user_threshold = 0.05, correction_method = "g_SCS", 
+                       domain_scope = "annotated", custom_bg = NULL, 
+                       numeric_ns = "", sources = NULL, as_short_link = FALSE)
+
+LncTar_gostres <- LncTar_gostres$result
+head(trans_gostres)
+
+#
+LncTar <- interactions_merge(gprof = LncTar_gostres, interaction_table = LncTar_interact, type = "LncTar")
+
+# LION interactions lncRNA-protein
+LION <- read.csv2(file = "data/LION_results_part.csv", header = T)
+
+nrow(LION[LION$RPISeq_retrain_pred %in% "Interact", ])
+nrow(LION[LION$rpiCOOL_retrain_pred %in% "Interact", ])
+nrow(LION[LION$LION_pred %in% "Interact", ])
+
+LION[LION$LION_pred %in% "Interact", ]$Pro_Name
+
+LIONGOin1 <- LION[LION$LION_pred %in% "Interact", ]$Pro_Name
+LIONGOin2 <- LION[LION$rpiCOOL_retrain_pred %in% "Interact", ]$Pro_Name
+LIONGOin3 <- LION[LION$RPISeq_retrain_pred %in% "Interact", ]$Pro_Name
+  
+LION_gostres <- gost(query = c(LIONGOin1,LIONGOin2,LIONGOin3), 
+                     organism = "mmusculus", ordered_query = FALSE, 
+                     multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                     measure_underrepresentation = FALSE, evcodes = TRUE, 
+                     user_threshold = 0.05, correction_method = "g_SCS", 
+                     domain_scope = "annotated", custom_bg = NULL, 
+                     numeric_ns = "", sources = NULL, as_short_link = FALSE)
+
+LION_gostres <- LION_gostres$result
+head(LION_gostres)
+
+# Process interactions
+Test <- process_interactions(gprof = trans_gostres, interaction_table = trans_table, type = "banana")
+
 # Create a table of cis interactions of protein coding genes with lncRNAs 
 cis <- cis_interactions(cis_gprof = cis_gostres, cis_table = cis_table)
 head(cis)
@@ -331,7 +375,7 @@ combined_table <- rbind(trans,cis)
 
 # You can use different functions for creating plot
 #plot_by_action
-plot_by_action(data = combined_table, cis = T, trans = T, label = T)
+plot_by_action(data = combined_table, cis = T, trans = F, label = T)
 
 #plot_by_lnc
 plot_by_lnc(data = combined_table, select_lnc = c("ENSMUSG00000106858", "ENSMUSG00000002769"), label = T)
@@ -341,3 +385,9 @@ plot_by_target(data = combined_table, select_target = c("ENSMUSG00000000731","EN
 
 #plot_by_terms
 plot_by_terms(data = combined_table, select_terms = "response to stress", label = T)
+plot_by_terms(data = Test, label = T)
+
+
+plot_by_type(data = Test, label = T)
+plot_by_type(data = Test, type = "cis", label = T)
+plot_by_type(data = Test, type = c("cis", "LncTar"), label = T)

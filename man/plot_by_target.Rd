@@ -50,9 +50,6 @@ Creates a Sankey diagram visualizing the connections of nodes to selected target
 }
 \examples{
 # Assuming 'combined_table' is your gProfiler interaction data frame
-# fig <- plot_by_target(data = combined_table)
-
-# with selected target protein coding genes
 # fig <- plot_by_target(data = combined_table, select_target = c("gene1", "gene2"), color_selected = TRUE)
 # fig # Display the plot
 

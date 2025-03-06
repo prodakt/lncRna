@@ -1,12 +1,13 @@
 #' Plot Sankey Diagram by Specified Interaction Types
 #'
-#' Creates a Sankey diagram visualizing interactions from a gProfiler output table, 
-#' filtered by user-specified interaction types. Allows customization of labels, colors, and titles.
+#' Creates a Sankey diagram visualizing interactions from a gProfiler output table,
+#' filtered by user-specified interaction types, with interactive type selection from the console if not specified.
+#' Allows customization of labels, colors, and titles.
 #'
 #' @param data data.frame. A data frame containing gProfiler interaction results.
 #'        Must include columns: `term_name`, `intersection`, `lncRNA.id`, `type`, and optionally `source`.
-#' @param type character vector. Specifies the interaction types to include in the plot (e.g., "cis", "trans", "TAR").
-#'        Must match values in the `type` column of `data`. At least one type must be specified.
+#' @param type character vector, optional. Specifies the interaction types to include in the plot (e.g., "cis", "trans", "TAR").
+#'        Must match values in the `type` column of `data`. If missing, user will be prompted to choose from console.
 #' @param label logical, optional. If `TRUE`, shows node labels. If `FALSE` (default), no labels are shown.
 #' @param color character, optional. Single color for all nodes and links. If `NULL` (default), uses a random palette.
 #' @param title character, optional. Diagram title. If `NULL` (default), no title is displayed.
@@ -17,16 +18,20 @@
 #' # Assuming 'combined_table' is your gProfiler interaction data frame
 #'
 #' # Example 1: Plot only "cis" interactions
-#' # fig1 <- plot_by_action(data = combined_table, type = "cis")
+#' # fig1 <- plot_by_type(data = combined_table, type = "cis")
 #' # fig1 # Display the plot
 #'
 #' # Example 2: Plot "cis" and "trans" interactions
-#' # fig2 <- plot_by_action(data = combined_table, type = c("cis", "trans"), label = TRUE)
+#' # fig2 <- plot_by_type(data = combined_table, type = c("cis", "trans"), label = TRUE)
 #' # fig2 # Display the plot
 #'
 #' # Example 3: Plot custom interaction type with a title and color
-#' # fig3 <- plot_by_action(data = combined_table, type = "TAR", title = "TAR Interactions", color = "blue")
+#' # fig3 <- plot_by_type(data = combined_table, type = "TAR", title = "TAR Interactions", color = "blue")
 #' # fig3 # Display the plot
+#'
+#' # Example 4: Interactive type selection from console
+#' # fig4 <- plot_by_type(data = combined_table) # User will be prompted to select type
+#' # fig4 # Display the plot
 #'
 #' @import plotly
 #' @import Polychrome
@@ -34,7 +39,7 @@
 #' @export
 plot_by_type <- function(data, type, label = FALSE, color = NULL, title = NULL) {
   # Validate inputs and filter data
-  data <- validate_inputs_type_plot(data, type)
+  type <- validate_inputs_type_plot(data, type)
   
   # Prepare Sankey data
   sankey_data <- prepare_data_type_plot(data)
@@ -53,6 +58,7 @@ plot_by_type <- function(data, type, label = FALSE, color = NULL, title = NULL) 
 #' Validate Inputs for Plot by Interaction Types
 #'
 #' Ensures the input data has required columns and filters interactions based on user-specified types.
+#' If type is not specified, prompts user to select from console.
 #'
 #' @param data data.frame. Input data frame.
 #' @param type character vector. Interaction types to include.
@@ -65,16 +71,43 @@ validate_inputs_type_plot <- function(data, type) {
     stop("Input 'data' must contain columns: ", paste(required_columns, collapse = ", "))
   }
   
-  # Validate type parameter
-  if (missing(type) || is.null(type) || length(type) == 0 || !is.character(type)) {
-    stop("'type' must be a non-empty character vector specifying interaction types.")
+  # Handle missing type parameter - interactive selection
+  if (missing(type) || is.null(type)) {
+    unique_types <- unique(data$type)
+    if(length(unique_types) == 0) {
+      stop("No interaction types found in 'type' column of the data.")
+    }
+    cat("Available interaction types in 'type' column:\n")
+    for (i in seq_along(unique_types)) {
+      cat(paste0(i, ". ", unique_types[i], "\n"))
+    }
+    type_choice_index <- readline(prompt = "Choose type number from console or type 'all' for all types: ")
+    
+    if(tolower(type_choice_index) == 'all'){
+      type <- unique_types
+    } else {
+      type_choice_index <- as.integer(type_choice_index)
+      if (is.na(type_choice_index) || type_choice_index < 1 || type_choice_index > length(unique_types)) {
+        stop("Invalid input. Please choose a number from the list or type 'all'.")
+      }
+      type <- unique_types[type_choice_index]
+    }
+    cat("You selected interaction type(s): ", paste(type, collapse = ", "), "\n")
+  } else {
+    # Validate type parameter if provided
+    if (!is.character(type)) {
+      stop("'type' must be a character vector specifying interaction types.")
+    }
+    if (length(type) == 0) {
+      stop("'type' must be a non-empty character vector specifying interaction types.")
+    }
+    # Check if all specified type types exist in data
+    if (!all(type %in% unique(data$type))) {
+      missing_types <- type[!type %in% unique(data$type)]
+      stop("Specified interaction types not found in data: ", paste(missing_types, collapse = ", "))
+    }
   }
   
-  # Check if all specified type types exist in data
-  if (!all(type %in% unique(data$type))) {
-    missing_types <- type[!type %in% unique(data$type)]
-    stop("Specified interaction types not found in data: ", paste(missing_types, collapse = ", "))
-  }
   
   # Filter data based on type types
   data <- data[data$type %in% type, ]
@@ -85,6 +118,7 @@ validate_inputs_type_plot <- function(data, type) {
   
   return(data)
 }
+
 
 #' Prepare Sankey Data
 #'
@@ -122,7 +156,7 @@ set_sankey_colors_type_plot <- function(sankey_data, color) {
   } else {
     node$color <- color
   }
-  link$color <- node$color[link$IDtype + 1]
+  link$color <- node$color[link$IDtarget + 1]
   list(node = node, link = link)
 }
 
@@ -147,7 +181,7 @@ create_sankey_type_plot <- function(sankey_data, label, title) {
   )
   plot_link <- list(
     source = link$IDsource,
-    type = link$IDtype,
+    target = link$IDtarget,
     value = link$value,
     color = link$color
   )

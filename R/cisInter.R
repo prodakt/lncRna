@@ -34,5 +34,7 @@ cisInter <-function(lncRNAs = NULL, mRNAs = NULL, FEELnc.classes, is.best=T, lnc
 
   }
   cis <- cis[cis$distance <= max.dist,]
+  names(cis)[names(cis) == 'lncRNA_gene'] <- 'lncRNA.id'
+  names(cis)[names(cis) == 'partnerRNA_gene'] <- 'targetRNA.id'
   return(cis)
 }

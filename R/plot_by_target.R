@@ -18,9 +18,6 @@
 #'
 #' @examples
 #' # Assuming 'combined_table' is your gProfiler interaction data frame
-#' # fig <- plot_by_target(data = combined_table)
-#' 
-#' # with selected target protein coding genes
 #' # fig <- plot_by_target(data = combined_table, select_target = c("gene1", "gene2"), color_selected = TRUE)
 #' # fig # Display the plot
 #'
@@ -43,7 +40,6 @@ plot_by_target <- function(data, select_target = NULL, label = FALSE, color = NU
   
   return(fig)
 }
-
 #' Validate and Prepare Data for Target Plotting
 #'
 #' Ensures the input data is valid and prepares it based on target selection and coloring options.
