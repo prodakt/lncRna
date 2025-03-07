@@ -11,7 +11,7 @@
 
 
 ## Introduction
-The lncRna is an R package designed to simplify the process of lncRNA identification, it allows researchers to set up and perform the analysis in a straightforward manner. This package provides a step_by_Step.R script for better understanding of this package. It, can be accesed through /data catalog, in /Tutorial_script .  This package provides a user-friendly interface for processing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
+The lncRna is an R package designed to simplify the process of lncRNA identification, it allows researchers to set up and perform the analysis in a straightforward manner. This package includes a step-by-step tutorial script (step_by_Step.R) to help you get started. You can find it in the /data catalog, under /Tutorial_script. This package provides a user-friendly interface for processing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
 
 
 ## General description
