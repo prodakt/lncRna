@@ -37,12 +37,20 @@
 #' @import Polychrome
 #' @import dplyr
 #' @export
-plot_by_type <- function(data, type, label = FALSE, color = NULL, title = NULL) {
+plot_by_type <- function(data, type = NULL, label = FALSE, color = NULL, title = NULL, color_selected = FALSE) {
   # Validate inputs and filter data
-  type <- validate_inputs_type_plot(data, type)
+  validate_inputs_type_plot(data, type)
+  
+  # Handle interactive term selection if select_terms is NULL
+  if (is.null(type)) {
+    selected_type <- interactive_types_selection(data)
+  }
+  
+  # Prepare data based on selection
+  prepared_data <- prepare_data_type(data, selected_type, color_selected)
   
   # Prepare Sankey data
-  sankey_data <- prepare_data_type_plot(data)
+  sankey_data <- prepare_data_type_plot(prepared_data$data)
   
   # Set colors for nodes and links
   sankey_data <- set_sankey_colors_type_plot(sankey_data, color)
@@ -71,65 +79,76 @@ validate_inputs_type_plot <- function(data, type) {
     stop("Input 'data' must contain columns: ", paste(required_columns, collapse = ", "))
   }
   
-  # Handle missing type parameter - interactive selection
-  if (missing(type) || is.null(type)) {
-    unique_types <- unique(data$type)
-    if(length(unique_types) == 0) {
-      stop("No interaction types found in 'type' column of the data.")
-    }
-    cat("Available interaction types in 'type' column:\n")
-    for (i in seq_along(unique_types)) {
-      cat(paste0(i, ". ", unique_types[i], "\n"))
-    }
-    type_choice_index <- readline(prompt = "Choose type number from console or type 'all' for all types: ")
-    
-    if(tolower(type_choice_index) == 'all'){
-      type <- unique_types
-    } else {
-      type_choice_index <- as.integer(type_choice_index)
-      if (is.na(type_choice_index) || type_choice_index < 1 || type_choice_index > length(unique_types)) {
-        stop("Invalid input. Please choose a number from the list or type 'all'.")
-      }
-      type <- unique_types[type_choice_index]
-    }
-    cat("You selected interaction type(s): ", paste(type, collapse = ", "), "\n")
-  } else {
-    # Validate type parameter if provided
-    if (!is.character(type)) {
-      stop("'type' must be a character vector specifying interaction types.")
-    }
-    if (length(type) == 0) {
-      stop("'type' must be a non-empty character vector specifying interaction types.")
-    }
-    # Check if all specified type types exist in data
-    if (!all(type %in% unique(data$type))) {
-      missing_types <- type[!type %in% unique(data$type)]
-      stop("Specified interaction types not found in data: ", paste(missing_types, collapse = ", "))
-    }
-  }
-  
-  
-  # Filter data based on type types
-  data <- data[data$type %in% type, ]
-  
-  if (nrow(data) == 0) {
-    stop("No data to plot after filtering with specified types.")
-  }
-  
-  return(data)
 }
 
+#' Interactive Type Selection
+#'
+#' @param data data.frame. Input data frame.
+#' @return character vector. Selected types.
+#' @noRd
+interactive_types_selection <- function(data) {
+  # Get unique types from the type column
+  available_types <- unique(data$type)
+  
+  # Display selection options starting with "1. All types"
+  cat("Select type to plot:\n")
+  cat("1. All types\n")
+  for (i in seq_along(available_types)) {
+    cat(paste0(i + 1, ". ", available_types[i], "\n"))
+  }
+  
+  # Prompt user for input
+  selected_indices_str <- readline(prompt = "Enter the number(s) (comma-separated, e.g., 1 or 2,3): ")
+  selected_indices <- as.integer(strsplit(selected_indices_str, ",")[[1]])
+  
+  # Validate input
+  if (length(selected_indices) == 0 || any(is.na(selected_indices))) {
+    stop("Invalid input: please enter comma-separated numbers.")
+  }
+  
+  # Check if "1" (All types) is selected
+  if (1 %in% selected_indices) {
+    cat("You selected: All types\n")
+    return(available_types)
+  } else {
+    # Adjust indices since individual types start at 2
+    type_indices <- selected_indices - 1
+    if (any(type_indices < 1) || any(type_indices > length(available_types))) {
+      stop("Invalid selection: please enter numbers between 1 and ", length(available_types) + 1, ".")
+    }
+    select_types <- available_types[type_indices]
+    cat("You selected types: ", paste(select_types, collapse = ", "), "\n")
+    return(select_types)
+  }
+}
+
+#' Prepare filtered Data for Sankey Diagram
+#'
+#' @param data data.frame. Input data frame.
+#' @param select_type character vector. Selected types.
+#' @param color_selected logical. Color selection flag.
+#' @return list. Contains 'data' (filtered or full data) and 'pathway' (selected data if color_selected is TRUE).
+#' @noRd
+prepare_data_type <- function(data, select_type, color_selected) {
+  if (color_selected) {
+    pathway <- data[data$type %in% select_type, ]
+    return(list(data = data, pathway = pathway))
+  } else {
+    filtered_data <- data[data$type %in% select_type, ]
+    return(list(data = filtered_data, pathway = NULL))
+  }
+}
 
 #' Prepare Sankey Data
 #'
 #' Constructs link and node data frames from filtered interaction data.
 #'
-#' @param data data.frame. Filtered data frame.
+#' @param sankey_data data.frame. Filtered data frame.
 #' @return list. Contains `link` and `node` data frames for Sankey plotting.
 #' @noRd
-prepare_data_type_plot <- function(data) {
-  GOprot <- data.frame(source = data$intersection, target = data$term_name, stringsAsFactors = FALSE)
-  LNCprot <- data.frame(source = data$lncRNA.id, target = data$intersection, stringsAsFactors = FALSE)
+prepare_data_type_plot <- function(sankey_data) {
+  GOprot <- data.frame(source = sankey_data$intersection, target = sankey_data$term_name, stringsAsFactors = FALSE)
+  LNCprot <- data.frame(source = sankey_data$lncRNA.id, target = sankey_data$intersection, stringsAsFactors = FALSE)
   
   link <- rbind(GOprot, LNCprot)
   link$value <- 1

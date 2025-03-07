@@ -1,0 +1,65 @@
+---
+title: "lncRNA Tutorial: A Step-by-Step Guide to lncRNA Identification and Functional Analysis"
+author: "Jan Jastrzebski"
+date: "2025-03-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+# lncRNA Tutorial: A Step-by-Step Guide to lncRNA Identification and Functional Analysis
+
+This tutorial demonstrates how to use the `lncRna` R package to identify long non-coding RNAs (lncRNAs) from transcriptomic data, evaluate coding potential prediction tools, and perform functional annotation and visualization. The script is divided into clear sections with detailed explanations and code snippets.
+
+## Table of Contents
+1. [Setup](#1-setup)
+2. [Data Loading](#2-data-loading)
+3. [Expression Level Filtering and Sequence Preparation](#3-expression-level-filtering-and-sequence-preparation)
+4. [Coding Potential Prediction Analysis](#4-coding-potential-prediction-analysis)
+5. [Best Accuracy Analysis of Coding Potential Prediction Tools](#5-best-accuracy-analysis-of-coding-potential-prediction-tools)
+6. [Visualizing Confusion Matrix Statistics](#6-visualizing-confusion-matrix-statistics)
+7. [Functional Annotation of Predicted lncRNAs](#7-functional-annotation-of-predicted-lncrnas)
+8. [Investigating lncRNA-mRNA Interactions](#8-investigating-lncrna-mrna-interactions)
+9. [Functional Enrichment Analysis](#9-functional-enrichment-analysis)
+10. [Visualizing Functional Interaction Results](#10-visualizing-functional-interaction-results)
+
+---
+
+## 1. Setup
+
+This section prepares your R environment by installing and loading necessary packages and defining custom operators.
+
+### 1.1 Install and Load 'devtools'
+```R
+# Install 'devtools' from CRAN if not already installed
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+library(devtools)  # Load devtools for GitHub package installation
+
+# Install 'lncRna' from the 'test' branch on GitHub
+# Increase timeout if needed: options(timeout = 400)
+install_github("prodakt/lncRna@test", force = TRUE)
+library(lncRna)  # Load the package
+
+### 1.2 Install and Load 'lncRna' from GitHub
+
+Installs the lncRna package from the test branch of your GitHub repository.
+
+'''R
+# Install 'lncRna' from GitHub (test branch)
+install_github("prodakt/lncRna@test", force = TRUE)
+library("lncRna")
+
+### 1.3 Load Other Required R Packages
+
+Loads additional packages using a helper function from lncRna.
+
+'''R
+# Load additional packages
+load_packages(additional_packages = c("dplyr", "patchwork"), "plotly")
+

@@ -4,7 +4,14 @@
 \alias{plot_by_type}
 \title{Plot Sankey Diagram by Specified Interaction Types}
 \usage{
-plot_by_type(data, type, label = FALSE, color = NULL, title = NULL)
+plot_by_type(
+  data,
+  type = NULL,
+  label = FALSE,
+  color = NULL,
+  title = NULL,
+  color_selected = FALSE
+)
 }
 \arguments{
 \item{data}{data.frame. A data frame containing gProfiler interaction results.

@@ -55,7 +55,7 @@
 #' @export
 clock_plot_cm <- function(cm_list, methods = NULL, 
                           metrics = c("Accuracy", "Sensitivity", "Specificity", "Precision", "Recall"),
-                          plot_title = "Clock Plot of Metrics", colors = NULL, layout = "single", ...) {
+                          plot_title = "Clock Plot of Metrics", colors = NULL, layout = "single",...) {
   layout <- match.arg(layout, choices = c("single", "multiple"))
   
   # Validate and prepare inputs
@@ -72,6 +72,7 @@ clock_plot_cm <- function(cm_list, methods = NULL,
   
   # Draw clock plot based on layout
   plot_clock(clock_data, plot_title, colors, layout, ...)
+  
 }
 
 #######################################
@@ -80,23 +81,24 @@ clock_plot_cm <- function(cm_list, methods = NULL,
 #' Validate Inputs for Clock Plot Functions
 #'
 #' Validates the input list of confusion matrices, selected methods, and metrics
-#' to ensure they are in the correct format for clock plot generation. This function
-#' handles interactive method selection when methods are not explicitly provided.
+#' to ensure they are in the correct format for clock plot generation. When methods
+#' are not provided, it offers an interactive prompt with "All methods" as the first option.
 #'
 #' @param cm_list list. A named list of confusion matrix objects.
-#' @param methods character vector, optional.  Vector of method names to be plotted, or NULL for interactive selection.
+#' @param methods character vector, optional. Vector of method names to be plotted, or NULL for interactive selection.
 #' @param metrics character vector. Vector of metric names to be plotted.
 #'
 #' @return list. Returns a list containing validated `cm_list`, `methods`, and `metrics`.
 #'
 #' @noRd
 validate_inputs_clock_plot <- function(cm_list, methods, metrics) {
+  # Check if cm_list is a valid named list
   if (!is.list(cm_list) || is.null(names(cm_list)) || length(names(cm_list)) == 0) {
     stop("cm_list must be a named list of confusion matrix objects.")
   }
   available_methods <- names(cm_list)
   
-  # Define valid metrics
+  # Define valid metrics (assuming these are typical confusion matrix metrics)
   valid_metrics <- unique(c("Accuracy", "Sensitivity", "Specificity", "Precision", "Recall",
                             "Pos Pred Value", "Neg Pred Value", "F1", "Prevalence",
                             "Detection Rate", "Detection Prevalence", "Balanced Accuracy",
@@ -105,34 +107,47 @@ validate_inputs_clock_plot <- function(cm_list, methods, metrics) {
   # Interactive method selection if methods is NULL
   if (is.null(methods)) {
     cat("Available methods in cm_list:\n")
+    cat("1. All methods\n")
     for (i in seq_along(available_methods)) {
-      cat(paste0(i, ". ", available_methods[i], "\n"))
+      cat(paste0(i + 1, ". ", available_methods[i], "\n"))
     }
-    selected_indices_str <- readline(prompt = "Select method numbers (comma-separated, e.g., 1,3): ")
+    selected_indices_str <- readline(prompt = "Select method numbers (comma-separated, e.g., 1 or 2,3): ")
     selected_indices <- as.numeric(strsplit(selected_indices_str, ",")[[1]])
     
+    # Validate input
     if (any(is.na(selected_indices))) {
       stop("Error: Invalid input. Please enter numbers separated by commas.")
     }
-    if (any(selected_indices < 1 | selected_indices > length(available_methods))) {
+    if (any(selected_indices < 1 | selected_indices > length(available_methods) + 1)) {
       stop(sprintf("Error: Method index out of range. Please select indices between 1 and %d.", 
-                   length(available_methods)))
+                   length(available_methods) + 1))
     }
-    methods <- available_methods[selected_indices]
-    cat(sprintf("You selected methods: '%s'\n", paste(methods, collapse = "', '")))
+    
+    # Handle "All methods" or specific selections
+    if (1 %in% selected_indices) {
+      methods <- available_methods
+      cat("You selected: All methods\n")
+    } else {
+      # Adjust indices since "All methods" is 1, and individual methods start from 2
+      adjusted_indices <- selected_indices - 1
+      methods <- available_methods[adjusted_indices]
+      cat(sprintf("You selected methods: '%s'\n", paste(methods, collapse = "', '")))
+    }
   } else if (!all(methods %in% available_methods)) {
-    stop(sprintf("Methods  not in cm_list. Available: .",
+    # Validate explicitly provided methods
+    stop(sprintf("Methods '%s' not in cm_list. Available: '%s'.",
                  paste(methods[!methods %in% available_methods], collapse = "', '"),
                  paste(available_methods, collapse = "', '")))
   }
   
   # Validate metrics
   if (!all(metrics %in% valid_metrics)) {
-    stop(sprintf("Invalid metrics . Valid options: .",
+    stop(sprintf("Invalid metrics '%s'. Valid options: '%s'.",
                  paste(metrics[!metrics %in% valid_metrics], collapse = "', '"),
                  paste(valid_metrics, collapse = "', '")))
   }
   
+  # Return validated inputs
   list(cm_list = cm_list, methods = methods, metrics = metrics)
 }
 
@@ -197,7 +212,7 @@ set_colors <- function(colors, n_methods) {
 #' @param layout character. Specifies "single" or "multiple" layout.
 #' @param ... Additional arguments passed to `draw_single_clock_plot` or `draw_multiple_clock_plots`.
 #'
-#' @return ggplot object or patchwork object. Returns the plot object(s) generated by the called function.
+#' @return ggplot object or list of patchwork objects. Returns the plot object(s) generated by the called function.
 #'
 #' @noRd
 plot_clock <- function(clock_data, plot_title, colors, layout, ...) {
@@ -246,70 +261,78 @@ draw_single_clock_plot <- function(clock_data, plot_title, colors, ...) {
 
 #' Draw Multiple Clock Plots (One per Method)
 #'
-#' Generates a series of clock plots, with each plot displaying performance metrics for a single method.
-#' Uses ggplot2 and patchwork to create and arrange multiple plots.
+#' Generates a series of clock plots with performance metrics for each method, ensuring metric names are fully visible.
 #'
 #' @param clock_data data.frame. Data frame prepared by `prepare_clock_data`.
-#' @param plot_title character. The base title for the plots; method name will be appended to each plot title.
+#' @param plot_title character. The base title for the plots, displayed on the first line.
 #' @param colors character vector. Vector of colors for methods.
 #' @param ... Additional arguments passed to `ggplot2` geom or theme functions.
 #'
-#' @return patchwork object. Returns a patchwork object containing arranged ggplot objects (clock plots).
+#' @return list of patchwork objects. Each object is a grid of up to 4 clock plots with two-line titles.
 #'
 #' @noRd
 draw_multiple_clock_plots <- function(clock_data, plot_title, colors, ...) {
+  library(stringr)  # For str_wrap
   methods <- unique(clock_data$Method)
   num_methods <- length(methods)
   if (num_methods <= 0) stop("No methods available to plot.")
   
-  # Create a list of plots
-  plot_list <- lapply(seq_along(methods), function(i) {
-    method_data <- clock_data[clock_data$Method == methods[i], ]
-    ggplot(method_data, aes(x = Metric, y = Value)) +
-      geom_bar(stat = "identity", fill = alpha(colors[i], 0.5)) +
-      coord_polar(start = 0) +
-      ylim(0, 1.1) +
-      ggtitle(paste(plot_title, "- Method:", methods[i])) +
-      theme_minimal() +
-      theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        panel.grid.major.y = element_line(color = "grey", linetype = "dashed"),
-        axis.text.y = element_blank(),
-        axis.text.x = element_text(size = 10, color = "black"),
-        plot.title = element_text(hjust = 0.5)
-      ) +
-      geom_text(aes(y = Value + 0.03, label = sprintf("%.4f", Value)),
-                position = position_dodge(width = 0.9), vjust = 0, size = 3)
-  })
+  # Reduce to 2x2 grid for more space per plot
+  max_plots_per_grid <- 6
+  n_grids <- ceiling(num_methods / max_plots_per_grid)
   
-  # Arrange plots using patchwork
-  layout <- calculate_optimal_layout(num_methods)
-  wrap_plots(plot_list, ncol = layout[2], nrow = layout[1])
-}
-
-#' Calculate Optimal Layout for Multiple Plots
-#'
-#' Determines the optimal number of rows and columns for arranging multiple plots in a grid.
-#' This is used to organize multiple clock plots effectively.
-#'
-#' @param n_plots integer. The number of plots to arrange.
-#'
-#' @return integer vector. A vector of length 2, specifying the number of rows and columns (c(rows, cols)).
-#'
-#' @noRd
-calculate_optimal_layout <- function(n_plots) {
-  if (n_plots <= 2) return(c(1, n_plots))
-  if (n_plots <= 4) return(c(2, 2))
-  if (n_plots <= 6) return(c(2, 3))
-  rows <- ceiling(sqrt(n_plots))
-  cols <- ceiling(n_plots / rows)
-  c(rows, cols)
+  # Split methods into chunks of up to 4
+  method_chunks <- split(methods, rep(1:n_grids, each = max_plots_per_grid, length.out = num_methods))
+  
+  # Create a list to hold all grid plots
+  all_plots <- list()
+  
+  for (grid in 1:n_grids) {
+    current_methods <- method_chunks[[grid]]
+    
+    # Create plots for the current grid
+    plot_list <- lapply(current_methods, function(method) {
+      method_data <- clock_data[clock_data$Method == method, ]
+      # Wrap long metric names
+      method_data$Metric <- str_wrap(method_data$Metric, width = 10)
+      title_text <- paste(plot_title, "\n", method)
+      ggplot(method_data, aes(x = Metric, y = Value)) +
+        geom_bar(stat = "identity", fill = alpha(colors[which(methods == method)], 0.5)) +
+        coord_polar(start = 0) +
+        ylim(0, 1.3) +  # Extend radial limit further
+        ggtitle(title_text) +
+        theme_minimal() +
+        theme(
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          panel.grid.major.y = element_line(color = "grey", linetype = "dashed"),
+          axis.text.y = element_blank(),
+          # Remove default x-axis labels
+          axis.text.x = element_blank(),
+          plot.title = element_text(hjust = 0.5, size = 12, margin = margin(b = 20)),
+          plot.margin = unit(c(1, 1, 2, 1), "cm")  # Extra bottom margin
+        ) +
+        # Add custom labels outside the plot
+        geom_text(aes(label = Metric, x = Metric, y = 1.25), 
+                  angle = 0, hjust = 0.5, vjust = 0, size = 3.5) +
+        geom_text(aes(y = Value + 0.05, label = sprintf("%.4f", Value)),
+                  position = position_dodge(width = 0.9), vjust = 0, size = 3)
+    })
+    
+    # Arrange plots in a 2x2 grid
+    grid_layout <- patchwork::wrap_plots(plot_list) +
+      plot_layout(guides = "collect") & 
+      theme(plot.margin = unit(c(1, 1, 1, 1), "cm"))
+    
+    all_plots[[grid]] <- grid_layout
+  }
+  
+  return(all_plots)
 }
 
 #' Extract Metric Value from Confusion Matrix Object
 #'
-#' Helper function to extract a specific performance metric value from a `confusionMatrix` object.
+#' Helper function to extract a specific performance metric value from a `confusionMatrix` object.http://127.0.0.1:30639/graphics/plot_zoom_png?width=1920&height=1017
 #'  Reused from radar plot functions for consistency.
 #'
 #' @param confusion_matrix_obj confusionMatrix. A confusionMatrix object from the `caret` package.
@@ -328,3 +351,4 @@ extract_metric_value <- function(confusion_matrix_obj, metric_name) {
     stop(sprintf("Metric  not found in confusion matrix.", metric_name))
   }
 }
+
