@@ -71,7 +71,7 @@ if (!exists("%!in%")) {
 # 
 ###  ================ 1.7: Set the working directory ================ 
 setwd("/path/to/your/working/directory/lncRna/")
-  setwd("C:/Users/Jan Jastrzembski/Downloads/lncRna-test/lncRna-test") # WARNING!!! do wywalenia
+
 } # WARNING!!! jpj
 
 #  ================ Section 2: Reading Input Data Files  ================
@@ -983,6 +983,12 @@ DEGs_prot <- DEGs_prot[!is.na(DEGs_prot)]
 DEGs_prot
 
 # Load the proteome FASTA file
+#
+# wget https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/pep/Mus_musculus.GRCm39.pep.all.fa.gz
+# OR
+# download.file(url = "https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/pep/Mus_musculus.GRCm39.pep.all.fa.gz",
+#              destfile = "data/Mus_musculus.GRCm39.pep.all.fa.gz", mode = "wb")
+
 proteome <- read.fasta("data/Mus_musculus.GRCm39.pep.all.fa.gz", seqtype = "AA", as.string = F, set.attributes = T)
 names(proteome) <- sub("\\..*", "", names(proteome))
 head(proteome)
