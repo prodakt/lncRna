@@ -1,5 +1,7 @@
 #  ================ Section 1: Setup - Install, Load Packages, and Read Input Data   ================
 
+#warning common problems: i.e.: rummer, rtracklayer... 
+
 ###  ================ 1.1: Install and Load the 'devtools' Package   ================
 
 # The 'devtools' package is required to install packages directly from GitHub.
