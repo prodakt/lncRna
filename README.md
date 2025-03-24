@@ -438,8 +438,7 @@ predicted_lncRNA <- predicted_lncRNA$seqIDs
 
 
 ### III. Functional annotation
-<i>under construction</i>
- <!--
+
 the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
 ```
 # combine tle list of both predicted and known lncRNA's
@@ -471,7 +470,7 @@ head(trans)
 
 
 ```
--->
+
 
 ### IV. Structural analysis
 <i>under construction</i>
