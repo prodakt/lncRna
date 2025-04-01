@@ -685,6 +685,9 @@ Example of usage:
 # **Example 1: Bar plot showing interactions associated with "response to stress" GO term, with labels.**
 plot_by_terms(data = combined_interactions_table, select_terms = "response to stress", label = TRUE)
 ```
+
+![sankey](https://github.com/prodakt/lncRna/blob/main/img/SankeyPlot.png)
+
 The last function in this group of visualisation functions is the ‘plot_by_type()’ function, which generates a stacked bar plot summarizing interactions:
 
 ```
