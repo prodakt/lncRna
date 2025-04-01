@@ -447,6 +447,8 @@ radar_plot_cm(cm_list = all_high_precision, layout = "multiple", display_area = 
 radar_plot_cm(cm_list = all_high_precision, layout = "multiple", display_area = TRUE, display_fill = FALSE)
 ```
 
+![radar](https://github.com/prodakt/lncRna/blob/main/img/RadarPlot.png)
+
 ##### Clock Plots - Circular Bar Plots for Performance Metrics
 
 Clock plots are another way to visualize performance metrics. They are essentially circular bar plots where each "hour" on the clock represents a performance metric, and the length of the bar represents the metric's value. Clock plots can be particularly effective for highlighting differences in metric values in a visually appealing circular format.
@@ -470,6 +472,8 @@ Example:
 clock_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "PLEK+CPAT", "CPAT+CNCI")) # WARNING !!! jpj
 clock_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI"))
 ```
+
+![clock](https://github.com/prodakt/lncRna/blob/main/img/ClockPlot.png)
 
 ### IIc. Filtering by simmilarity
 in this stage you can read the Pfam scanning output file to filter out transcripts containing protein domains
