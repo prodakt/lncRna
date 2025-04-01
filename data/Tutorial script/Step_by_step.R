@@ -1,5 +1,7 @@
 #  ================ Section 1: Setup - Install, Load Packages, and Read Input Data   ================
 
+#warning common problems: i.e.: rummer, rtracklayer... 
+
 ###  ================ 1.1: Install and Load the 'devtools' Package   ================
 
 # The 'devtools' package is required to install packages directly from GitHub.
@@ -38,7 +40,7 @@ library(Polychrome)
 library(plotly)
 library(gprofiler2)
 library(tidyr)
-library(fsmb) # ERROR library(fmsb) jpj
+library(fmsb) # ERROR library(fmsb) jpj
 library(patchwork)
 library(ggplot2)
 
@@ -66,11 +68,12 @@ if (!exists("%!in%")) {
 
 { # WARNING!!! jpj
 ###  ================ 1.6: Download tutorial data ================ 
-# procedura
+# download single zipped file and unzip the whole data folder, sie da sie?
 
 # 
 ###  ================ 1.7: Set the working directory ================ 
 setwd("/path/to/your/working/directory/lncRna/")
+
 } # WARNING!!! jpj
 
 #  ================ Section 2: Reading Input Data Files  ================
@@ -255,6 +258,7 @@ length(potential_lncRNA_transcript_ids)
 { # ERROR !!! in test.train.cds and test.train.nc functions !!!!! jpj 
 cds_reference_sequences <- read.fasta("data/Mus_musculus.GRCm39.cds.all.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
 nc_reference_sequences <- read.fasta("data/Mus_musculus.GRCm39.ncrna.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
+# REMOVE!!!!!!!
 cds <- read.fasta("data/Mus_musculus.GRCm39.cds.all.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
 nc <- read.fasta("data/Mus_musculus.GRCm39.ncrna.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
 rm(cds)
@@ -402,6 +406,21 @@ coding_potential_table <- CodPot2tbl(
 # coding potential prediction results from all specified tools.
 head(coding_potential_table) # Inspect the first few rows of the combined table.
 
+{
+ # Here you can add/join coding potential results or lncRNA prediction results from any external tool
+  # the only one reason is to keep the proper table format which is 1 - non-coding or predicted lncRNA,
+  # and 0 - it is not lncRNA. 
+  # You can do it in a several ways. The simplest une is to merge the table or manualy add a new column
+  # with all values equal 0 and change all predicted to 1, for example:
+  #
+  # > coding_potential_table$NewMethod <- 0
+  # > coding_potential_table[coding_potential_table$seqIDs %in% NewMethod$lncRNA_list,]$NewMethod <- 1
+  # 
+  # or you can test it with an artificially generated list of zero-one values:
+  # set.seed(12345)
+  # coding_potential_table$ARTIF <- sample(c(0, 1), nrow(coding_potential_table), replace = TRUE)
+}
+
 ###  ================ 5.4: Visualizing Coding Potential Prediction Agreement (Venn Diagrams) ================
 
 # To visualize the agreement and disagreement between different coding potential prediction tools,
@@ -433,7 +452,7 @@ venn.CodPot(CodPot = coding_potential_table, selmet = c(1,1,0,1,1,0))
 # It takes the combined coding potential table ('coding_potential_table'), and the test sets
 # for non-coding RNAs ('nc_tt$nc.test') and coding RNAs ('cds_tt$cds.test') as input.
 
-individual_tool_performance <- SumSingleTools(CodPot.tbl2 = coding_potential_table, nc_test = nc_tt$nc.test, cds_test = cds_tt$cds.test)
+individual_tool_performance <- SumSingleTools(CodPot.tbl2 = coding_potential_table, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
 head(individual_tool_performance) # Inspect the calculated performance statistics.
 
 ###  ================ 6.2: Analyze Error Rates for Selected Individual Tools  ================
@@ -443,6 +462,8 @@ head(individual_tool_performance) # Inspect the calculated performance statistic
 # We first define the tools we want to analyze in the 'selectedTools' vector.
 
 selected_tools <- c("CPC2", "PLEK", "FEELnc", "CPAT", "CNCI", "LncFinder") # List of tools to analyze
+# OR
+# selected_tools <- colnames(coding_potential_table)[-1] # for all tools
 
 # Now, use 'BestTool()' to calculate and display error rates for the selected tools.
 best_tool_cpt_analysis <- BestTool(BestPat = individual_tool_performance, tools = selected_tools)
@@ -481,6 +502,8 @@ combined_tool_performance_all_combinations # Inspect the performance statistics 
 # initial performance observations).
 # The 'BestTool.comb()' function performs error analysis for these selected combinations.
 
+# BEWARE!!! You have to select proper columns in your analyses!!!
+# > colnames(combined_tool_performance_all_combinations)
 selected_combinations <- colnames(combined_tool_performance_all_combinations)[17:ncol(combined_tool_performance_all_combinations)]
 # In this example, we are selecting combinations starting from column 17 (adjust column indices if needed).
 
@@ -512,7 +535,6 @@ high_precision_confusion_matrices <- calculate_cm(bp_cmb_data = best_tool_combin
 # **Alternatively, return only the list of high-performing methods (meeting the threshold for Precision):**
 all_high_precision <- calculate_cm(bp_cmb_data = best_tool_combination_analysis, best_pat3_data = combined_tool_performance_all_combinations, print_metric_threshold_methods = TRUE, return_only_high_methods = TRUE)
 
-
 #  ================ Section 7: Visualizing Confusion Matrix Statistics - Radar Plots and Clock Plots ================
 
 # In this section, we will explore different ways to visualize the confusion matrix statistics
@@ -536,6 +558,16 @@ all_high_precision <- calculate_cm(bp_cmb_data = best_tool_combination_analysis,
 
 radar_plot_cm(cm_list = all_high_precision)
 
+
+{
+  # ERROR!!!
+  # procedure
+  all_high_precision <- calculate_cm(bp_cmb_data = best_tool_combination_analysis, best_pat3_data = combined_tool_performance_all_combinations, print_metric_threshold_methods = TRUE, return_only_high_methods = F)
+  radar_plot_cm(cm_list = all_high_precision)
+  # does not list all available methods!!!!
+}
+
+
 ####  ================ 7.1.2: Radar Plot for Specified Methods ================
 
 # You can focus the radar plot on a subset of methods by using the 'methods' argument.
@@ -545,7 +577,7 @@ radar_plot_cm(cm_list = all_high_precision)
 
 radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "PLEK+CPAT", "CPAT+CNCI")) # WARNING !!!! jpj
 radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI")) 
-
+radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI"), display_fill = F) 
 
 ####  ================ 7.1.3: Radar Plot for Specified Performance Metrics ================
 
@@ -648,6 +680,7 @@ predicted_lncRNA_candidates <- coding_potential_table # If you predicted on the 
 # at least 5 out of the tools used. This increases the confidence in our lncRNA predictions.
 # Adjust the threshold (e.g., >= 5) based on your desired stringency.
 predicted_lncRNA_candidates <- predicted_lncRNA_candidates[rowSums(predicted_lncRNA_candidates[, 2:ncol(predicted_lncRNA_candidates)]) >= 5,]
+head(predicted_lncRNA_candidates)
 
 # **Optional: Filter out transcripts with PFAM domain annotations (if PFAM analysis was performed):**
 # If you have performed PFAM domain analysis and have a list of transcripts with PFAM hits ('pfam' variable),
@@ -822,6 +855,7 @@ DEGs_seqs <- stringtieGTF[stringtieGTF$gene_id %in% rownames(DEGs),]$transcript_
 head(DEGs_seqs) # View the first few DEGs transcript IDs.
 
 # Retrieve the actual sequences for these DEGs transcripts from the 'transcriptome' object.
+transcriptome <- read.fasta("data/merged_transtriptome.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
 DEGs_seqs <- transcriptome[names(transcriptome) %in% DEGs_seqs]
 head(DEGs_seqs) # Inspect the first few DEG sequences.
 
@@ -833,7 +867,7 @@ DELs_seqs <- stringtieGTF[stringtieGTF$gene_id %in% rownames(DELs),]$transcript_
 
 # We need to ensure that these DELs transcript IDs are indeed within our list of lncRNA transcripts
 # ('lncRNA_transcripts', created in an earlier step, likely during data loading and annotation).
-DELs_seqs <- DELs_seqs[DELs_seqs %in% lncRNA_transcripts]
+DELs_seqs <- DELs_seqs[DELs_seqs %in% lncRNA_transcript_ids_combined]
 
 # It's good practice to check for any overlap between DEGs and DELs transcript lists.
 # While they should ideally be distinct sets, this check confirms no accidental overlap.
@@ -919,6 +953,8 @@ head(LncTar_gProfiler_results_table) # Inspect enrichment results for LncTar tar
 
 ###  ================ 10.4: LION-RNA-Protein Interaction Analysis  ================
 
+# BEWARE!!! The loop with LION run can take VERY LONG TIME !!!!
+
 # 10.4.1. Install and Load LION Package -------------------------------------------------
 
 # LION (Ligand Interaction Optimized N-terminal) is a tool for predicting RNA-protein interactions.
@@ -949,6 +985,12 @@ DEGs_prot <- DEGs_prot[!is.na(DEGs_prot)]
 DEGs_prot
 
 # Load the proteome FASTA file
+#
+# wget https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/pep/Mus_musculus.GRCm39.pep.all.fa.gz
+# OR
+# download.file(url = "https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/pep/Mus_musculus.GRCm39.pep.all.fa.gz",
+#              destfile = "data/Mus_musculus.GRCm39.pep.all.fa.gz", mode = "wb")
+
 proteome <- read.fasta("data/Mus_musculus.GRCm39.pep.all.fa.gz", seqtype = "AA", as.string = F, set.attributes = T)
 names(proteome) <- sub("\\..*", "", names(proteome))
 head(proteome)
