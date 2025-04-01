@@ -392,7 +392,7 @@ Prediction    0    1
       Balanced Accuracy : 0.9150               
 
 ```
-![matrix](https://github.com/prodakt/lncRna/blob/main/img/ConfusionMatrix.png)
+<img src="img/ConfusionMatrix.png" align="center" height = 256/>
 
 Proper preparation of the data in the first stage (initial filtering of transcripts for assessment of structural features) is a prerequisite to adjust the appropriate filtering levels to maximize the efficiency of the whole process (e.g. selection of the average expression level or decision to filter based on the number of exons) also considering parameters such as the efficiency criteria, accuracy and accordance with the established research goals.
 
