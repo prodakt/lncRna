@@ -437,9 +437,9 @@ predicted_lncRNA <- predicted_lncRNA$seqIDs
 -->
 
 
-### III. Functional annotation
+## III. Functional annotation 
 
-#### Investigating lncRNA-mRNA Interactions (Cis and Trans)
+### IIIa Investigating lncRNA-mRNA Interactions (Cis and Trans)
 
 This subchapter presents the use of two functions (separate for cis and for trans) which investigate potential functional interactions of our identified lncRNAs with protein-coding genes. Users can analyze both cis-regulatory interactions (nearby genes) and trans-regulatory interactions (gene expression correlations). 
 Firstly the Cis-Regulatory Interaction Analysis in which you need to use the ‘cisInter()’ function to identify protein-coding genes that are located within a certain genomic distance (e.g., 10kb) of our lncRNA transcripts. Cis-regulation implies that lncRNAs might regulate the expression of nearby genes on the same chromosome.
@@ -467,7 +467,7 @@ trans_interaction_table <- TransAct(expr.matrix = genes_counts,
 head(trans_interaction_table) # Inspect the resulting table of trans-interactions.
 ```
 
-#### Functional Enrichment Analysis of lncRNA-Interacting Genes (gProfiler2) (cis and trans)
+### IIIb Functional Enrichment Analysis of lncRNA-Interacting Genes (Gene Onthology)
 
 After obtaining a list of protein-coding genes that can potentially interact with lncRNAs (cis and trans), the user can carry out functional enrichment analysis to understand the potential biological pathways and functions associated with these interactions. The gost() function from the ‘gprofiler2’ package for Gene Ontology (GO), pathway, and other enrichment analysis is used for this purpose. 
 The use of the gost() function is divided into its use for cis-interacting genes and for trans-interacting genes:
@@ -501,6 +501,9 @@ trans_enrichment_results <- gost(query = trans_interaction_table$targetRNA.id,
                                  domain_scope = "annotated", custom_bg = NULL,
                                  numeric_ns = "", sources = NULL, as_short_link = FALSE)
 ```
+
+
+### IIIc Direct interactions
 
 #### Use of lncTar to obtain information on lncRNA-mRNA interaction
 
@@ -567,7 +570,7 @@ combined_interactions_table <- rbind(Trans_interactions_processed, Cis_interacti
 combined_interactions_table # View the combined interaction table.
 ```
 
-#### Visualizing Functional Interaction Results
+### IIId Visualizing Functional Interaction Results
 The lncRna package also allows a number of functions to visualise the resulting data.
 The visualisations are the functional interaction results summarized in the 'combined_interactions_table'. These plotting functions allow you to explore and present the functional associations of lncRNAs from different perspectives.
 
@@ -631,7 +634,8 @@ head(trans)
 
 
 ```
--->
+
 
 ### IV. Structural analysis
 <i>under construction</i>
+-->
