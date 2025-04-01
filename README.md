@@ -438,7 +438,167 @@ predicted_lncRNA <- predicted_lncRNA$seqIDs
 
 
 ### III. Functional annotation
-<i>under construction</i>
+
+#### Investigating lncRNA-mRNA Interactions (Cis and Trans)
+
+This subchapter presents the use of two functions (separate for cis and for trans) which investigate potential functional interactions of our identified lncRNAs with protein-coding genes. Users can analyze both cis-regulatory interactions (nearby genes) and trans-regulatory interactions (gene expression correlations). 
+Firstly the Cis-Regulatory Interaction Analysis in which you need to use the ‘cisInter()’ function to identify protein-coding genes that are located within a certain genomic distance (e.g., 10kb) of our lncRNA transcripts. Cis-regulation implies that lncRNAs might regulate the expression of nearby genes on the same chromosome.
+Example of usage:
+
+```
+cis_interaction_table <- cisInter(is.best = TRUE,
+                                  FEELnc.classes = "data/lncCodPot_MMus/FEELnc_Mm_classes.txt",
+                                  lncRNAs = lncRNA_transcript_ids_combined,
+                                  lncRNA.level = "transcript",
+                                  mRNA.level = "gene",
+                                  max.dist = 10000,
+                                  mRNAs = rownames(DEGs)) # Using differentially expressed genes (DEGs) as target mRNAs
+head(cis_interaction_table) # Inspect the resulting table of cis-interactions.
+```
+
+The second one is Trans-Regulatory Interaction Analysis where to identify trans-interacting protein-coding genes based on expression correlation the user should use the ‘TransAct()’ function whereby the user is able to identify potential trans-regulatory interactions based on gene expression correlations between lncRNAs and protein-coding genes across samples. Trans-regulation suggests that lncRNAs might influence the expression of distant genes, possibly on different chromosomes.
+Example of usage:
+```
+trans_interaction_table <- TransAct(expr.matrix = genes_counts,
+                                    rval = 0.95,
+                                    pval = 0.05,
+                                    lncRNA.list = rownames(DELs), # Using differentially expressed lncRNAs (DELs)
+                                    tarRNA.list = rownames(DEGs)) # Using differentially expressed genes (DEGs) as target mRNAs
+head(trans_interaction_table) # Inspect the resulting table of trans-interactions.
+```
+
+#### Functional Enrichment Analysis of lncRNA-Interacting Genes (gProfiler2) (cis and trans)
+
+After obtaining a list of protein-coding genes that can potentially interact with lncRNAs (cis and trans), the user can carry out functional enrichment analysis to understand the potential biological pathways and functions associated with these interactions. The gost() function from the ‘gprofiler2’ package for Gene Ontology (GO), pathway, and other enrichment analysis is used for this purpose. 
+The use of the gost() function is divided into its use for cis-interacting genes and for trans-interacting genes:
+
+#### Run gProfiler2 'gost()' for cis-interacting genes:
+
+Using the gost() function we contribute to enrichment analysis on the list of protein-coding genes found to be in cis-interaction with lncRNAs.
+Example of the usage:
+
+```
+cis_enrichment_results <- gost(query = cis_interaction_table$partnerRNA_transcript,
+                               organism = "mmusculus", ordered_query = FALSE,
+                               multi_query = FALSE, significant = TRUE, exclude_iea = FALSE,
+                               measure_underrepresentation = FALSE, evcodes = TRUE,
+                               user_threshold = 0.05, correction_method = "g_SCS",
+                               domain_scope = "annotated", custom_bg = NULL,
+                               numeric_ns = "", sources = NULL, as_short_link = FALSE)
+```
+
+#### Run gProfiler2 'gost()' for trans-interacting genes:
+
+The functioning of the function in this case is analogous to the description above.
+Example of the usage:
+
+```
+trans_enrichment_results <- gost(query = trans_interaction_table$targetRNA.id,
+                                 organism = "mmusculus", ordered_query = FALSE,
+                                 multi_query = FALSE, significant = TRUE, exclude_iea = FALSE,
+                                 measure_underrepresentation = FALSE, evcodes = TRUE,
+                                 user_threshold = 0.05, correction_method = "g_SCS",
+                                 domain_scope = "annotated", custom_bg = NULL,
+                                 numeric_ns = "", sources = NULL, as_short_link = FALSE)
+```
+
+#### Use of lncTar to obtain information on lncRNA-mRNA interaction
+
+The use of lncTar makes it possible to carry out an analysis that provides information on interactions between lncRNAs and mRNAs.
+At the beginning, it is necessary to prepare an input file for the use of lncTar, as in this case a file in FASTA format containing the lncRNA sequences and target mRNAs of interest is required.
+lncTar itself is a command-line tool that needs to be downloaded and set up separately. How to download it is described in detail in the tutorial file (data/Tutorial script/Step_by_step.R)
+
+After obtaining the necessary FASTA file to perform the analysis (a tutorial on how to prepare this can be found in the tutorial file) using lncTar or, if the user already has such a file, and downloading the tool itself, the functional analysis of enrichment of target genes from lncRNA-mRNA interaction predictions (LncTar) can be performed.
+
+#### RNA-Protein interaction analysis using LION package
+
+LION (Ligand Interaction Optimised N-terminal) is a separate package used in our analyses, so it must be installed before performing RNA-Protein interaction analyses.
+The next step is to prepare the input file, which requires protein sequences in FASTA file format. 
+Once such a file has been obtained (a tutorial on how to do this can be found in the tutorial file - data/Tutorial script/Step_by_step.R), the user can use the ‘run_lion_analysis’ function to perform the RNA-protein interaction prediction using LION. This function will process all pairwise combinations of your RNA and protein sequences and save the results to a CSV file.
+Example of usage:
+
+```
+LION_interaction_data <- run_lion_analysis(rna_seqs = DELs_seqs, prot_seqs = proteins, output_filename = "LION_results.csv", parallel_cores = 8)
+```
+
+After obtaining protein-lncRNA interaction predictions (e.g., from LION tool, loaded from 'data/LION_results_part.csv'), you can also perform functional enrichment analysis on the protein partners of lncRNAs.
+Example of usage:
+
+```
+LION_interaction_data <- read.csv2(file = "data/LION_results.csv", header = TRUE)
+# **Prepare lists of interacting proteins from different LION methods (for combined enrichment analysis):**
+LION_proteins_method1 <- LION_interaction_data[LION_interaction_data$LION_pred %in% "Interact", ]$Pro_Name
+LION_proteins_method2 <- LION_interaction_data[LION_interaction_data$rpiCOOL_retrain_pred %in% "Interact", ]$Pro_Name
+LION_proteins_method3 <- LION_interaction_data[LION_interaction_data$RPISeq_retrain_pred %in% "Interact", ]$Pro_Name
+
+# **Run gProfiler2 'gost()' for LION-interacting proteins (using combined protein lists):**
+#LION_enrichment_results <- gost(query = c(LION_proteins_method1, LION_proteins_method2, LION_proteins_method3), # WARNING !!!! jpj
+LION_enrichment_results <- gost(query = LION_proteins_method1,
+                                organism = "mmusculus", ordered_query = FALSE,
+                                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE,
+                                measure_underrepresentation = FALSE, evcodes = TRUE,
+                                user_threshold = 0.05, correction_method = "g_SCS",
+                                domain_scope = "annotated", custom_bg = NULL,
+                                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+
+# **Extract the enrichment results table:**
+LION_gProfiler_results_table <- LION_enrichment_results$result
+head(LION_gProfiler_results_table) # Inspect enrichment results for LION-interacting proteins.
+head(LION_interaction_data) # Example: inspect LION interaction data table
+```
+
+#### Once all the analyses described above have been performed on the data, it is possible to merge Interaction Results with Enrichment Data.
+
+To combine the interaction data (cis, trans, LncTar, LION) with their corresponding functional enrichment results, we use the 'interactions_merge()' function. This function takes the gProfiler2 enrichment results and the interaction tables and merges them, adding relevant enrichment information to each interaction record.
+
+The first step to merge all data is to process interactions and merge with gProfiler2 results:
+
+```
+Trans_interactions_processed <- process_interactions(gprof = trans_gProfiler_results_table, interaction_table = trans_interaction_table, type = "trans")  # ERROR!!! trans_enrichment_results -> trans_gProfiler_results_table jpj
+Cis_interactions_processed <- process_interactions(gprof = cis_gProfiler_results_table, interaction_table = cis_interaction_table, type = "cis") # ERROR !!! cis_enrichment_results -> cis_interaction_table jpj
+LncTar_interactions_processed <- process_interactions(gprof = LncTar_gProfiler_results_table, interaction_table = LncTar_interaction_data, type = "LncTar", lncRNA_col = "Query", target_col = "Target") # ERROR !!! LncTar_enrichment_results -> LncTar_gProfiler_results_table jpj
+LION_interactions_processed <- process_interactions(gprof = LION_gProfiler_results_table, interaction_table = LION_interaction_data, type = "LION", lncRNA_col = "RNA_Name", target_col = "Pro_Name") # ERROR !!! LION_enrichment_results -> LION_gProfiler_results_table jpj
+```
+
+Once this step has been completed, you can proceed to the actual combining all processed interaction tables (cis, trans, LncTar, LION) into a single table for a comprehensive overview of potential lncRNA functional associations:
+
+```
+combined_interactions_table <- rbind(Trans_interactions_processed, Cis_interactions_processed, LncTar_interactions_processed, LION_interactions_processed) # Using processed interaction objects directly
+combined_interactions_table # View the combined interaction table.
+```
+
+#### Visualizing Functional Interaction Results
+The lncRna package also allows a number of functions to visualise the resulting data.
+The visualisations are the functional interaction results summarized in the 'combined_interactions_table'. These plotting functions allow you to explore and present the functional associations of lncRNAs from different perspectives.
+
+#### Plot Interactions by lncRNA (Bar Plot for Specific lncRNAs)
+The first type of data visualisation available is the use of a bar plot, using the function ‘plot_by_lnc()', which creates a bar plot that shows the number of interactions for specific lncRNAs of interest. You can select which lncRNAs to display using the 'select_lnc' argument.
+Example of usage:
+```
+# **Example: Bar plot showing interactions for lncRNAs "ENSMUSG00000106858" and "ENSMUSG00000002769", with labels.**
+plot_by_lnc(data = combined_interactions_table, select_lnc = c("ENSMUSG00000106858", "ENSMUSG00000002769"), label = TRUE)
+```
+The next function ‘plot_by_target()' allows you to show interactions for specific target protein-coding genes.  Use 'select_target' to choose target genes:
+```
+# **Example: Bar plot showing interactions for target genes "ENSMUSG00000000731" and "ENSMUSG00000000732", with labels.**
+plot_by_target(data = combined_interactions_table, select_target = c("ENSMUSG00000000731","ENSMUSG00000000732"), label = TRUE)
+```
+‘plot_by_terms()' is a visualising function that visualizes interactions associated with specific GO terms or pathways. Use 'select_terms' to specify the GO terms or pathway descriptions you are interested in.
+Example of usage:
+```
+# **Example 1: Bar plot showing interactions associated with "response to stress" GO term, with labels.**
+plot_by_terms(data = combined_interactions_table, select_terms = "response to stress", label = TRUE)
+```
+The last function in this group of visualisation functions is the ‘plot_by_type()’ function, which generates a stacked bar plot summarizing interactions:
+
+```
+# **Example 1: Basic 'plot_by_type()' plot for combined interactions, with labels.**
+plot_by_type(data = combined_interactions_table, label = TRUE)
+
+# **Example 2: 'plot_by_type()' for 'Cis' interactions only, specifying 'type = "cis"', with labels.**
+plot_by_type(data = Cis_interactions_processed, type = "cis", label = TRUE) # ERROR !!! there is no "selected_type" object jpj
+```
+
  <!--
 the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
 ```
