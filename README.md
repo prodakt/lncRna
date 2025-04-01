@@ -697,6 +697,7 @@ plot_by_type(data = combined_interactions_table, label = TRUE)
 # **Example 2: 'plot_by_type()' for 'Cis' interactions only, specifying 'type = "cis"', with labels.**
 plot_by_type(data = Cis_interactions_processed, type = "cis", label = TRUE) # ERROR !!! there is no "selected_type" object jpj
 ```
+![sankey_2](https://github.com/prodakt/lncRna/blob/main/img/SankeyType.png)
 
 ### IV. Structural analysis
 <i>under construction</i>
