@@ -411,7 +411,6 @@ radar_plot_cm(cm_list = all_high_precision)
 
 
 {
-  # ERROR!!!
   # procedure
   all_high_precision <- calculate_cm(bp_cmb_data = best_tool_combination_analysis, best_pat3_data = combined_tool_performance_all_combinations, print_metric_threshold_methods = TRUE, return_only_high_methods = F)
   radar_plot_cm(cm_list = all_high_precision)
@@ -423,7 +422,7 @@ Example:
 ```
 # Example: Create a radar plot comparing "CPC2+CPAT", "PLEK+CPAT", and "CPAT+CNCI" combinations.
 
-radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "PLEK+CPAT", "CPAT+CNCI")) # WARNING !!!! jpj
+radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "PLEK+CPAT", "CPAT+CNCI")) 
 radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI")) 
 radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI"), display_fill = F)
 ```
@@ -432,7 +431,7 @@ Example:
 ```
 # Example: Create a radar plot showing only "Sensitivity", "Recall", "Precision", and "Accuracy".
 
-radar_plot_cm(cm_list = all_high_precision, metrics = c("Sensitivity", "Recall", "Precision", "Accuracy")) # WARNING !!!! how to list all available metrics? jpj
+radar_plot_cm(cm_list = all_high_precision, metrics = c("Sensitivity", "Recall", "Precision", "Accuracy")) 
 ```
 This function also makes it possible to visualise several plots at the same time, which can be filled in the middle of an area or show only the contours. This option is useful when you have many methods or combinations to compare, displaying them all on a single radar plot can become crowded and difficult to read.  The 'layout = "multiple"' option generates a grid of individual radar plots, where each plot represents a single method or a small group of methods. At the same time filling the area under the radar is a cosmetic option, sometimes capable of providing a a cleaner look or when comparing many methods where filled areas might overlap and obscure each other. For removing this area you need to setting 'display_fill = FALSE'.
 Example:
@@ -456,7 +455,6 @@ Analogous to the Radar plot described above, the Clock Plot function also offers
 Example:
 ```
 clock_plot_cm(cm_list = all_high_precision)
-# ERROR !!! there is no "all_cms" object jpj
 clock_plot_cm(cm_list = all_cms) # Example with 'all_cms' list (if you want to compare with a different set of confusion matrices)
 ```
 This function also offers the possibility of adjusting the number of simultaneously displayed Clock Plots, in order to comparing multiple methods using clock plots, you can again use 'layout = "multiple' to create a grid of individual clock plots, one for each method or combination. This is especially useful when you have a larger number of methods to visualize. You can also specify a 'plot_title' which will be used as a base title for each individual clock plot.
@@ -651,8 +649,8 @@ The first step to merge all data is to process interactions and merge with gProf
 ```
 Trans_interactions_processed <- process_interactions(gprof = trans_gProfiler_results_table, interaction_table = trans_interaction_table, type = "trans")  # ERROR!!! trans_enrichment_results -> trans_gProfiler_results_table jpj
 Cis_interactions_processed <- process_interactions(gprof = cis_gProfiler_results_table, interaction_table = cis_interaction_table, type = "cis") # ERROR !!! cis_enrichment_results -> cis_interaction_table jpj
-LncTar_interactions_processed <- process_interactions(gprof = LncTar_gProfiler_results_table, interaction_table = LncTar_interaction_data, type = "LncTar", lncRNA_col = "Query", target_col = "Target") # ERROR !!! LncTar_enrichment_results -> LncTar_gProfiler_results_table jpj
-LION_interactions_processed <- process_interactions(gprof = LION_gProfiler_results_table, interaction_table = LION_interaction_data, type = "LION", lncRNA_col = "RNA_Name", target_col = "Pro_Name") # ERROR !!! LION_enrichment_results -> LION_gProfiler_results_table jpj
+LncTar_interactions_processed <- process_interactions(gprof = LncTar_gProfiler_results_table, interaction_table = LncTar_interaction_data, type = "LncTar", lncRNA_col = "Query", target_col = "Target") 
+LION_interactions_processed <- process_interactions(gprof = LION_gProfiler_results_table, interaction_table = LION_interaction_data, type = "LION", lncRNA_col = "RNA_Name", target_col = "Pro_Name") 
 ```
 
 Once this step has been completed, you can proceed to the actual combining all processed interaction tables (cis, trans, LncTar, LION) into a single table for a comprehensive overview of potential lncRNA functional associations:
