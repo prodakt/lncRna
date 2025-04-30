@@ -20,7 +20,7 @@ library("devtools")
 # If you encounter internet connection issues during installation, you can try
 # increasing the timeout limit using 'options(timeout=400)' before running 'install_github'.
 
-install_github("prodakt/lncRna@test", force = TRUE)
+BiocManager::install("prodakt/lncRna@test", force = TRUE)
 # options(timeout=400)  # Uncomment and run this line if you experience installation errors
 
 # After installation, load the 'lncRna' package into your R environment.
@@ -256,8 +256,8 @@ length(potential_lncRNA_transcript_ids)
 # We use 'read.fasta()' function from 'seqinr' package to read these FASTA files as DNA sequences.
 
 # ERROR !!! in test.train.cds and test.train.nc functions !!!!! jpj
-cds_reference_sequences <- read.fasta("data/Mus_musculus.GRCm39.cds.all.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
-nc_reference_sequences <- read.fasta("data/Mus_musculus.GRCm39.ncrna.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
+cds_reference_sequences <- seqinr::read.fasta("data/Mus_musculus.GRCm39.cds.all.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
+nc_reference_sequences <- seqinr::read.fasta("data/Mus_musculus.GRCm39.ncrna.fa.gz", seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
 
 # 'cds_reference_sequences' and 'nc_reference_sequences' now hold the reference CDS and NC RNA sequences, respectively.
 
@@ -288,10 +288,11 @@ sequences_to_predict <- potential_lncRNA_transcript_ids
 # meaning that if you run the script again, you will get the same training and test sets.
 
 set.seed(12345) # Set seed for reproducible training/test set splitting
-cds_training_test_sets <- test.train.cds(cds.fa = cds_reference_sequences, percent_train = 0.6) # ERROR!!! inside function cds is needed!!! jpj
+cds_training_test_sets <- lncRna::test.train.cds(cds = cds_reference_sequences, percent_train = 0.6)
 set.seed(12345) # Set seed for reproducible training/test set splitting
-nc_training_test_sets <- test.train.nc(nc.fa = nc_reference_sequences, percent_train = 0.6) # ERROR!!! inside function nc is needed!!! jpj
-
+nc_training_test_sets <- lncRna::test.train.nc(nc = nc_reference_sequences, percent_train = 0.6)
+cds_training_test_sets <- test.train.cds(cds = cds_reference_sequences, percent_train = 0.6)
+nc_training_test_sets <- test.train.nc(nc = nc_reference_sequences, percent_train = 0.6)
 # Inspect the structure of the created training/test set lists.
 head(cds_training_test_sets$cds.test) # Example: display first few CDS test set IDs
 head(nc_training_test_sets$nc.test)  # Example: display first few NC test set IDs
@@ -385,7 +386,7 @@ write.fasta(nc_training_sequences, names(nc_training_sequences), "nc2train.fa", 
 # where each row represents a transcript and columns represent the coding potential scores
 # (or binary predictions) from different tools.
 
-coding_potential_table <- CodPot2tbl(
+coding_potential_table <- lncRnaV2::CodPot2tbl(
   CPC2_outfile      = "data/lncCodPot_MMus/CPC2_Mm_lnc.txt.txt",
   FEELnc_outfile    = "data/lncCodPot_MMus/FEELnc_codpot_RF.txt",
   CNCI_outfile      = "data/lncCodPot_MMus/CNCI.index",
@@ -446,7 +447,8 @@ venn.CodPot(CodPot = coding_potential_table, selmet = c(1,1,0,1,1,0))
 # It takes the combined coding potential table ('coding_potential_table'), and the test sets
 # for non-coding RNAs ('nc_tt$nc.test') and coding RNAs ('cds_tt$cds.test') as input.
 
-individual_tool_performance <- SumSingleTools(CodPot.tbl2 = coding_potential_table, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
+individual_tool_performance <- SumSingleTools(CodPot_list = coding_potential_table, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
+individual_tool_performance_check <- lncRna::SumSingleTools(CodPot.tbl2 = coding_potential_table, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
 head(individual_tool_performance) # Inspect the calculated performance statistics.
 
 ###  ================ 6.2: Analyze Error Rates for Selected Individual Tools  ================
@@ -460,7 +462,9 @@ selected_tools <- c("CPC2", "PLEK", "FEELnc", "CPAT", "CNCI", "LncFinder") # Lis
 # selected_tools <- colnames(coding_potential_table)[-1] # for all tools
 
 # Now, use 'BestTool()' to calculate and display error rates for the selected tools.
-best_tool_cpt_analysis <- BestTool(BestPat = individual_tool_performance, tools = selected_tools)
+best_tool_cpt_analysis <- lncRna::BestTool(BestPat = individual_tool_performance_check, tools = selected_tools)
+best_tool_cpt_analysis <- BestTool(SumSingleTools_list = individual_tool_performance)
+best_tool_cpt_analysis <- BestTool(SumSingleTools_list = individual_tool_performance, tools = selected_tools)
 best_tool_cpt_analysis # Print the error analysis results.
 
 ###  ================ 6.3: Performance Statistics for Combined Tool Predictions (At Least 'n' Tools Criterion) ================
@@ -470,7 +474,8 @@ best_tool_cpt_analysis # Print the error analysis results.
 # by at least a certain number of tools (e.g., at least 'n' tools).
 # The 'SumAtLeast()' function calculates performance statistics for such combined predictions.
 
-combined_tool_performance_atleast_n <- SumAtLeast(BestPat = individual_tool_performance, tools = selected_tools)
+combined_tool_performance_atleast_n <- lncRna::SumAtLeast(BestPat = individual_tool_performance_check, tools = selected_tools)
+combined_tool_performance_atleast_n <- SumAtLeast(SumSingleTools_list = individual_tool_performance)
 head(combined_tool_performance_atleast_n) # Inspect the performance statistics for combined criteria.
 
 ###  ================ 6.4: Error Analysis for Combined Tool Predictions (At Least 'n' Tools Criterion) ================
@@ -478,6 +483,7 @@ head(combined_tool_performance_atleast_n) # Inspect the performance statistics f
 # The 'BestTool.atleast()' function performs error analysis (similar to 'BestTool()')
 # but specifically for the combined prediction criteria (at least 'n' tools agreement).
 best_tool_atleast_analysis <- BestTool.atleast(BestPat = combined_tool_performance_atleast_n)
+best_tool_atleast_analysis <- BestTool.atleast(SumAtLeast_list = combined_tool_performance_atleast_n)
 best_tool_atleast_analysis # Print the error analysis results for combined criteria.
 
 ###  ================ 6.5: Performance Statistics for All Tool Combinations (Venn Diagram Combinations) ================
