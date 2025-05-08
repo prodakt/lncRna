@@ -386,7 +386,7 @@ write.fasta(nc_training_sequences, names(nc_training_sequences), "nc2train.fa", 
 # where each row represents a transcript and columns represent the coding potential scores
 # (or binary predictions) from different tools.
 
-coding_potential_table <- lncRnaV2::CodPot2tbl(
+coding_potential_table <- CodPot2tbl(
   CPC2_outfile      = "data/lncCodPot_MMus/CPC2_Mm_lnc.txt.txt",
   FEELnc_outfile    = "data/lncCodPot_MMus/FEELnc_codpot_RF.txt",
   CNCI_outfile      = "data/lncCodPot_MMus/CNCI.index",
@@ -448,7 +448,7 @@ venn.CodPot(CodPot = coding_potential_table, selmet = c(1,1,0,1,1,0))
 # for non-coding RNAs ('nc_tt$nc.test') and coding RNAs ('cds_tt$cds.test') as input.
 
 individual_tool_performance <- SumSingleTools(CodPot_list = coding_potential_table, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
-individual_tool_performance_check <- lncRna::SumSingleTools(CodPot.tbl2 = coding_potential_table, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
+individual_tool_performance_check <- lncRna::SumSingleTools(CodPot.tbl2 = coding_potential_table_test, nc_test = nc_training_test_sets$nc.test, cds_test = cds_training_test_sets$cds.test) # ERROR !!! Poprawione nazwy zmiennych
 head(individual_tool_performance) # Inspect the calculated performance statistics.
 
 ###  ================ 6.2: Analyze Error Rates for Selected Individual Tools  ================
@@ -474,7 +474,7 @@ best_tool_cpt_analysis # Print the error analysis results.
 # by at least a certain number of tools (e.g., at least 'n' tools).
 # The 'SumAtLeast()' function calculates performance statistics for such combined predictions.
 
-combined_tool_performance_atleast_n <- lncRna::SumAtLeast(BestPat = individual_tool_performance_check, tools = selected_tools)
+combined_tool_performance_atleast_n_check <- lncRna::SumAtLeast(BestPat = individual_tool_performance_check, tools = selected_tools)
 combined_tool_performance_atleast_n <- SumAtLeast(SumSingleTools_list = individual_tool_performance)
 head(combined_tool_performance_atleast_n) # Inspect the performance statistics for combined criteria.
 
@@ -492,7 +492,8 @@ best_tool_atleast_analysis # Print the error analysis results for combined crite
 # we can calculate performance statistics for each combination.
 # The 'SumCombTools()' function calculates these statistics for all combinations of the selected tools.
 
-combined_tool_performance_all_combinations <- SumCombTools(BestPat = combined_tool_performance_atleast_n, selectedTools = selected_tools)
+combined_tool_performance_all_combinations_check <- lncRnaV2::SumCombTools(BestPat = combined_tool_performance_atleast_n_check, selectedTools = selected_tools)
+combined_tool_performance_all_combinations <- SumCombTools(SumSingleTools_list = combined_tool_performance_atleast_n)
 combined_tool_performance_all_combinations # Inspect the performance statistics for all combinations.
 
 ###  ================ 6.6: Error Analysis for Selected Tool Combinations ================
@@ -504,10 +505,10 @@ combined_tool_performance_all_combinations # Inspect the performance statistics 
 
 # BEWARE!!! You have to select proper columns in your analyses!!!
 # > colnames(combined_tool_performance_all_combinations)
-selected_combinations <- colnames(combined_tool_performance_all_combinations)[17:ncol(combined_tool_performance_all_combinations)]
+selected_combinations <- colnames(combined_tool_performance_all_combinations_check)[17:ncol(combined_tool_performance_all_combinations_check)]
 # In this example, we are selecting combinations starting from column 17 (adjust column indices if needed).
 
-best_tool_combination_analysis <- BestTool.comb(BestPat = combined_tool_performance_all_combinations, selectComb = selected_combinations) # ERROR!!! selectedCombinations ->  selected_combinations jpj
+best_tool_combination_analysis <- lncRna::BestTool.comb(BestPat = combined_tool_performance_all_combinations_check, selectComb = selected_combinations) # ERROR!!! selectedCombinations ->  selected_combinations jpj
 best_tool_combination_analysis # Print the error analysis for selected combinations.
 
 # Example: Identify combinations with Accuracy > 0.8 (optional filtering)
