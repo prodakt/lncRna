@@ -55,5 +55,3 @@ trans_interactions <- function(trans_gprof, trans_table) {
   trans_table_final <- unique(trans_table_final)
   return(trans_table_final)
 }
-#######################################
-# Helper Functions Documentation

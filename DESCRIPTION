@@ -31,6 +31,7 @@ Imports:
   Polychrome,
   plotly,
   scales,
-  patchwork
+  patchwork,
+  utils
 Suggests: 
     testthat (>= 3.0.0)

@@ -65,23 +65,6 @@
 #'     }
 #'   }
 #'
-#'   # --- Example 2: Simulate non-interactive selection (selects first tool) ---
-#'   # Note: SumCombTools requires at least 2 tools to form combinations.
-#'   # The .select_tools_interactively helper in non-interactive mode might return only one.
-#'   # For a meaningful non-interactive example, ensure enough tools are "selected".
-#'   # Here, we'll pass two tools to simulate a valid non-interactive case.
-#'   cat("\nSimulating non-interactive run with two tools (ToolX, ToolY):\n")
-#'   results_comb_noninteractive <- SumCombTools(SumSingleTools_list = example_input_list_comb,
-#'                                               tools = c("ToolX", "ToolY"))
-#'   if (!is.null(results_comb_noninteractive) &&
-#'       "ToolX+ToolY" %in% names(results_comb_noninteractive$tool_combinations)) {
-#'     print("ToolX+ToolY combination (first 5):")
-#'     print(head(results_comb_noninteractive$tool_combinations[["ToolX+ToolY"]], 5))
-#'   }
-#' } else {
-#'   message("Please ensure helper functions are loaded to run SumCombTools examples.")
-#' }
-#'
 SumCombTools <- function(SumSingleTools_list, tools = NULL) {
 
   # --- 1. Input Validation ---
@@ -132,7 +115,6 @@ SumCombTools <- function(SumSingleTools_list, tools = NULL) {
   # Iterate through combination sizes (from 2 up to n_selected)
   for (k in 2:n_selected) {
     # Get all combinations of tool *indices* for the current size k
-    # utils::combn is used here
     tool_indices_combinations <- utils::combn(1:n_selected, k, simplify = FALSE)
 
     for (idx_vector in tool_indices_combinations) {
