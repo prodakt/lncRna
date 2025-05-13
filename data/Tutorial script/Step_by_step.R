@@ -386,7 +386,7 @@ write.fasta(nc_training_sequences, names(nc_training_sequences), "nc2train.fa", 
 # where each row represents a transcript and columns represent the coding potential scores
 # (or binary predictions) from different tools.
 
-coding_potential_list <- CodPot2tbl(
+coding_potential_res <- CodPot2tbl(
   CPC2_outfile      = "data/lncCodPot_MMus/CPC2_Mm_lnc.txt.txt",
   FEELnc_outfile    = "data/lncCodPot_MMus/FEELnc_codpot_RF.txt",
   CNCI_outfile      = "data/lncCodPot_MMus/CNCI.index",
@@ -457,8 +457,7 @@ venn.CodPot(CodPot = coding_potential_list)
 # You can customize the Venn diagram to focus on specific tools and prediction outcomes.
 # In this example, 'selmet = c(1,1,0,1,1,0)' selects specific criteria for each tool
 # (the meaning of these criteria depends on how 'venn.CodPot' and the coding potential tools are designed).
-venn.CodPot(CodPot = coding_potential_list, selmet = c(1,1,0,1,1,0))
-
+venn.CodPot(CodPot = coding_potential_list, selmet = c(1,0,0,1,1))
 
 #  ================ Section 6: Stage 2B - Best Accuracy Analysis of Coding Potential Prediction Tools ================
 
@@ -952,8 +951,6 @@ LncTar_enrichment_results <- gost(query = LncTar_interaction_data$Target, # 'Tar
 LncTar_gProfiler_results_table <- LncTar_enrichment_results$result
 head(LncTar_gProfiler_results_table) # Inspect enrichment results for LncTar target genes.
 
-
-# Original script had an extra 'Test' object creation which seems redundant, so it's removed here.
 
 
 ###  ================ 10.4: LION-RNA-Protein Interaction Analysis  ================
