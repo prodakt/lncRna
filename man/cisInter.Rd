@@ -2,42 +2,93 @@
 % Please edit documentation in R/cisInter.R
 \name{cisInter}
 \alias{cisInter}
-\title{cisInter function
-This function reads several outputs from coding potential programs and join all tesults in table, where 0 is coding and 1 - noncoding}
+\title{Analyze cis-regulatory interactions from FEELnc output}
 \usage{
 cisInter(
+  feelncClasses,
   lncRNAs = NULL,
   mRNAs = NULL,
-  FEELnc.classes,
-  is.best = T,
-  lncRNA.level = "transcript",
-  mRNA.level = "gene",
-  max.dist = 1e+05
+  isBest = TRUE,
+  lncRnaLevel = "transcript",
+  mRnaLevel = "gene",
+  maxDist = 1e+05
 )
 }
 \arguments{
-\item{lncRNAs}{the list of lncRNA IDs (genes or transcripts)}
+\item{feelncClasses}{character. The path to the "classes" output file from
+FEELnc. The file must exist.}
 
-\item{mRNAs}{the list of mRNA IDs (genes or transcripts)}
+\item{lncRNAs}{character (optional). A vector of lncRNA gene or transcript IDs
+to filter the results. If \code{NULL} (default), all lncRNAs are considered.}
 
-\item{FEELnc.classes}{the "classes" output file from FEELnc}
+\item{mRNAs}{character (optional). A vector of mRNA gene or transcript IDs
+to filter the results. If \code{NULL} (default), all mRNAs are considered.}
 
-\item{is.best}{filtering by the first collumn "is.best" (see https://github.com/tderrien/FEELnc)}
+\item{isBest}{logical. If \code{TRUE} (default), only interactions flagged as the
+'best' (isBest == 1) in the FEELnc output are retained.}
 
-\item{lncRNA.level}{choose the "gene" or "transcript" level for lncRNA filtering}
+\item{lncRnaLevel}{character. Specifies whether to filter \code{lncRNAs} at the
+"gene" or "transcript" level. Defaults to "transcript".}
 
-\item{mRNA.level}{choose the "gene" or "transcript" level for mRNA filtering}
+\item{mRnaLevel}{character. Specifies whether to filter \code{mRNAs} at the
+"gene" or "transcript" level. Defaults to "gene".}
 
-\item{max.dist}{the distance for cis-relation (default value is 100 000)}
+\item{maxDist}{numeric. The maximum allowed distance in base pairs for an
+interaction to be considered 'cis'. Defaults to 100000.}
+}
+\value{
+A data.frame containing the filtered cis-interactions. The columns
+'lncRNA_gene' and 'partnerRNA_gene' are renamed to 'lncRNAId' and
+'targetRNAId' respectively for clarity.
 }
 \description{
-cisInter function
-This function reads several outputs from coding potential programs and join all tesults in table, where 0 is coding and 1 - noncoding
+This function reads and filters the 'classes' output file from FEELnc to
+identify cis-regulatory relationships between lncRNAs and mRNAs based on
+user-defined criteria.
 }
 \examples{
-cisInter()
+# --- 1. Create a temporary FEELnc classes file for a reproducible example ---
+tempFile <- tempfile(fileext = ".tsv")
+
+# Create a sample data frame mimicking the FEELnc output structure
+feelncData <- data.frame(
+  lncRNA_transcript = c("lncT1", "lncT2", "lncT3", "lncT4"),
+  lncRNA_gene = c("lncG1", "lncG1", "lncG2", "lncG2"),
+  partnerRNA_transcript = c("mRNAT1", "mRNAT2", "mRNAT3", "mRNAT4"),
+  partnerRNA_gene = c("mRNAG1", "mRNAG2", "mRNAG2", "mRNAG3"),
+  distance = c(5000, 80000, 120000, 15000),
+  isBest = c(1, 1, 0, 1)
+)
+
+# Write the data to the temporary file
+write.table(feelncData, file = tempFile, sep = "\t", quote = FALSE, row.names = FALSE)
+
+# --- 2. Run the cisInter function ---
+
+# Example 2a: Basic usage, filtering by 'isBest' and default distance
+cisResults <- cisInter(feelncClasses = tempFile)
+print("Results with default filtering:")
+print(cisResults)
+
+# Example 2b: Advanced usage with ID and distance filtering
+specificLncRNAs <- c("lncG1")
+specificMRNAs <- c("mRNAG2")
+cisResultsFiltered <- cisInter(
+  feelncClasses = tempFile,
+  lncRNAs = specificLncRNAs,
+  lncRnaLevel = "gene",
+  mRNAs = specificMRNAs,
+  mRnaLevel = "gene",
+  maxDist = 90000
+)
+print("Results with specific ID and distance filters:")
+print(cisResultsFiltered)
+
+# --- 3. Clean up the temporary file ---
+unlink(tempFile)
 
 }
+\keyword{FEELnc}
 \keyword{cis}
 \keyword{interactions}
 \keyword{lncRNA}

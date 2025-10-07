@@ -1,0 +1,264 @@
+---
+title: "lncRna: A Comprehensive Pipeline for lncRNA Identification and Functional Analysis"
+author:
+  - Jan Pawel Jastrzebski
+  - Damian Czopek
+  - Wiktor Babis
+  - Miriana Quaranta
+  - Monika Gawronska
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{lncRna: Identification and Functional Analysis Pipeline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=TRUE}
+# Standard setup chunk
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+# Load libraries required for the vignette to build
+library(lncRna)
+library(rtracklayer)
+library(GenomicRanges)
+library(IRanges)
+library(gprofiler2)
+library(plotly)
+library(fmsb)
+library(caret)
+```
+
+# 1 Introduction
+
+The lncRna package provides a comprehensive toolkit for the identification, analysis, and functional annotation of long non-coding RNAs (lncRNAs) from RNA-Seq data. The workflow covers several key stages:
+Initial Processing & Filtering: Feature extraction from GTF files and filtering of lncRNA candidates based on structural features (length, exon count) and expression levels.
+Coding Potential Analysis: Utilization of results from multiple popular tools to assess whether a transcript has protein-coding potential.
+Performance Evaluation: Systematic assessment of the accuracy of individual tools and their combinations using defined test sets.
+Functional Analysis: Identification of potential cis and trans interactions with protein-coding genes and performing functional enrichment analysis (e.g., GO, KEGG).
+Visualization: Generation of informative plots, such as Venn diagrams, radar plots, and Sankey diagrams, to visualize results.
+This vignette will guide you through the complete workflow, step by step, from data preparation to functional interpretation.
+
+## 1.1 Instalation
+To install this package, start R (version "4.4" or higher) and enter:
+
+```{r installation-loading, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# Install the lncRna package 
+BiocManager::install("lncRna")
+
+# Load the package for use
+library(lncRna)
+```
+# 2 Data Preparation
+
+In a typical analysis, you would load your own data files (e.g., GTF, FASTA, expression matrices). For this demonstration, to ensure the vignette is self-contained and reproducible, we will create small, representative "mock" data objects that mimic the structure of real-world data.
+
+## 2.1 Create mock data objects
+```{r create-mock-data}
+# 1. A sample GRanges object (mimicking an imported GTF file)
+mockGtf <- GRanges(
+  seqnames = "chr1",
+  ranges = IRanges(start = c(100, 200, 400, 500), width = c(50, 60, 100, 20)),
+  strand = "+",
+  type = c("exon", "exon", "transcript", "exon"),
+  gene_id = c("G1", "G1", "G2", "G2"),
+  gene_biotype = c("protein_coding", "protein_coding", "lncRNA", "lncRNA"),
+  transcript_id = c("tx1", "tx1", "tx2", "tx2"),
+  transcript_biotype = c("protein_coding", "protein_coding", "lncRNA", "lncRNA"),
+  exon_number = c("1", "2", NA, "1")
+)
+
+# 2. A sample coding potential result list (from codPotToTbl)
+mockCodPotList <- list(
+  seqIDs = c("tx1", "tx2", "tx3", "tx4"),
+  tools = list(
+    CPC2 = c(0, 1, 1, 0),
+    PLEK = c(0, 1, 0, 0),
+    CPAT = c(0, 1, 1, 1)
+  )
+)
+
+# 3. Sample test sets
+set.seed(123)
+ncTestSet <- c("tx2", "tx3")
+cdsTestSet <- c("tx1")
+
+```
+
+# 3. Initial Filtering and Feature Extraction
+
+At this stage, we use functions to extract key information from our GRanges object to prepare a list of lncRNA candidates.
+
+## 3.1 Extract transcript statistics
+
+```{r extract-transcripts}
+
+# Calculate transcript length and exon count from the GTF object.
+transcriptStats <- getGtfStats(gtfObject = mockGtf)
+print("Transcript Statistics:")
+print(transcriptStats)
+
+```
+## 3.2 Extract biotypes
+
+```{r extract-biotypes}
+
+# Get biotype information at the gene level.
+geneBiotypes <- getRefBiotypes(gtfObject = mockGtf, level = "gene")
+print("Gene Biotypes:")
+print(geneBiotypes)
+
+```
+
+In a real workflow, you would now use these data frames to filter out known protein-coding genes and then further filter the remaining transcripts by length and exon count to obtain your list of potentialLncRnaIds.
+
+# 4. Coding Potential Analysis and Evaluation
+
+With the results from coding potential prediction tools (mockCodPotList) and our defined test sets, we can now systematically evaluate the performance of each tool and their combinations.
+
+## 4.1 Summarize tool results for the test sets
+``` {r summarise-test-results}
+
+singleToolPerformance <- sumSingleTools(
+  codPotList = mockCodPotList,
+  ncTest = ncTestSet,
+  cdsTest = cdsTestSet
+)
+print("Summary for individual tools:")
+str(singleToolPerformance, max.level = 2)
+
+```
+
+## 4.2 Evaluate performance of individual tools
+
+``` {r evaluate-performance}
+
+bestToolResults <- bestTool(sumSingleToolsList = singleToolPerformance)
+print("Performance of individual tools:")
+print(bestToolResults)
+
+```
+
+## 4.3 Evaluate performance for the "at least N" criterion
+
+``` {r evaluate-performance-at-least-n}
+
+atLeastNPerformance <- sumAtLeast(sumSingleToolsList = singleToolPerformance)
+bestToolAtLeastResults <- bestToolAtLeast(sumAtLeastList = atLeastNPerformance)
+print("Performance for 'at least N' criterion:")
+print(bestToolAtLeastResults)
+
+```
+
+## 4.4 Evaluate performance for all tool combinations
+
+``` {r evaluate-performance-of-all-tools}
+
+combPerformance <- sumCombTools(sumSingleToolsList = singleToolPerformance)
+bestToolCombResults <- bestToolComb(sumCombToolsList = combPerformance)
+print("Performance for tool combinations:")
+print(bestToolCombResults)
+
+```
+
+# 5. Performance Visualization
+Based on the calculated statistics, we can create plots to visually compare the different prediction methods.
+
+## 5.1 Calculate confusion matrices
+
+``` {r calculate-cm}
+allCms <- calculateCm(
+  sumCombToolsList = combPerformance,
+  bestToolCombMetricsData = bestToolCombResults
+)
+```
+
+## 5.2 Generate performance plots
+
+``` {r performance-visualization, fig.show='hold', warning=FALSE}
+if (length(allCms) > 1) {
+  # Radar plot for the best two combinations
+  radarPlotCm(
+    cmList = allCms,
+    methods = names(allCms)[1:min(2, length(allCms))],
+    plotTitle = "Combination Comparison (Radar Plot)"
+  )
+  
+  # Clock plot for all combinations
+  clockPlotCm(
+    cmList = allCms,
+    plotTitle = "Performance (Clock Plot)"
+  )
+}
+```
+# 6. Functional Analysis and Interactions
+The final stage is to predict the function of the identified lncRNAs by analyzing their interactions with protein-coding genes.
+
+## 6.1 Prepare mock data for interaction analysis
+``` {r prepare-mock-data-for-sankey}
+set.seed(456)
+mockExprMatrix <- matrix(rnorm(50), nrow = 5,
+  dimnames = list(c("LNC1", "LNC2", "GENE_A", "GENE_B", "GENE_C"), paste0("Sample", 1:10)))
+mockExprMatrix["LNC1",] <- mockExprMatrix["GENE_A",] + rnorm(10, 0, 0.1)
+lncIds <- c("LNC1", "LNC2")
+targetIds <- c("GENE_A", "GENE_B", "GENE_C")
+```
+## 6.2 Calculate trans-interactions
+``` {r calc-trans-inter}
+transInteractions <- calculateTransInteractions(
+  exprMatrix = mockExprMatrix,
+  rValueCutoff = 0.9,
+  lncRnaIds = lncIds,
+  targetRnaIds = targetIds
+)
+print("Found trans-interactions:")
+print(transInteractions)
+```
+
+## 6.3 Perform functional enrichment analysis (gProfiler)
+``` {r gprofiler}
+if (nrow(transInteractions) > 0) {
+  mockGostResult <- list(
+    result = data.frame(
+      term_id = "GO:0006950",
+      term_name = "response to stress",
+      source = "GO:BP",
+      p_value = 0.001,
+      intersection = paste(unique(transInteractions$targetRNAId), collapse = ",")
+    )
+  )
+}
+```
+
+## 6.4 Process interaction results with enrichment data
+``` {r process-interaction}
+if (exists("mockGostResult")) {
+  interactionsProcessed <- processInteractions(
+    gprof = mockGostResult$result,
+    interactionTable = transInteractions,
+    type = "trans"
+  )
+  print("Processed interaction table:")
+  head(interactionsProcessed)
+```
+
+## 6.5 Generate a Sankey plot to visualize interactions
+``` {r sankey-generate}
+  if (requireNamespace("plotly", quietly = TRUE)) {
+    sankeyPlot <- plotByTerms(
+      data = interactionsProcessed,
+      selectedTerms = mockGostResult$result$term_name[1],
+      title = "Sankey Plot of Trans-Interactions"
+    )
+    # The plot object 'sankeyPlot' is now created and can be displayed
+    # in an interactive session by simply typing its name.
+    # sankeyPlot
+  }
+}
+```
+# 7. Session Information
+
+```{r session-info}
+sessionInfo()
