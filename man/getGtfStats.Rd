@@ -23,7 +23,6 @@ typically created by importing a GTF/GFF file.
 }
 \examples{
 # --- 1. Create a sample GRanges object for a reproducible example ---
-# This object mimics the structure of a GTF file imported with rtracklayer.
 sampleGtf <- GenomicRanges::GRanges(
   seqnames = "chr1",
   ranges = IRanges::IRanges(start = c(100, 200, 400, 500), width = c(50, 60, 100, 20)),
@@ -38,7 +37,6 @@ transcriptStats <- getGtfStats(gtfObject = sampleGtf)
 
 print("Transcript Statistics:")
 print(transcriptStats)
-# Expected output will show stats for tx1 (length=110, exons=2) and tx2 (length=20, exons=1).
 
 }
 \keyword{GRanges}

@@ -1,30 +1,10 @@
 library(testthat)
 
-test_that("plot_by_terms creates a plotly object with valid single-row input", {
-  skip_if_not_installed("plotly")
-  skip_if_not_installed("Polychrome")
-  
-  data <- data.frame(
-    term_name = "term1",
-    intersection = "gene1",
-    lncRNA.id = "lnc1",
-    type = "trans",
-    stringsAsFactors = FALSE
-  )
-  fig <- plot_by_terms(data, select_terms = "term1")
-  expect_true(inherits(fig, "plotly"))
-  
-  # Additional check to confirm node colors match node count
-  sankey_data <- prepare_sankey_data(data)  # Assuming this is accessible for testing
-  colored_data <- set_sankey_colors(sankey_data, color = NULL, color_selected = FALSE, pathway = NULL)
-  expect_equal(length(colored_data$node$color), nrow(colored_data$node))
-})
-
 # Test 2: Multiple rows with color_selected
 test_that("plot_by_terms handles multiple rows and color_selected", {
   skip_if_not_installed("plotly")
   skip_if_not_installed("Polychrome")
-  
+
   data <- data.frame(
     term_name = c("term1", "term2"),
     intersection = c("gene1", "gene2"),

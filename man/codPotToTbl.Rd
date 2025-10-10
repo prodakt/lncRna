@@ -44,9 +44,20 @@ list. Noncoding predictions are marked as 1, coding as 0.
 # --- 1. Create temporary output files for a reproducible example ---
 cpc2File <- tempfile()
 plekFile <- tempfile()
-write.table(data.frame(V1="ID1", V8="noncoding"), cpc2File, col.names=FALSE, row.names=FALSE)
-write.table(data.frame(V1="ID2", V8="coding"), cpc2File, col.names=FALSE, row.names=FALSE, append=TRUE)
-write.table(data.frame(V1="Non-coding", V3=">ID2"), plekFile, col.names=FALSE, row.names=FALSE)
+# CPC2 format: ID ... classification
+write.table(
+  data.frame(V1="ID1", V2="-", V3="-", V4="-", V5="-", V6="-", V7="-", V8="noncoding"),
+  cpc2File, col.names=FALSE, row.names=FALSE, sep="\t"
+)
+write.table(
+  data.frame(V1="ID2", V2="-", V3="-", V4="-", V5="-", V6="-", V7="-", V8="coding"),
+  cpc2File, col.names=FALSE, row.names=FALSE, sep="\t", append=TRUE
+)
+# PLEK format: Classification Score >ID
+write.table(
+  data.frame(V1="Non-coding", V2="0.9", V3=">ID2"),
+  plekFile, col.names=FALSE, row.names=FALSE, sep=" "
+)
 
 # --- 2. Run the function with the temporary files ---
 codpotResults <- codPotToTbl(cpc2Outfile = cpc2File, plekOutfile = plekFile)
