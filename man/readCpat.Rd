@@ -4,7 +4,7 @@
 \alias{readCpat}
 \title{Read CPAT Output}
 \usage{
-readCpat(cpatOutfile, cpatCutoff = 0.364)
+readCpat(cpatOutfile, cpatCutoff)
 }
 \arguments{
 \item{cpatOutfile}{Path to the CPAT output file.}

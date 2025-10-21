@@ -25,7 +25,8 @@
 # niezbędne dane do środowiska R.
 
 message("Sekcja 1: Wczytywanie danych...")
-
+getwd()
+setwd("F:/Dragoni/Prodakt/lncRna/")
 # --- 1.1: Zdefiniuj ścieżki do plików ---
 # Używamy `file.path` dla kompatybilności z różnymi systemami operacyjnymi.
 dataDir <- "data"
@@ -45,7 +46,7 @@ refGtf <- rtracklayer::import.gff(refGtfFile)
 # --- 1.3: Wczytaj macierze ekspresji ---
 genesCounts <- read.csv(geneCountsFile, row.names = 1)
 rownames(genesCounts) <- gsub("\\|.*", "", rownames(genesCounts)) # Oczyść nazwy genów
-transcriptsCounts <- read.csv(transcriptCountsFile, row.names = 1)
+transcriptsCounts <-  read.table("data/transcript_count_matrix.csv", header = TRUE, sep = ",", row.names = 1)
 
 # --- 1.4: Wczytaj listy genów DE ---
 degs <- read.csv2(degsFile, row.names = 1)
@@ -66,22 +67,27 @@ transcriptStats <- getGtfStats(gtfObject = stringtieGtf)
 
 # --- 2.2: Zidentyfikuj znane biotypy z referencyjnego GTF ---
 knownBiotypes <- getRefBiotypes(gtfObject = refGtf, level = "transcript")
+length(knownBiotypes$transcript_biotype)
+table(knownBiotypes$transcript_biotype)
 knownLncRnaIds <- knownBiotypes[knownBiotypes$transcript_biotype == "lncRNA", "transcript_id"]
-knownPcRnaIds <- knownBiotypes[knownBiotypes$transcript_biotype == "protein_coding", "transcript_id"]
-
+knownPcRnaIds <- knownBiotypes[knownBiotypes$transcript_biotype %in% "protein_coding",]$transcript_id
+head(knownPcRnaIds)
+length(knownPcRnaIds)
 # --- 2.3: Filtruj transkrypty na podstawie cech i ekspresji ---
 # Usuń znane transkrypty kodujące białka
 potentialLncRnaTranscripts <- transcriptStats[!(transcriptStats$transcript_id %in% knownPcRnaIds), ]
+head(potentialLncRnaTranscripts)
+length(potentialLncRnaTranscripts$transcript_id)
 # Filtruj po długości (>200 nt) i liczbie egzonów (>1)
-potentialLncRnaTranscripts <- potentialLncRnaTranscripts[
-  potentialLncRnaTranscripts$exons > 1 & potentialLncRnaTranscripts$transLength >= 200,
-]
+potentialLncRnaTranscriptsIds <- potentialLncRnaTranscripts[potentialLncRnaTranscripts$exons > 1 & potentialLncRnaTranscripts$transLength >= 200,]$transcript_id
+head(potentialLncRnaTranscriptsIds)
+length(potentialLncRnaTranscriptsIds)
 # Zidentyfikuj transkrypty z wystarczającą ekspresją
 expressedTranscriptIds <- rownames(transcriptsCounts[rowSums(transcriptsCounts) > 10, ])
 # Finalna lista potencjalnych lncRNA (po wszystkich filtrach)
-potentialLncRnaIds <- potentialLncRnaTranscripts$transcript_id[
-  potentialLncRnaTranscripts$transcript_id %in% expressedTranscriptIds
-]
+potentialLncRnaIds <- potentialLncRnaTranscripts$transcript_id[potentialLncRnaTranscripts$transcript_id %in% expressedTranscriptIds]
+head(potentialLncRnaIds)
+length(potentialLncRnaIds)
 message(paste("Znaleziono", length(potentialLncRnaIds), "potencjalnych lncRNA po filtrowaniu."))
 
 

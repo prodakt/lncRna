@@ -130,3 +130,61 @@ validateInputList <- function(inputList, requiredElements) {
   }
   return(TRUE)
 }
+
+
+
+#' Calculate Statistics for a Single Tool
+#'
+#' Computes confusion matrix statistics for one tool using caret. Returns a named
+#' vector containing all available metrics, including NAs.
+#'
+#' @param toolName The name of the tool to analyze.
+#' @param predictions A numeric vector (0/1) of predictions for the tool.
+#' @param referenceFactor A factor vector of true labels (levels "0", "1").
+#' @return A named numeric vector containing combined overall and by-class statistics
+#'         for the tool (may include NAs), or NULL if calculation fails catastrophically.
+#' @keywords internal statistics helper caret confusion matrix
+#' @importFrom caret confusionMatrix
+#' @noRd
+#'
+calculateSingleToolStats <- function(toolName, predictions, referenceFactor) {
+  # Check prediction validity
+  if (is.null(predictions) || length(predictions) != length(referenceFactor)) {
+    warning(paste("Skipping tool '", toolName, "' due to missing or mismatched predictions."), call. = FALSE)
+    return(NULL)
+  }
+  if (!all(predictions %in% c(0, 1))) {
+    warning(paste("Skipping tool '", toolName, "' as predictions are not all 0 or 1."), call. = FALSE)
+    return(NULL)
+  }
+  
+  dat_factor <- factor(predictions, levels = levels(referenceFactor)) # Use same levels as reference
+  
+  # Use tryCatch for robustness
+  cm_result <- tryCatch({
+    caret::confusionMatrix(data = dat_factor,
+                           reference = referenceFactor,
+                           mode = "everything", # Get all available stats
+                           positive = "1") # Assume '1' (non-coding) is positive class
+  }, error = function(e) {
+    warning(paste("Could not compute confusion matrix for tool '", toolName, "'. Error: ", e$message), call. = FALSE)
+    return(NULL) # Return NULL if confusionMatrix itself fails
+  })
+  
+  if (is.null(cm_result)) {
+    return(NULL)
+  }
+  
+  # Extract and combine stats
+  stats_overall <- cm_result$overall
+  stats_byClass <- cm_result$byClass
+  # Combine into a single named vector
+  combined_stats_vector <- c(stats_overall, stats_byClass)
+  
+  # Ensure the output is numeric, converting potential non-numeric outputs to NA
+  # This handles cases where caret might return characters like "NaN"
+  numeric_stats_vector <- suppressWarnings(as.numeric(combined_stats_vector))
+  names(numeric_stats_vector) <- names(combined_stats_vector)
+  
+  return(numeric_stats_vector) # Return the named vector (may contain NAs)
+}

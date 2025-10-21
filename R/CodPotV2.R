@@ -69,7 +69,7 @@ codPotToTbl <- function(cpc2Outfile = NULL, plekOutfile = NULL, feelncOutfile = 
   codpotList$tools$CPC2 <- readFileIfExists(cpc2Outfile, readCpc2)
   codpotList$tools$PLEK <- readFileIfExists(plekOutfile, readPlek)
   codpotList$tools$FEELnc <- readFileIfExists(feelncOutfile, readFeelnc)
-  codpotList$tools$CPAT <- readFileIfExists(cpatOutfile, readCpat, CPAT_cutoff = cpatCutoff)
+  codpotList$tools$CPAT <- readFileIfExists(cpatOutfile, readCpat, cpatCutoff)
   codpotList$tools$CNCI <- readFileIfExists(cnciOutfile, readCnci)
   codpotList$tools$LncFinder <- readFileIfExists(lncFinderOutfile, readLncFinder)
   codpotList$tools$lncRNA_Mdeep <- readFileIfExists(lncRnaMdeepOutfile, readLncRnaMdeep)
@@ -202,9 +202,9 @@ readFeelnc <- function(feelncOutfile) {
 #' print(noncodingCpat)
 #' # Clean up
 #' unlink(tempCpatFile)
-readCpat <- function(cpatOutfile, cpatCutoff = 0.364) {
-  cpatData <- utils::read.table(cpatOutfile, header = TRUE, stringsAsFactors = FALSE)
-  noncodingIds <- rownames(cpatData[cpatData$coding_prob < cpatCutoff, ])
+readCpat <- function(cpatOutfile, cpatCutoff) {
+  cpatData <- utils::read.table(cpatOutfile, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
+  noncodingIds <- rownames(cpatData[cpatData$coding_prob < cpatCutoff, , drop = FALSE])
   noncodingIds <- unique(noncodingIds)
   setNames(rep("noncoding", length(noncodingIds)), noncodingIds)
 }
@@ -252,10 +252,8 @@ readCnci <- function(cnciOutfile) {
 #' # Clean up
 #' unlink(tempLncFinderFile)
 readLncFinder <- function(lncFinderOutfile) {
-  # LncFinder often uses the first column for IDs, not rownames
-  lncFinderData <- utils::read.csv2(lncFinderOutfile, header = TRUE, stringsAsFactors = FALSE)
-  # Assuming the first column contains the IDs
-  noncodingIds <- lncFinderData[lncFinderData$Pred == "NonCoding", 1]
+  lncFinderData <- utils::read.csv2(lncFinderOutfile, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
+  noncodingIds <- rownames(lncFinderData[lncFinderData$Pred == "NonCoding", , drop = FALSE])
   noncodingIds <- unique(as.character(noncodingIds))
   setNames(rep("noncoding", length(noncodingIds)), noncodingIds)
 }
