@@ -22,11 +22,17 @@ Authors@R: c(
            role = c("ctb"),          
            email = "wiktorbabis@gmail.com",
            comment = c(ORCID = "0009-0006-3648-3413")),
-    person(given = "Miriana",
-           family = "Quaranta",        
+    person(given = "Mariusz",
+           family = "Jankowski",        
            role = c("ctb"),          
-           email = "miriana.quaranta@uniroma1.it",
-           comment = c(ORCID = "0009-0003-0855-485X")))
+           email = "ma.jankowski99@gmail.com",
+           comment = c(ORCID = "0009-0000-7872-4023"))
+    person(given = "Stefano",
+           family = "Pascarella",        
+           role = c("ctb"),          
+           email = "stefano.pascarella@uniroma1.it",
+           comment = c(ORCID = "0000-0002-6822-4022"))
+)
 Description: Provides a complete workflow for the identification, analysis, and functional
     annotation of long non-coding RNAs (lncRNAs) from RNA-Seq data. The package
     includes functions for filtering transcripts from GTF files, evaluating the
