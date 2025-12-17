@@ -1,23 +1,84 @@
 Package: lncRna
-Title: Long Non-coding RNA Identification
-Version: 1.0.0
-Authors@R: 
+Title: A Comprehensive Workflow for Long Non-coding RNA Identification and Functional Analysis
+Version: 0.99.0
+Authors@R: c(
     person(given = "Jan Pawel",
            family = "Jastrzebski",
            role = c("aut", "cre"),
            email = "bioinformatyka@gmail.com",
-           comment = c(ORCID = "0000-0001-8699-7742"))
-Description: This is the package for lncRNA identification in a simple way.
-License: licence
+           comment = c(ORCID = "0000-0001-8699-7742")),
+    person(given = "Damian",
+           family = "Czopek",        
+           role = c("ctb", "aut"),          
+           email = "dcwmpl@gmail.com",
+           comment = c(ORCID = "0009-0005-3471-4866")),
+    person(given = "Monika",
+           family = "Gawronska",    
+           role = c("ctb"),
+           email = "gawronska572@gmail.com",
+           comment = c(ORCID = "0009-0001-2677-6371")), 
+    person(given = "Wiktor",
+           family = "Babis",        
+           role = c("ctb"),          
+           email = "wiktorbabis@gmail.com",
+           comment = c(ORCID = "0009-0006-3648-3413")),
+    person(given = "Mariusz",
+           family = "Jankowski",        
+           role = c("ctb"),          
+           email = "ma.jankowski99@gmail.com",
+           comment = c(ORCID = "0009-0000-7872-4023"))
+    person(given = "Stefano",
+           family = "Pascarella",        
+           role = c("ctb"),          
+           email = "stefano.pascarella@uniroma1.it",
+           comment = c(ORCID = "0000-0002-6822-4022"))
+)
+Description: Provides a complete workflow for the identification, analysis, and functional
+    annotation of long non-coding RNAs (lncRNAs) from RNA-Seq data. The package
+    includes functions for filtering transcripts from GTF files, evaluating the
+    performance of multiple coding potential prediction tools (e.g., CPC2, PLEK,
+    CPAT), and summarizing their agreement. It enables systematic performance
+    analysis of individual tools, "at least N" tool consensus, and all possible tool
+    combinations. Functional analysis is supported through the identification of
+    potential cis- and trans-acting interactions with protein-coding genes,
+    followed by enrichment analysis. Results can be visualized using a variety
+    of plots, including radar plots, clock plots, and interactive Sankey diagrams.
+License: MIT
+URL: https://github.com/prodakt/lncRna
+BugReports: https://github.com/prodakt/lncRna/issues
+biocViews: Software, GeneExpression, RNASeq, Transcription, Visualization, QualityControl, FunctionalGenomics, Classification, FunctionalPrediction
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
-Depends:
-  dplyr (>= 1.1.0)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+VignetteBuilder: knitr
 Imports:
-  caret,
-  venn,
-  Hmisc,
-  reshape2,
-  rhmmer,
-  ROCR
+    dplyr,
+    fmsb,
+    ggplot2,
+    grDevices,
+    graphics,
+    Hmisc,
+    patchwork,
+    plotly,
+    Polychrome,
+    reshape2,
+    S4Vectors,
+    scales,
+    stats,
+    stringr,
+	GenomicRanges,
+    utils
+Suggests:
+	IRanges,
+    methods, 
+    BiocStyle,
+    gprofiler2,
+    knitr,
+    rmarkdown,
+    rtracklayer,
+    seqinr,
+    testthat (>= 3.0.0),
+    venn,
+	rhmmer
+Config/testthat/edition: 3

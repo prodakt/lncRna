@@ -11,7 +11,7 @@
 
 
 ## Introduction
-The lncRna is an R package designed to simplify the process of lncRNA identification, it allows researchers to set up and perform the analysis in a straightforward manner. This package provides a user-friendly interface for processing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
+The lncRna is an R package designed to simplify the process of lncRNA identification, it allows researchers to set up and perform the analysis in a straightforward manner. This package includes a step-by-step tutorial script (step_by_Step.R) to help you get started. You can find it in the /data catalog, under /Tutorial_script. This package provides a user-friendly interface for processing transcriptomic data and implementing the lncRNA identification pipeline. Moreover, it offers the capability to estimate the accuracy and precision of the prepared pipelines, facilitating the selection of the most reliable approach. With its simplicity and comprehensive functionality, this package aims to enhance the efficiency and accuracy of lncRNA identification, ultimately contributing to advancements in the field of non-coding RNA research.
 
 
 ## General description
@@ -389,89 +389,11 @@ Prediction    0    1
              Prevalence : 0.4725          
          Detection Rate : 0.4120          
    Detection Prevalence : 0.4341          
-      Balanced Accuracy : 0.9150               
+      Balanced Accuracy : 0.9150          
+                                                        
+      
 
 ```
-<img src="img/ConfusionMatrix.png" align="center" height = 256/>
-
-Proper preparation of the data in the first stage (initial filtering of transcripts for assessment of structural features) is a prerequisite to adjust the appropriate filtering levels to maximize the efficiency of the whole process (e.g. selection of the average expression level or decision to filter based on the number of exons) also considering parameters such as the efficiency criteria, accuracy and accordance with the established research goals.
-
-#### Visualizing Confusion Matrix Statistics - Radar Plots and Clock Plots
-
-The next thing which can be make by using functions from this package is decision-making process which is facilitated by a set of functions for visualizing these parameters in several layouts and for all selected analytical configurations: the 'radar_plot_cm()' and 'clock_plot_cm()' functions.
-Those visualizations provide different ways to visualize the confusion matrix statistics calculated in the previous steps. The user can use two types of plots: Radar plots and Clock plots, these plots help to visually compare the performance of different coding potential prediction methods and their combinations across various metrics.
-
-##### Radar Plots - Visualizing Performance Metrics in a Radial Layout
-
-Radar plots (also known as spider plots or star plots) are useful for displaying multivariate data in a two-dimensional chart. In our case, each axis of the radar plot represents a performance metric (e.g., Accuracy, Precision, Sensitivity), and each "vertex" or point on the radar represents the value of that metric for a specific coding potential prediction method (or combination).
-For this you should use the 'radar_plot_cm()' function with just the list of confusion matrices ('cm_list') as an input file. This function will generate a radar plot for *all* methods in the 'cm_list' and will display a default set of performance metrics (typically Accuracy, Sensitivity, Specificity, Precision).
-Example of usage:
-```
-radar_plot_cm(cm_list = all_high_precision)
-
-
-{
-  # procedure
-  all_high_precision <- calculate_cm(bp_cmb_data = best_tool_combination_analysis, best_pat3_data = combined_tool_performance_all_combinations, print_metric_threshold_methods = TRUE, return_only_high_methods = F)
-  radar_plot_cm(cm_list = all_high_precision)
-  # does not list all available methods!!!!
-}
-```
-This function also provides an option to focus on specified methods, by using the 'methods' argument. This is helpful when you want to compare the performance of only a few specific methods or combinations.
-Example:
-```
-# Example: Create a radar plot comparing "CPC2+CPAT", "PLEK+CPAT", and "CPAT+CNCI" combinations.
-
-radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "PLEK+CPAT", "CPAT+CNCI")) 
-radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI")) 
-radar_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI"), display_fill = F)
-```
-This function also provides a focus for Specified Performance Metrics, because the default, 'radar_plot_cm()' displays a standard set of metrics, so the user can customize the metrics displayed on the radar plot using the 'metrics' argument. This allows you to focus on specific aspects of performance that are most relevant to your analysis.
-Example:
-```
-# Example: Create a radar plot showing only "Sensitivity", "Recall", "Precision", and "Accuracy".
-
-radar_plot_cm(cm_list = all_high_precision, metrics = c("Sensitivity", "Recall", "Precision", "Accuracy")) 
-```
-This function also makes it possible to visualise several plots at the same time, which can be filled in the middle of an area or show only the contours. This option is useful when you have many methods or combinations to compare, displaying them all on a single radar plot can become crowded and difficult to read.  The 'layout = "multiple"' option generates a grid of individual radar plots, where each plot represents a single method or a small group of methods. At the same time filling the area under the radar is a cosmetic option, sometimes capable of providing a a cleaner look or when comparing many methods where filled areas might overlap and obscure each other. For removing this area you need to setting 'display_fill = FALSE'.
-Example:
-```
-# Example: Generate a grid of radar plots, one for each method/combination in 'all_high_precision'.
-#          We also use 'display_area = TRUE' to fill the radar plot area, enhancing visual comparison.
-
-radar_plot_cm(cm_list = all_high_precision, layout = "multiple", display_area = TRUE)
-
-# Example: Create multiple radar plots without filled areas.
-
-radar_plot_cm(cm_list = all_high_precision, layout = "multiple", display_area = TRUE, display_fill = FALSE)
-```
-
-![radar](https://github.com/prodakt/lncRna/blob/main/img/RadarPlot.png)
-
-##### Clock Plots - Circular Bar Plots for Performance Metrics
-
-Clock plots are another way to visualize performance metrics. They are essentially circular bar plots where each "hour" on the clock represents a performance metric, and the length of the bar represents the metric's value. Clock plots can be particularly effective for highlighting differences in metric values in a visually appealing circular format.
-Analogous to the Radar plot described above, the Clock Plot function also offers modifications, allowing it to be customised by the user. Similar to radar plots, running 'clock_plot_cm()' with just 'cm_list' will generate clock plots for all methods in 'cm_list' using a default set of performance metrics.
-Example:
-```
-clock_plot_cm(cm_list = all_high_precision)
-clock_plot_cm(cm_list = all_cms) # Example with 'all_cms' list (if you want to compare with a different set of confusion matrices)
-```
-This function also offers the possibility of adjusting the number of simultaneously displayed Clock Plots, in order to comparing multiple methods using clock plots, you can again use 'layout = "multiple' to create a grid of individual clock plots, one for each method or combination. This is especially useful when you have a larger number of methods to visualize. You can also specify a 'plot_title' which will be used as a base title for each individual clock plot.
-Example:
-```
-clock_plot_cm(cm_list = all_high_precision, layout = "multiple", plot_title = "Coding Potential Prediction Performance")
-```
-Analogously as in radar plots, you can focus clock plots on specific methods using the 'methods' argument. This allows for direct visual comparison of performance between a chosen subset of methods.
-Example:
-```
-# Example: Create clock plots only for "CPC2+CPAT", "PLEK+CPAT", and "CPAT+CNCI" combinations.
-
-clock_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "PLEK+CPAT", "CPAT+CNCI")) # WARNING !!! jpj
-clock_plot_cm(cm_list = all_high_precision, methods = c("CPC2+CPAT", "CPAT+CNCI"))
-```
-
-![clock](https://github.com/prodakt/lncRna/blob/main/img/ClockPlot.png)
 
 ### IIc. Filtering by simmilarity
 in this stage you can read the Pfam scanning output file to filter out transcripts containing protein domains
@@ -515,52 +437,37 @@ predicted_lncRNA <- predicted_lncRNA$seqIDs
 -->
 
 
-### III. Functional annotation
+## III. Functional annotation 
 
-the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
-
-#### Investigating lncRNA-mRNA Interactions (Cis and Trans)
+### IIIa Investigating lncRNA-mRNA Interactions (Cis and Trans)
 
 This subchapter presents the use of two functions (separate for cis and for trans) which investigate potential functional interactions of our identified lncRNAs with protein-coding genes. Users can analyze both cis-regulatory interactions (nearby genes) and trans-regulatory interactions (gene expression correlations). 
 Firstly the Cis-Regulatory Interaction Analysis in which you need to use the ‘cisInter()’ function to identify protein-coding genes that are located within a certain genomic distance (e.g., 10kb) of our lncRNA transcripts. Cis-regulation implies that lncRNAs might regulate the expression of nearby genes on the same chromosome.
 Example of usage:
 
 ```
-# combine tle list of both predicted and known lncRNA's
-lncRNA_transcripts <- unique(c(predicted_lncRNA, known_lncRNA))
-
-# cis acting genes
-cis <- cisInter(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene", max.dist = 10000)  
-head(cis)
-
-     isBest lncRNA_gene lncRNA_transcript    partnerRNA_gene partnerRNA_transcript direction       type distance     subtype location
-276       1 MSTRG.13837     MSTRG.13837.9 ENSMGAG00000000862    ENSMGAT00000000882 antisense intergenic    13338   divergent upstream
-433       1 MSTRG.37986     MSTRG.37986.9 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    51659 same_strand upstream
-1112      1 MSTRG.37986    MSTRG.37986.14 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    74766 same_strand upstream
-1430      1 MSTRG.26440     MSTRG.26440.4 ENSMGAG00000002759    ENSMGAT00000003192     sense      genic        0      nested intronic
-1518      1 MSTRG.43740     MSTRG.43740.4 ENSMGAG00000015916    ENSMGAT00000017829     sense      genic        0  containing intronic
-1561      1 MSTRG.37986    MSTRG.37986.11 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    51659 same_strand upstream
+cis_interaction_table <- cisInter(is.best = TRUE,
+                                  FEELnc.classes = "data/lncCodPot_MMus/FEELnc_Mm_classes.txt",
+                                  lncRNAs = lncRNA_transcript_ids_combined,
+                                  lncRNA.level = "transcript",
+                                  mRNA.level = "gene",
+                                  max.dist = 10000,
+                                  mRNAs = rownames(DEGs)) # Using differentially expressed genes (DEGs) as target mRNAs
+head(cis_interaction_table) # Inspect the resulting table of cis-interactions.
 ```
 
 The second one is Trans-Regulatory Interaction Analysis where to identify trans-interacting protein-coding genes based on expression correlation the user should use the ‘TransAct()’ function whereby the user is able to identify potential trans-regulatory interactions based on gene expression correlations between lncRNAs and protein-coding genes across samples. Trans-regulation suggests that lncRNAs might influence the expression of distant genes, possibly on different chromosomes.
 Example of usage:
-
 ```
-# trans acting genes
-trans <- TransAct(expr.matrix = expr, rval = 0.9, pval = 0.05, lncRNA.list = lncRNA_genes, tarRNA.list = pcRNA_genes)
-head(trans)
-
-      lncRNA.id targetRNA.id   r.value      p.value
-193 MSTRG.14959  MSTRG.10009 0.9129956 3.387791e-05
-333 MSTRG.18834  MSTRG.10009 0.9011705 6.277291e-05
-397 MSTRG.20790  MSTRG.10009 0.9126770 3.448375e-05
-591 MSTRG.26440  MSTRG.10009 0.9556676 1.251677e-06
-690 MSTRG.28330  MSTRG.10009 0.9243804 1.713508e-05
-819 MSTRG.31990  MSTRG.10009 0.9151334 3.002583e-05
-
+trans_interaction_table <- TransAct(expr.matrix = genes_counts,
+                                    rval = 0.95,
+                                    pval = 0.05,
+                                    lncRNA.list = rownames(DELs), # Using differentially expressed lncRNAs (DELs)
+                                    tarRNA.list = rownames(DEGs)) # Using differentially expressed genes (DEGs) as target mRNAs
+head(trans_interaction_table) # Inspect the resulting table of trans-interactions.
 ```
 
-#### Functional Enrichment Analysis of lncRNA-Interacting Genes (gProfiler2) (cis and trans)
+### IIIb Functional Enrichment Analysis of lncRNA-Interacting Genes (Gene Onthology)
 
 After obtaining a list of protein-coding genes that can potentially interact with lncRNAs (cis and trans), the user can carry out functional enrichment analysis to understand the potential biological pathways and functions associated with these interactions. The gost() function from the ‘gprofiler2’ package for Gene Ontology (GO), pathway, and other enrichment analysis is used for this purpose. 
 The use of the gost() function is divided into its use for cis-interacting genes and for trans-interacting genes:
@@ -594,6 +501,9 @@ trans_enrichment_results <- gost(query = trans_interaction_table$targetRNA.id,
                                  domain_scope = "annotated", custom_bg = NULL,
                                  numeric_ns = "", sources = NULL, as_short_link = FALSE)
 ```
+
+
+### IIIc Direct interactions
 
 #### Use of lncTar to obtain information on lncRNA-mRNA interaction
 
@@ -649,8 +559,8 @@ The first step to merge all data is to process interactions and merge with gProf
 ```
 Trans_interactions_processed <- process_interactions(gprof = trans_gProfiler_results_table, interaction_table = trans_interaction_table, type = "trans")  # ERROR!!! trans_enrichment_results -> trans_gProfiler_results_table jpj
 Cis_interactions_processed <- process_interactions(gprof = cis_gProfiler_results_table, interaction_table = cis_interaction_table, type = "cis") # ERROR !!! cis_enrichment_results -> cis_interaction_table jpj
-LncTar_interactions_processed <- process_interactions(gprof = LncTar_gProfiler_results_table, interaction_table = LncTar_interaction_data, type = "LncTar", lncRNA_col = "Query", target_col = "Target") 
-LION_interactions_processed <- process_interactions(gprof = LION_gProfiler_results_table, interaction_table = LION_interaction_data, type = "LION", lncRNA_col = "RNA_Name", target_col = "Pro_Name") 
+LncTar_interactions_processed <- process_interactions(gprof = LncTar_gProfiler_results_table, interaction_table = LncTar_interaction_data, type = "LncTar", lncRNA_col = "Query", target_col = "Target") # ERROR !!! LncTar_enrichment_results -> LncTar_gProfiler_results_table jpj
+LION_interactions_processed <- process_interactions(gprof = LION_gProfiler_results_table, interaction_table = LION_interaction_data, type = "LION", lncRNA_col = "RNA_Name", target_col = "Pro_Name") # ERROR !!! LION_enrichment_results -> LION_gProfiler_results_table jpj
 ```
 
 Once this step has been completed, you can proceed to the actual combining all processed interaction tables (cis, trans, LncTar, LION) into a single table for a comprehensive overview of potential lncRNA functional associations:
@@ -660,8 +570,7 @@ combined_interactions_table <- rbind(Trans_interactions_processed, Cis_interacti
 combined_interactions_table # View the combined interaction table.
 ```
 
-#### Visualizing Functional Interaction Results
-
+### IIId Visualizing Functional Interaction Results
 The lncRna package also allows a number of functions to visualise the resulting data.
 The visualisations are the functional interaction results summarized in the 'combined_interactions_table'. These plotting functions allow you to explore and present the functional associations of lncRNAs from different perspectives.
 
@@ -683,9 +592,6 @@ Example of usage:
 # **Example 1: Bar plot showing interactions associated with "response to stress" GO term, with labels.**
 plot_by_terms(data = combined_interactions_table, select_terms = "response to stress", label = TRUE)
 ```
-
-![sankey](https://github.com/prodakt/lncRna/blob/main/img/SankeyPlot.png)
-
 The last function in this group of visualisation functions is the ‘plot_by_type()’ function, which generates a stacked bar plot summarizing interactions:
 
 ```
@@ -695,7 +601,41 @@ plot_by_type(data = combined_interactions_table, label = TRUE)
 # **Example 2: 'plot_by_type()' for 'Cis' interactions only, specifying 'type = "cis"', with labels.**
 plot_by_type(data = Cis_interactions_processed, type = "cis", label = TRUE) # ERROR !!! there is no "selected_type" object jpj
 ```
-![sankey_2](https://github.com/prodakt/lncRna/blob/main/img/SankeyType.png)
+
+ <!--
+the third stage is to predict or estimate some functions and functional connections of identified lncRNAs
+```
+# combine tle list of both predicted and known lncRNA's
+lncRNA_transcripts <- unique(c(predicted_lncRNA, known_lncRNA))
+
+# cis acting genes
+cis <- cisInter(is.best = T, FEELnc.classes = ".../FEELnc_classes.txt", lncRNAs = lncRNA_transcripts, lncRNA.level = "transcript", mRNA.level = "gene", max.dist = 10000)  
+head(cis)
+
+     isBest lncRNA_gene lncRNA_transcript    partnerRNA_gene partnerRNA_transcript direction       type distance     subtype location
+276       1 MSTRG.13837     MSTRG.13837.9 ENSMGAG00000000862    ENSMGAT00000000882 antisense intergenic    13338   divergent upstream
+433       1 MSTRG.37986     MSTRG.37986.9 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    51659 same_strand upstream
+1112      1 MSTRG.37986    MSTRG.37986.14 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    74766 same_strand upstream
+1430      1 MSTRG.26440     MSTRG.26440.4 ENSMGAG00000002759    ENSMGAT00000003192     sense      genic        0      nested intronic
+1518      1 MSTRG.43740     MSTRG.43740.4 ENSMGAG00000015916    ENSMGAT00000017829     sense      genic        0  containing intronic
+1561      1 MSTRG.37986    MSTRG.37986.11 ENSMGAG00000008533    ENSMGAT00000009584     sense intergenic    51659 same_strand upstream
+
+# trans acting genes
+trans <- TransAct(expr.matrix = expr, rval = 0.9, pval = 0.05, lncRNA.list = lncRNA_genes, tarRNA.list = pcRNA_genes)
+head(trans)
+
+      lncRNA.id targetRNA.id   r.value      p.value
+193 MSTRG.14959  MSTRG.10009 0.9129956 3.387791e-05
+333 MSTRG.18834  MSTRG.10009 0.9011705 6.277291e-05
+397 MSTRG.20790  MSTRG.10009 0.9126770 3.448375e-05
+591 MSTRG.26440  MSTRG.10009 0.9556676 1.251677e-06
+690 MSTRG.28330  MSTRG.10009 0.9243804 1.713508e-05
+819 MSTRG.31990  MSTRG.10009 0.9151334 3.002583e-05
+
+
+```
+
 
 ### IV. Structural analysis
 <i>under construction</i>
+-->
