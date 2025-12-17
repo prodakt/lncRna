@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(lncRnaV2)
+library(lncRna)
 
-test_check("lncRnaV2")
+test_check("lncRna")

@@ -7,26 +7,26 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "bioinformatyka@gmail.com",
            comment = c(ORCID = "0000-0001-8699-7742")),
-	person(given = "Damian",
+    person(given = "Damian",
            family = "Czopek",        
            role = c("ctb", "aut"),          
            email = "dcwmpl@gmail.com",
-		   comment = c(ORCID = "0009-0005-3471-4866")),
-	person(given = "Monika",
+           comment = c(ORCID = "0009-0005-3471-4866")),
+    person(given = "Monika",
            family = "Gawronska",    
            role = c("ctb"),
-		   email = "gawronska572@gmail.com",
+           email = "gawronska572@gmail.com",
            comment = c(ORCID = "0009-0001-2677-6371")), 
     person(given = "Wiktor",
            family = "Babis",        
            role = c("ctb"),          
            email = "wiktorbabis@gmail.com",
-		   comment = c(ORCID = "0009-0006-3648-3413")),
-	person(given = "Miriana",
+           comment = c(ORCID = "0009-0006-3648-3413")),
+    person(given = "Miriana",
            family = "Quaranta",        
            role = c("ctb"),          
            email = "miriana.quaranta@uniroma1.it",
-		   comment = c(ORCID = "0009-0003-0855-485X")))
+           comment = c(ORCID = "0009-0003-0855-485X")))
 Description: Provides a complete workflow for the identification, analysis, and functional
     annotation of long non-coding RNAs (lncRNAs) from RNA-Seq data. The package
     includes functions for filtering transcripts from GTF files, evaluating the
@@ -37,41 +37,42 @@ Description: Provides a complete workflow for the identification, analysis, and 
     potential cis- and trans-acting interactions with protein-coding genes,
     followed by enrichment analysis. Results can be visualized using a variety
     of plots, including radar plots, clock plots, and interactive Sankey diagrams.
-License: MIT + file LICENSE
+License: MIT
 URL: https://github.com/prodakt/lncRna
 BugReports: https://github.com/prodakt/lncRna/issues
-biocViews: Software, RNASeq, GeneExpression, FunctionalAnnotation, Visualization
+biocViews: Software, GeneExpression, RNASeq, Transcription, Visualization, QualityControl, FunctionalGenomics, Classification, FunctionalPrediction
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Imports:
-    caret,
     dplyr,
-    GenomicRanges,
-    gprofiler2,
-    Hmisc,
-    IRanges,
-    LION,
-    reshape2,
-    rhmmer,
-    ROCR,
-    rtracklayer,
-    S4Vectors,
-    seqinr,
-    tidyr,
-    utils
-Suggests: 
-    BiocStyle,
     fmsb,
     ggplot2,
-    knitr,
+    grDevices,
+    graphics,
+    Hmisc,
     patchwork,
     plotly,
     Polychrome,
-    rmarkdown,
+    reshape2,
+    S4Vectors,
     scales,
+    stats,
     stringr,
+	GenomicRanges,
+    utils
+Suggests:
+	IRanges,
+    methods, 
+    BiocStyle,
+    gprofiler2,
+    knitr,
+    rmarkdown,
+    rtracklayer,
+    seqinr,
     testthat (>= 3.0.0),
-    venn
+    venn,
+	rhmmer
+Config/testthat/edition: 3
