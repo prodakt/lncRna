@@ -3,8 +3,9 @@ title: "lncRna: A Comprehensive Pipeline for lncRNA Identification and Functiona
 author:
   - Jan Pawel Jastrzebski
   - Damian Czopek
+  - Mariusz Jankowski
+  - Stefano Pascarella
   - Wiktor Babis
-  - Miriana Quaranta
   - Monika Gawronska
 date: "`r Sys.Date()`"
 output: BiocStyle::html_document
