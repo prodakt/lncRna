@@ -1,6 +1,6 @@
 Package: lncRna
 Title: A Comprehensive Workflow for Long Non-coding RNA Identification and Functional Analysis
-Version: 0.99.0
+Version: 0.99.1
 Authors@R: c(
     person(given = "Jan Pawel",
            family = "Jastrzebski",
