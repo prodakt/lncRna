@@ -30,6 +30,10 @@ handleToolSelection <- function(availableTools, selectedTools = NULL) {
                 final_selected_tools <- availableTools
                 message("All tools selected.\n")
             } else {
+                # suppressWarnings() is used here to silence expected warnings 
+                # (during as.integer(strsplit()) calls . These warnings are 
+                # expected and do not impact the downstream analysis. This approach 
+                # is chosen to maintain code readability and simplicity.
                 indices <- suppressWarnings(as.integer(strsplit(input, "[ ,]+")[[1]]))
                 valid_indices <- indices[!is.na(indices) & indices > 0 &
                                              indices <= length(availableTools)]
