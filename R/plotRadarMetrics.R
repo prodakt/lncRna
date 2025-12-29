@@ -119,10 +119,14 @@ validateRadarInputs <- function(cmList, methods, metrics) {
     
     allAvailableMetrics <- names(cmList[[1]]$metrics)
     invalidMetrics <- setdiff(metrics, allAvailableMetrics)
-    if (length(invalidMetrics) > 0) {
-        stop("Invalid metrics specified: ", paste(invalidMetrics, collapse = ", "),
-             ". Available metrics are: ", paste(allAvailableMetrics, collapse = ", "))
+    
+     if (length(invalidMetrics) > 0) {
+         stop(
+              "Invalid metrics specified: ", toString(invalidMetrics),
+             ". Available metrics are: ", toString(allAvailableMetrics)
+         )
     }
+  
     
     list(cmList = cmList, methods = selectedMethods, metrics = metrics)
 }
