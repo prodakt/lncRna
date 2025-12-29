@@ -105,8 +105,12 @@ calculateMetrics <- function(predictions, reference) {
     
     AccuracyNull <- max(Prevalence, 1 - Prevalence)
     
+ #   accuracy_ci <- tryCatch(
+ #       stats::binom.test(TP + TN, total_obs)$conf.int[1:2],
+ #       error = function(e) c(NA, NA)
+ #   )
     accuracy_ci <- tryCatch(
-        stats::binom.test(TP + TN, total_obs)$conf.int[1:2],
+        stats::binom.test(TP + TN, total_obs)$conf.int[seq_len(2)],
         error = function(e) c(NA, NA)
     )
     AccuracyPValue <- tryCatch(
