@@ -43,7 +43,7 @@ Description: Provides a complete workflow for the identification, analysis, and 
     potential cis- and trans-acting interactions with protein-coding genes,
     followed by enrichment analysis. Results can be visualized using a variety
     of plots, including radar plots, clock plots, and interactive Sankey diagrams.
-License: MIT
+License: MIT + file LICENSE
 URL: https://github.com/prodakt/lncRna
 BugReports: https://github.com/prodakt/lncRna/issues
 biocViews: Software, GeneExpression, RNASeq, Transcription, Visualization, QualityControl, FunctionalGenomics, Classification, FunctionalPrediction
