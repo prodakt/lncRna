@@ -86,7 +86,7 @@ plotRadarMetrics <- function(cmList, methods = NULL,
             stop("A valid file name is required when saveData is TRUE.")
         }
         utils::write.csv2(radarData, file = paste0(fileName, ".csv"))
-        message("Radar data frame saved to ", paste0(fileName, ".csv"))
+        message("Radar data frame saved to ", fileName, ".csv")
     }
     
     plotColors <- setColors(colors, length(methods))
