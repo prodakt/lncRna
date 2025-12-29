@@ -168,7 +168,7 @@ plotSankeyInteractions <- function(interactionData,
         )
         node$color <- as.character(mypal)
       } else {
-        node$color <- seed_colors[1:n_nodes]
+        node$color <- seed_colors[seq_len(n_nodes)]
       }
     }
   } else {
