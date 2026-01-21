@@ -79,6 +79,5 @@ Suggests:
     rtracklayer,
     seqinr,
     testthat (>= 3.0.0),
-    venn,
-	rhmmer
+    venn
 Config/testthat/edition: 3
