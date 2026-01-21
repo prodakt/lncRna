@@ -272,7 +272,6 @@ plotVennCodPot <- function(codPot, selection = NULL,
         vennColors <- rep(vennColors, length.out = numSelected)
     }
     
-    # This function directly plots, so no object is returned from the call itself
     venn::venn(
         listForVenn,
         zcolor = vennColors[seq_len(numSelected)],
