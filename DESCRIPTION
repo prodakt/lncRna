@@ -1,6 +1,6 @@
 Package: lncRna
 Title: A Comprehensive Workflow for Long Non-coding RNA Identification and Functional Analysis
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(
     person(given = "Jan Pawel",
            family = "Jastrzebski",
@@ -12,6 +12,11 @@ Authors@R: c(
            role = c("ctb", "aut"),          
            email = "dcwmpl@gmail.com",
            comment = c(ORCID = "0009-0005-3471-4866")),
+	person(given = "Mariusz",
+           family = "Jankowski",        
+           role = c("ctb"),          
+           email = "ma.jankowski99@gmail.com",
+           comment = c(ORCID = "0009-0000-7872-4023")),
     person(given = "Monika",
            family = "Gawronska",    
            role = c("ctb"),
@@ -22,11 +27,6 @@ Authors@R: c(
            role = c("ctb"),          
            email = "wiktorbabis@gmail.com",
            comment = c(ORCID = "0009-0006-3648-3413")),
-    person(given = "Mariusz",
-           family = "Jankowski",        
-           role = c("ctb"),          
-           email = "ma.jankowski99@gmail.com",
-           comment = c(ORCID = "0009-0000-7872-4023")),
     person(given = "Stefano",
            family = "Pascarella",        
            role = c("ctb"),          
