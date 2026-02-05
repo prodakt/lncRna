@@ -259,13 +259,13 @@ You can easily draw the venn diagram for all used methods:
 ```
 venn.CodPot(CodPot = tbl2)
 ```
-![venn_all](https://github.com/prodakt/lncRna/blob/main/img/vennFull.png)
+![venn_all](https://github.com/prodakt/lncRna/blob/main/inst/img/vennFull.png)
 
 or you can selet which results you wish to include in the venn diagram:
 ```
 venn.CodPot(CodPot = tbl2, selmet = c(1,1,0,1,1,0))
 ```
-![venn_4](https://github.com/prodakt/lncRna/blob/main/img/vennSel.png)
+![venn_4](https://github.com/prodakt/lncRna/blob/main/inst/img/vennSel.png)
 
 
 ### IIb. Best accuracy analysis
