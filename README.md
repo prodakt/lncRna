@@ -1,4 +1,4 @@
-# lncRna <img src="img/lncRna_logo.png" align="right" height = 150/>
+# lncRna <img src="inst/img/lncRna_logo.png" align="right" height = 150/>
 
 ![GitHub](https://img.shields.io/github/license/prodakt/lncRna?style=plastic)
 ![GitHub top language](https://img.shields.io/github/languages/top/prodakt/lncRna?style=plastic)
