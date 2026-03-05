@@ -57,15 +57,15 @@
 #' unlink(feelncFile)
 #'
 findCisInteractions <- function(FEELncClassesFile, lncRnas = NULL, mRnas = NULL,
-                                filterIsBest = TRUE, lncRnaLevel = "transcript",
-                                mRnaLevel = "gene", maxDist = 100000) {
+                                filterIsBest = TRUE, lncRnaLevel = c("transcript", "gene"),
+                                mRnaLevel = c("gene", "transcript"), maxDist = 100000) {
 
     # --- 1. Input Validation ---
     if (!file.exists(FEELncClassesFile)) {
         stop("The specified 'FEELncClassesFile' does not exist: ", FEELncClassesFile)
     }
-    lncRnaLevel <- match.arg(lncRnaLevel, choices = c("transcript", "gene"))
-    mRnaLevel <- match.arg(mRnaLevel, choices = c("transcript", "gene"))
+    lncRnaLevel <- match.arg(lncRnaLevel)
+    mRnaLevel <- match.arg(mRnaLevel)
 
     # --- 2. Read and Pre-filter Data ---
     cis <- utils::read.table(FEELncClassesFile, header = TRUE, sep = "\t",

@@ -10,7 +10,7 @@ plotRadarMetrics(
   metrics = c("Accuracy", "Sensitivity", "Specificity", "Precision", "Recall"),
   plotTitle = "Radar Plot of Metrics",
   colors = NULL,
-  layout = "single",
+  layout = c("single", "multiple"),
   displayArea = FALSE,
   displayFill = TRUE,
   saveData = FALSE,

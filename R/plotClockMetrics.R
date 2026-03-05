@@ -52,9 +52,9 @@ plotClockMetrics <- function(cmList, methods = NULL,
                              metrics = c("Accuracy", "Sensitivity", "Specificity",
                                          "Precision", "Recall"),
                              plotTitle = "Clock Plot of Metrics", colors = NULL,
-                             layout = "single", ...) {
+                             layout = c("single", "multiple"), ...) {
     
-    layout <- match.arg(layout, choices = c("single", "multiple"))
+    layout <- match.arg(layout)
     
     validatedInputs <- validateClockInputs(cmList, methods, metrics)
     cmList <- validatedInputs$cmList

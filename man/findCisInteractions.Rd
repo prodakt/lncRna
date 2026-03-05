@@ -9,8 +9,8 @@ findCisInteractions(
   lncRnas = NULL,
   mRnas = NULL,
   filterIsBest = TRUE,
-  lncRnaLevel = "transcript",
-  mRnaLevel = "gene",
+  lncRnaLevel = c("transcript", "gene"),
+  mRnaLevel = c("gene", "transcript"),
   maxDist = 1e+05
 )
 }

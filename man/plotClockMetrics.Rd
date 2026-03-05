@@ -10,7 +10,7 @@ plotClockMetrics(
   metrics = c("Accuracy", "Sensitivity", "Specificity", "Precision", "Recall"),
   plotTitle = "Clock Plot of Metrics",
   colors = NULL,
-  layout = "single",
+  layout = c("single", "multiple"),
   ...
 )
 }

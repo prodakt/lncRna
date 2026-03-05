@@ -67,11 +67,11 @@ plotRadarMetrics <- function(cmList, methods = NULL,
                              metrics = c("Accuracy", "Sensitivity", "Specificity",
                                          "Precision", "Recall"),
                              plotTitle = "Radar Plot of Metrics", colors = NULL,
-                             layout = "single", displayArea = FALSE,
+                             layout = c("single", "multiple"), displayArea = FALSE,
                              displayFill = TRUE, saveData = FALSE,
                              fileName = NULL, ...) {
     
-    layout <- match.arg(layout, choices = c("single", "multiple"))
+    layout <- match.arg(layout)
     
     validatedInputs <- validateRadarInputs(cmList, methods, metrics)
     methods <- validatedInputs$methods
