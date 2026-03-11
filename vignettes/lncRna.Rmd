@@ -30,7 +30,7 @@ library(fmsb)
 library(patchwork)
 ```
 
-# 1 Introduction
+#  Introduction
 
 The `lncRna` package provides a comprehensive toolkit for the identification, analysis, and functional annotation of long non-coding RNAs (lncRNAs) from RNA-Seq data. The workflow covers several key stages:
 
@@ -40,11 +40,11 @@ The `lncRna` package provides a comprehensive toolkit for the identification, an
 * **Functional Analysis:** Identification of potential *cis* and *trans* interactions with protein-coding genes.
 * **Visualization:** Generation of high-quality plots (Radar, Clock, Sankey, Venn) for publication-ready results.
 
-# 2 Data Preparation
+#  Data Preparation
 
 In a typical analysis, you would load your own data. For this demonstration, we create mock data objects that mimic real-world transcriptomic outputs.
 
-## 2.1 Create mock GTF and Test Sets
+##  Create mock GTF and Test Sets
 
 We start by creating a representative genomic structure and partitioning our sequences into independent training and testing subsets using the built-in split utility.
 
@@ -73,7 +73,7 @@ ncTestSet <- sets$demo.test
 cdsTestSet <- sets$demo.train
 ```
 
-# 3 Initial Filtering and Feature Extraction
+#  Initial Filtering and Feature Extraction
 
 We extract key structural features to distinguish lncRNAs from other biotypes based on the input GTF.
 
@@ -87,11 +87,11 @@ geneBiotypes <- getBiotypes(refGtf = mockGtf, level = "gene")
 print(head(transcriptStats))
 ```
 
-# 4 Coding Potential Analysis
+#  Coding Potential Analysis
 
 This stage integrates results from various coding potential predictors and evaluates their reliability.
 
-## 4.1 Aggregation and Venn Visualization
+##  Aggregation and Venn Visualization
 
 We aggregate results from external tools and visualize the agreement (consensus) between them.
 
@@ -112,7 +112,7 @@ if (requireNamespace("venn", quietly = TRUE)) {
 }
 ```
 
-## 4.2 Performance Evaluation
+##  Performance Evaluation
 
 We evaluate all possible tool combinations to identify the most accurate identification strategy for the current dataset.
 
@@ -132,7 +132,7 @@ combStats <- bestToolCombination(combinationSummaryList = combSummary)
 print(combStats)
 ```
 
-# 5 Performance Visualization with calculateCM
+#  Performance Visualization with calculateCM
 
 The `calculateCM` function serves as the central hub for the visualization pipeline. It converts raw predictions into Confusion Matrix objects and allows for threshold-based filtering.
 
@@ -149,7 +149,7 @@ allCms <- calculateCM(
 )
 ```
 
-## 5.1 Radar and Clock Plots
+##  Radar and Clock Plots
 
 Radar and Clock plots provide a holistic view of tool performance across multiple metrics.
 
@@ -162,11 +162,11 @@ plotRadarMetrics(cmList = allCms, methods = methodsToPlot, plotTitle = "Top Meth
 plotClockMetrics(cmList = allCms, plotTitle = "Performance Metrics Breakdown", layout = "multiple")
 ```
 
-# 6 Functional Analysis and Interactions
+#  Functional Analysis and Interactions
 
 The final stage of the pipeline identifies where and how the identified lncRNAs act in the cell.
 
-## 6.1 Cis and Trans Interactions
+##  Cis and Trans Interactions
 
 We identify *cis*-interactions based on genomic proximity and *trans*-interactions based on expression correlation.
 
@@ -185,7 +185,7 @@ mockExpr["LNC1",] <- mockExpr["GENE_A",] + rnorm(10, 0, 0.1)
 transInteractions <- findTransInteractions(exprMatrix = mockExpr, rval = 0.8, pval = 0.05)
 ```
 
-## 6.2 Annotation and Sankey Diagram
+##  Annotation and Sankey Diagram
 
 We link interactions to functional enrichment terms and visualize the flow using an interactive Sankey diagram.
 
@@ -202,7 +202,7 @@ plotSankeyInteractions(interactionData = interactionsProcessed, groupBy = "term"
                        selectIds = "stress response", title = "Functional Interaction Flow")
 ```
 
-# 7 Session Information
+#  Session Information
 
 ```{r session-info}
 sessionInfo()
