@@ -91,10 +91,10 @@ annotateInteractions <- function(gostResult, interactionTable, type,
     gost_prepared <- gostResult[, gost_cols_present, drop = FALSE]
     
     # Split intersection strings into a list of character vectors
-    intersection_list <- strsplit(gost_prepared$intersection, split = ",")
+    intersection_list <- strsplit(gost_prepared$intersection, split = ",", fixed = TRUE)
     
     # Calculate how many times each row of gost_prepared needs to be repeated
-    times_to_repeat <- vapply(intersection_list, length, integer(1))
+    times_to_repeat <- lengths(intersection_list)
     
     # Expand the data frame by repeating rows
     expanded_gost <- gost_prepared[rep(seq_len(nrow(gost_prepared)), times = times_to_repeat), ]

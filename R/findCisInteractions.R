@@ -57,15 +57,15 @@
 #' unlink(feelncFile)
 #'
 findCisInteractions <- function(FEELncClassesFile, lncRnas = NULL, mRnas = NULL,
-                                filterIsBest = TRUE, lncRnaLevel = "transcript",
-                                mRnaLevel = "gene", maxDist = 100000) {
+                                filterIsBest = TRUE, lncRnaLevel = c("transcript", "gene"),
+                                mRnaLevel = c("gene", "transcript"), maxDist = 100000) {
 
     # --- 1. Input Validation ---
     if (!file.exists(FEELncClassesFile)) {
         stop("The specified 'FEELncClassesFile' does not exist: ", FEELncClassesFile)
     }
-    lncRnaLevel <- match.arg(lncRnaLevel, choices = c("transcript", "gene"))
-    mRnaLevel <- match.arg(mRnaLevel, choices = c("transcript", "gene"))
+    lncRnaLevel <- match.arg(lncRnaLevel)
+    mRnaLevel <- match.arg(mRnaLevel)
 
     # --- 2. Read and Pre-filter Data ---
     cis <- utils::read.table(FEELncClassesFile, header = TRUE, sep = "\t",
@@ -81,14 +81,14 @@ findCisInteractions <- function(FEELncClassesFile, lncRnas = NULL, mRnas = NULL,
 
     # --- 3. Filter by lncRNA and mRNA lists ---
     if (!is.null(lncRnas) && length(lncRnas) > 0) {
-        col_to_filter <- if (lncRnaLevel == "transcript") "lncRNA_transcript" else "lncRNA_gene"
+        col_to_filter <- paste0("lcRNA_", lncRnaLevel)
         if (col_to_filter %in% colnames(cis)) {
             cis <- cis[cis[[col_to_filter]] %in% lncRnas, ]
         }
     }
 
     if (!is.null(mRnas) && length(mRnas) > 0) {
-        col_to_filter <- if (mRnaLevel == "transcript") "partnerRNA_transcript" else "partnerRNA_gene"
+        col_to_filter <- paste0("partnerRNA_", mRnaLevel)
         if (col_to_filter %in% colnames(cis)) {
             cis <- cis[cis[[col_to_filter]] %in% mRnas, ]
         }
