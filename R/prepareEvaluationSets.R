@@ -3,7 +3,7 @@
 #' Filters coding potential results to include only sequences present in
 #' provided test sets. It annotates each sequence as non-coding (nc) or
 #' protein-coding (cds), creating a summary object ready for various evaluation
-#' functions (e.g., `BestTool`, `BestToolAtleast`).
+#' functions (e.g., `bestTool`, `bestToolAtleast`).
 #'
 #' @param codPotList A list object, typically from `aggregateCodPot()`. Must
 #'   contain `$seqIDs` (character vector) and `$tools` (a list of

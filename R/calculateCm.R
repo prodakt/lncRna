@@ -9,7 +9,7 @@
 #'   `$isNC` (the true class labels).
 #' @param metricsData An optional data frame where rows are metric names and
 #'   columns are tool combination names (typically the output of
-#'   `BestToolCombination()`). If provided, `metricToExtract` is looked up
+#'   `bestToolCombination()`). If provided, `metricToExtract` is looked up
 #'   here for threshold-based filtering and printing. Defaults to `NULL`.
 #' @param printMetricThresholds Logical. If `TRUE`, prints the value of
 #'   `metricToExtract` for each combination, indicating if it meets the
@@ -42,8 +42,8 @@
 #'     `ToolB+ToolC` = sample(c(0,1), n_seq, replace=TRUE, prob=c(0.5,0.5))
 #'   )
 #' )
-#' # b) Mock output from BestToolCombination()
-#' mockMetricsData <- BestToolCombination(
+#' # b) Mock output from bestToolCombination()
+#' mockMetricsData <- bestToolCombination(
 #'   combinationSummaryList = mockCombinationSummary
 #' )
 #'
@@ -69,58 +69,52 @@
 calculateCM <- function(combinationSummaryList, metricsData = NULL,
                         printMetricThresholds = FALSE, threshold = 0.8,
                         returnOnlyHigh = FALSE, metricToExtract = "Accuracy") {
-    
+
     # --- Input Validation ---
     stopifnot(
         "'combinationSummaryList' must be a list with 'isNC' and 'toolCombinations'" =
             is.list(combinationSummaryList) && all(c("isNC", "toolCombinations") %in% names(combinationSummaryList)),
         "'metricsData' must be a data.frame or NULL" = is.null(metricsData) || is.data.frame(metricsData)
     )
-    
+
     tool_combinations <- combinationSummaryList$toolCombinations
     if (length(tool_combinations) == 0) {
         warning("'$toolCombinations' is empty. Returning an empty list.", call. = FALSE)
         return(list())
     }
-    
+
     reference_labels <- combinationSummaryList$isNC
     if (length(unique(reference_labels)) < 2) {
         warning("Reference labels ('isNC') must contain both classes (0 and 1).", call. = FALSE)
         return(list())
     }
-    
+
     # --- Initialization ---
     all_cm_list <- list()
     high_metric_cm_list <- list()
-    
+
     if (printMetricThresholds) {
         message("\n--- Confusion Matrix Calculation & Filtering ---\n")
     }
-    
+
     # --- Loop through each combination ---
     for (combo_name in names(tool_combinations)) {
-        predictions_vector <- tool_combinations[[combo_name]]
-        
-        # --- a) Create the lightweight CM object ---
-        TP <- sum(predictions_vector == 1 & reference_labels == 1, na.rm = TRUE)
-        TN <- sum(predictions_vector == 0 & reference_labels == 0, na.rm = TRUE)
-        FP <- sum(predictions_vector == 1 & reference_labels == 0, na.rm = TRUE)
-        FN <- sum(predictions_vector == 0 & reference_labels == 1, na.rm = TRUE)
-        
-        cm_table <- matrix(c(TN, FN, FP, TP), nrow = 2,
-                           dimnames = list(Prediction = c("0", "1"),
-                                           Reference = c("0", "1")))
-        
-        cm_metrics <- calculateMetrics(predictions = predictions_vector,
-                                       reference = reference_labels)
-        
-        current_cm_object <- list(
-            table = cm_table,
-            positive = "1",
-            metrics = cm_metrics
-        )
-        all_cm_list[[combo_name]] <- current_cm_object
-        
+      predictions_vector <- tool_combinations[[combo_name]]
+
+      # --- a) Create the lightweight CM object ---
+      pred_fac <- factor(predictions_vector, levels = c("0", "1"))
+      ref_fac <- factor(reference_labels, levels = c("0", "1"))
+      cm_table <- table(Prediction = pred_fac, Reference = ref_fac)
+
+      cm_metrics <- calculateMetrics(cm_table = cm_table)
+
+      current_cm_object <- list(
+        table = cm_table,
+        positive = "1",
+        metrics = cm_metrics
+      )
+      all_cm_list[[combo_name]] <- current_cm_object
+
         # --- b) Determine metric value for filtering/printing ---
         metric_value <- NA_real_
         if (!is.null(metricsData)) {
@@ -129,32 +123,32 @@ calculateCM <- function(combinationSummaryList, metricsData = NULL,
                 metric_value <- metricsData[metricToExtract, combo_name]
             }
         }
-        
+
         if (is.na(metric_value) && !is.null(cm_metrics)) {
             metric_value <- cm_metrics[metricToExtract]
         }
-        
+
         # --- c) Print if requested ---
         if (printMetricThresholds) {
-            val_str <- ifelse(is.na(metric_value), "NA", sprintf("%.4f", metric_value))
-            msg <- paste0("Combination: '", combo_name, "' - ", metricToExtract,
-                          ": ", val_str)
-            if (!is.na(metric_value) && metric_value >= threshold) {
-                msg <- paste0(msg, " - *** HIGH (>= ", threshold, ") ***")
-            }
-            message(msg, "\n")
+          val_str <- sprintf("%.4f", metric_value)
+          msg <- paste0("Combination: '", combo_name, "' - ", metricToExtract,
+                        ": ", val_str)
+          if (!is.na(metric_value) && metric_value >= threshold) {
+            msg <- paste0(msg, " - *** HIGH (>= ", threshold, ") ***")
+          }
+          message(msg, "\n")
         }
-        
+
         # --- d) Store if it meets the threshold ---
         if (!is.na(metric_value) && metric_value >= threshold) {
             high_metric_cm_list[[combo_name]] <- current_cm_object
         }
     }
-    
+
     if (printMetricThresholds) {
         message("--- End of Calculation ---\n")
     }
-    
+
     # --- Return final list based on user choice ---
     if (returnOnlyHigh) {
         return(high_metric_cm_list)

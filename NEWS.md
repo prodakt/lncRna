@@ -1,3 +1,14 @@
+Changes in version 0.99.3 (2026-03-11)
+--------------------------------------
+
+* Implemented comprehensive unit tests reaching >80% package coverage.
+
+* Optimized confusion matrix calculations and performance evaluation pipeline.
+
+* Added accessibility-friendly color palettes (Okabe-Ito) for all visualization functions.
+
+* Merged recent feature updates and refactors into the main branch via Pull Request.
+
 Changes in version 0.99.2 (2026-01-28)
 --------------------------------------
 

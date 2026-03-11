@@ -1,6 +1,6 @@
 Package: lncRna
 Title: A Comprehensive Workflow for Long Non-coding RNA Identification and Functional Analysis
-Version: 0.99.2
+Version: 0.99.3
 Authors@R: c(
     person(given = "Jan Pawel",
            family = "Jastrzebski",
@@ -48,12 +48,10 @@ URL: https://github.com/prodakt/lncRna
 BugReports: https://github.com/prodakt/lncRna/issues
 biocViews: Software, GeneExpression, RNASeq, Transcription, Visualization, QualityControl, FunctionalGenomics, Classification, FunctionalPrediction
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Imports:
-    dplyr,
     fmsb,
     ggplot2,
     grDevices,
@@ -62,7 +60,7 @@ Imports:
     patchwork,
     plotly,
     Polychrome,
-    reshape2,
+    tidyr,
     S4Vectors,
     scales,
     stats,

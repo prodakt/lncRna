@@ -32,18 +32,18 @@
 #' )
 #'
 #' # --- 2. Create the agreement summary using evaluateToolsThresholds ---
-#' # This is the object that BestToolAtleast actually takes as input
+#' # This is the object that bestToolAtleast actually takes as input
 #' agreementSummary <- evaluateToolsThresholds(summaryList = evaluationSummary)
 #'
-#' # --- 3. Run BestToolAtleast on the result ---
+#' # --- 3. Run bestToolAtleast on the result ---
 #' if (!is.null(agreementSummary)) {
-#'   performance_thresholds <- BestToolAtleast(
+#'   performance_thresholds <- bestToolAtleast(
 #'     agreementSummary = agreementSummary
 #'   )
 #'   print(performance_thresholds)
 #' }
 #'
-BestToolAtleast <- function(agreementSummary, digits = 4) {
+bestToolAtleast <- function(agreementSummary, digits = 4) {
     # --- 1. Input Validation ---
     stopifnot(
         "'agreementSummary' must be a list" = is.list(agreementSummary),

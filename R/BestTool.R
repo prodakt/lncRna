@@ -34,25 +34,25 @@
 #'   isNC = sample(c(0, 1), n_seq, replace = TRUE) # True labels
 #' )
 #'
-#' # --- 2. Run BestTool ---
+#' # --- 2. Run bestTool ---
 #' # Example 1: Analyze a specific subset of tools
-#' performance_stats <- BestTool(
+#' performance_stats <- bestTool(
 #'   summaryList = exampleEvaluationSummary,
 #'   tools = c("CPC2", "CPAT")
 #' )
 #' print(performance_stats)
 #'
 #' # Example 2: Analyze all available tools (non-interactively)
-#' all_tools_stats <- BestTool(summaryList = exampleEvaluationSummary)
+#' all_tools_stats <- bestTool(summaryList = exampleEvaluationSummary)
 #' print(all_tools_stats)
 #'
 #' # --- 3. Interactive example (do not run in scripts) ---
 #' if (interactive()) {
 #'   # The following would prompt you to select tools from the console:
-#'   # interactive_stats <- BestTool(summaryList = exampleSummaryList)
+#'   # interactive_stats <- bestTool(summaryList = exampleSummaryList)
 #' }
 #'
-BestTool <- function(summaryList, tools = NULL, digits = 4) {
+bestTool <- function(summaryList, tools = NULL, digits = 4) {
   # --- 1. Input Validation ---
   stopifnot(
     "'summaryList' must be a list" = is.list(summaryList),

@@ -34,7 +34,7 @@
 #'
 #' # --- 2. Run the function ---
 #' # Example 1: Analyze specific combinations
-#' perf_specific <- BestToolCombination(
+#' perf_specific <- bestToolCombination(
 #'   combinationSummaryList = exampleCombinationSummary,
 #'   combinations = c("ToolA+ToolB", "ToolB+ToolC")
 #' )
@@ -42,13 +42,13 @@
 #' print(perf_specific)
 #'
 #' # Example 2: Analyze all combinations (non-interactively)
-#' perf_all <- BestToolCombination(
+#' perf_all <- bestToolCombination(
 #'   combinationSummaryList = exampleCombinationSummary
 #' )
 #' print("Performance for all combinations:")
 #' print(perf_all)
 #'
-BestToolCombination <- function(combinationSummaryList, combinations = NULL,
+bestToolCombination <- function(combinationSummaryList, combinations = NULL,
                                 digits = 4) {
     # --- 1. Input Validation ---
     stopifnot(

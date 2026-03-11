@@ -13,27 +13,23 @@
 #'   valid tools are selected.
 #' @noRd
 handleToolSelection <- function(availableTools, selectedTools = NULL) {
-    
+
     final_selected_tools <- character(0)
-    
+
     if (is.null(selectedTools)) {
         if (interactive()) {
             message("Available tools:\n")
             tool_menu <- paste0(seq_along(availableTools), ": ", availableTools)
             message(paste(tool_menu, collapse = "\n"), "\n")
-            
+
             input <- readline(
                 "Enter tool numbers to analyze (e.g., '1 3'), or press Enter for all: "
             )
-            
+
             if (input == "") {
                 final_selected_tools <- availableTools
                 message("All tools selected.\n")
             } else {
-                # suppressWarnings() is used here to silence expected warnings 
-                # (during as.integer(strsplit()) calls . These warnings are 
-                # expected and do not impact the downstream analysis. This approach 
-                # is chosen to maintain code readability and simplicity.
                 indices <- suppressWarnings(as.integer(strsplit(input, "[ ,]+")[[1]]))
                 valid_indices <- indices[!is.na(indices) & indices > 0 &
                                              indices <= length(availableTools)]
@@ -52,100 +48,100 @@ handleToolSelection <- function(availableTools, selectedTools = NULL) {
         }
         final_selected_tools <- intersect(selectedTools, availableTools)
     }
-    
+
     if (length(final_selected_tools) == 0) {
         warning("No valid tools were selected for analysis.", call. = FALSE)
     }
-    
+
     return(final_selected_tools)
 }
 
 #' Calculate Confusion Matrix Metrics (Internal Function)
 #'
-#' A lightweight, dependency-free function to calculate a suite of performance
-#' metrics from prediction and reference vectors. Assumes '1' is the positive
-#' class (non-coding) and '0' is the negative class (coding).
-#'
 #' @param predictions A numeric or integer vector of predicted labels (0 or 1).
 #' @param reference A numeric or integer vector of true labels (0 or 1).
+#' @param cm_table An optional 2x2 table representing the confusion matrix.
 #'
 #' @return A named numeric vector of performance metrics. Returns NULL if
 #'   inputs are invalid.
 #' @importFrom stats binom.test mcnemar.test
 #' @noRd
-calculateMetrics <- function(predictions, reference) {
-    
-    if (length(unique(predictions)) < 2) {
-        warning("Prediction vector for a tool contains only one class; some metrics will be NA.",
-                call. = FALSE)
-    }
-    
-    # --- Core Confusion Matrix Components ---
-    TP <- sum(predictions == 1 & reference == 1, na.rm = TRUE)
-    TN <- sum(predictions == 0 & reference == 0, na.rm = TRUE)
-    FP <- sum(predictions == 1 & reference == 0, na.rm = TRUE)
-    FN <- sum(predictions == 0 & reference == 1, na.rm = TRUE)
-    
-    total_obs <- TP + TN + FP + FN
-    if (total_obs == 0) return(NULL)
-    
-    # --- Primary Metrics ---
-    Sensitivity <- TP / (TP + FN)
-    Specificity <- TN / (TN + FP)
-    Precision <- TP / (TP + FP)
-    NegPredValue <- TN / (TN + FN)
-    Accuracy <- (TP + TN) / total_obs
-    F1 <- 2 * (Precision * Sensitivity) / (Precision + Sensitivity)
-    BalancedAccuracy <- (Sensitivity + Specificity) / 2
-    
-    # --- Statistical Metrics from caret ---
-    Prevalence <- (TP + FN) / total_obs
-    DetectionRate <- TP / total_obs
-    DetectionPrevalence <- (TP + FP) / total_obs
-    
-    AccuracyNull <- max(Prevalence, 1 - Prevalence)
-    
- #   accuracy_ci <- tryCatch(
- #       stats::binom.test(TP + TN, total_obs)$conf.int[1:2],
- #       error = function(e) c(NA, NA)
- #   )
-    accuracy_ci <- tryCatch(
-        stats::binom.test(TP + TN, total_obs)$conf.int[seq_len(2)],
-        error = function(e) c(NA, NA)
-    )
-    AccuracyPValue <- tryCatch(
-        stats::binom.test(TP + TN, total_obs, p = AccuracyNull, 
-                          alternative = "greater")$p.value,
-        error = function(e) NA
-    )
-    
-    mcnemar_table <- matrix(c(TP, FN, FP, TN), nrow = 2)
-    McnemarPValue <- tryCatch(
-        stats::mcnemar.test(mcnemar_table)$p.value,
-        error = function(e) NA
-    )
-    
-    prob_pred_pos <- (TP + FP) / total_obs
-    prob_ref_pos <- (TP + FN) / total_obs
-    expected_accuracy <- (prob_pred_pos * prob_ref_pos) + 
-        ((1 - prob_pred_pos) * (1 - prob_ref_pos))
-    Kappa <- (Accuracy - expected_accuracy) / (1 - expected_accuracy)
-    
-    # --- Assemble Output Vector ---
-    metrics <- c(
-        "Accuracy" = Accuracy, "Kappa" = Kappa, "AccuracyLower" = accuracy_ci[1],
-        "AccuracyUpper" = accuracy_ci[2], "AccuracyNull" = AccuracyNull,
-        "AccuracyPValue" = AccuracyPValue, "McnemarPValue" = McnemarPValue,
-        "Sensitivity" = Sensitivity, "Specificity" = Specificity,
-        "Pos Pred Value" = Precision, "Neg Pred Value" = NegPredValue,
-        "Precision" = Precision, "Recall" = Sensitivity, "F1" = F1,
-        "Prevalence" = Prevalence, "Detection Rate" = DetectionRate,
-        "Detection Prevalence" = DetectionPrevalence,
-        "Balanced Accuracy" = BalancedAccuracy
-    )
-    
-    metrics[is.nan(metrics)] <- NA
-    return(metrics)
+calculateMetrics <- function(predictions = NULL, reference = NULL, cm_table = NULL) {
+
+  if (is.null(cm_table)) {
+    if (is.null(predictions) || is.null(reference)) return(NULL)
+    pred_fac <- factor(predictions, levels = c("0", "1"))
+    ref_fac <- factor(reference, levels = c("0", "1"))
+    cm_table <- table(Prediction = pred_fac, Reference = ref_fac)
+  }
+
+  if (any(rowSums(cm_table) == 0)) {
+    warning("Prediction vector for a tool contains only one class; some metrics will be NA.",
+            call. = FALSE)
+  }
+
+  # --- Core Confusion Matrix Components ---
+  TN <- cm_table["0", "0"]
+  FN <- cm_table["0", "1"]
+  FP <- cm_table["1", "0"]
+  TP <- cm_table["1", "1"]
+
+  total_obs <- TP + TN + FP + FN
+  if (total_obs == 0) return(NULL)
+
+  # --- Primary Metrics ---
+  Sensitivity <- TP / (TP + FN)
+  Specificity <- TN / (TN + FP)
+  Precision <- TP / (TP + FP)
+  NegPredValue <- TN / (TN + FN)
+  Accuracy <- (TP + TN) / total_obs
+  F1 <- 2 * (Precision * Sensitivity) / (Precision + Sensitivity)
+  BalancedAccuracy <- (Sensitivity + Specificity) / 2
+
+  # --- Statistical Metrics from caret ---
+  Prevalence <- (TP + FN) / total_obs
+  DetectionRate <- TP / total_obs
+  DetectionPrevalence <- (TP + FP) / total_obs
+
+  AccuracyNull <- max(Prevalence, 1 - Prevalence)
+
+  accuracy_ci <- tryCatch(
+    stats::binom.test(TP + TN, total_obs)$conf.int[seq_len(2)],
+    error = function(e) c(NA, NA)
+  )
+  AccuracyPValue <- tryCatch(
+    stats::binom.test(TP + TN, total_obs, p = AccuracyNull,
+                      alternative = "greater")$p.value,
+    error = function(e) NA
+  )
+
+  mcnemar_table <- matrix(c(TP, FN, FP, TN), nrow = 2)
+  McnemarPValue <- tryCatch(
+    stats::mcnemar.test(mcnemar_table)$p.value,
+    error = function(e) NA
+  )
+
+  prob_pred_pos <- (TP + FP) / total_obs
+  prob_ref_pos <- (TP + FN) / total_obs
+  expected_accuracy <- (prob_pred_pos * prob_ref_pos) +
+    ((1 - prob_pred_pos) * (1 - prob_ref_pos))
+  Kappa <- (Accuracy - expected_accuracy) / (1 - expected_accuracy)
+
+  # --- Assemble Output Vector ---
+  metrics <- c(
+    "Accuracy" = Accuracy, "Kappa" = Kappa, "AccuracyLower" = accuracy_ci[1],
+    "AccuracyUpper" = accuracy_ci[2], "AccuracyNull" = AccuracyNull,
+    "AccuracyPValue" = AccuracyPValue, "McnemarPValue" = McnemarPValue,
+    "Sensitivity" = Sensitivity, "Specificity" = Specificity,
+    "Pos Pred Value" = Precision, "Neg Pred Value" = NegPredValue,
+    "Precision" = Precision, "Recall" = Sensitivity, "F1" = F1,
+    "Prevalence" = Prevalence, "Detection Rate" = DetectionRate,
+    "Detection Prevalence" = DetectionPrevalence,
+    "Balanced Accuracy" = BalancedAccuracy
+  )
+
+  metrics[is.nan(metrics)] <- NA
+  return(metrics)
 }
 
 #' Extract a Metric Value from a CM List Object (Internal Helper)

@@ -2,7 +2,9 @@
 % Please edit documentation in R/findTransInteractions.R
 \name{findTransInteractions}
 \alias{findTransInteractions}
-\title{Find Potential trans-Regulatory Interactions}
+\title{Estimates trans-interactions between lncRNAs and target RNAs based on
+expression correlation. This function requires the \code{Hmisc} and \code{tidyr}
+packages.}
 \usage{
 findTransInteractions(
   exprMatrix,
@@ -38,7 +40,7 @@ lncRNA ID, target RNA ID, r-value, and p-value.
 }
 \description{
 Estimates trans-interactions between lncRNAs and target RNAs based on
-expression correlation. This function requires the \code{Hmisc} and \code{reshape2}
+expression correlation. This function requires the \code{Hmisc} and \code{tidyr}
 packages.
 }
 \examples{

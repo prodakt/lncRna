@@ -58,47 +58,46 @@ evaluateToolsThresholds <- function(summaryList, tools = NULL) {
         "'summaryList' must contain required elements" =
             all(c("seqIDs", "tools", "isNC", "type") %in% names(summaryList))
     )
-    
+
     available_tools <- names(summaryList$tools)
     if (length(available_tools) == 0) {
         warning("No tool predictions found in 'summaryList$tools'.", call. = FALSE)
         return(NULL)
     }
-    
+
     # --- 2. Tool Selection (using the central helper function) ---
     selected_tools <- handleToolSelection(
         availableTools = available_tools,
         selectedTools = tools
     )
-    
+
     if (length(selected_tools) == 0) {
-        return(NULL) # Helper already issued a warning
+        return(NULL)
     }
-    
+
     # --- 3. Core Calculation ---
     selected_predictions_list <- summaryList$tools[selected_tools]
-    
+
     n_seqs <- length(summaryList$seqIDs)
     predictions_matrix <- do.call(cbind, selected_predictions_list)
-    
+
     if (nrow(predictions_matrix) != n_seqs) {
         warning("Dimension mismatch after combining tool predictions. Aborting.",
                 call. = FALSE)
         return(NULL)
     }
-    
+
     sums_selected <- rowSums(predictions_matrix, na.rm = TRUE)
-    
+
     # Calculate "at least n" indicators
     agreement_thresholds <- list()
     num_selected <- length(selected_tools)
-    if (num_selected > 0) {
         for (n in seq_len(num_selected)) {
             agreement_thresholds[[paste0('atl', n)]] <-
                 as.integer(sums_selected >= n)
-        }
+
     }
-    
+
     # --- 4. Assemble Output List ---
     final_list <- list(
         seqIDs = summaryList$seqIDs,
@@ -109,6 +108,6 @@ evaluateToolsThresholds <- function(summaryList, tools = NULL) {
         # ZMIANA: Zagnieżdżenie progów w liście o opisowej nazwie
         atLeastN = agreement_thresholds
     )
-    
+
     return(final_list)
 }

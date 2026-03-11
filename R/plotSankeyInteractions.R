@@ -157,7 +157,7 @@ plotSankeyInteractions <- function(interactionData,
   n_nodes <- nrow(node)
 
   if (is.null(color)) {
-    seed_colors <- c("#ff0000", "#00ff00", "#0000ff")
+    seed_colors <- unname(grDevices::palette.colors(n = 9, palette = "Okabe-Ito"))
     if (n_nodes > 0) {
       if (n_nodes > length(seed_colors)) {
         mypal <- tryCatch(

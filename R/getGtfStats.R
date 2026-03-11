@@ -43,38 +43,38 @@ getGtfStats <- function(gtfObject) {
 #'
 #' @param gtfObject A GRanges object.
 #' @return A data.frame with transcript_id and trans_length.
-#' @importFrom dplyr %>% group_by summarise
 #' @noRd
 calculateTranscriptLength <- function(gtfObject) {
-    transcript_id <- width <- NULL
-    
-    strGTF <- as.data.frame(gtfObject)
-    strGTF_ex <- strGTF[strGTF$type %in% "exon", ]
-    
-    trans_len <- strGTF_ex %>%
-        group_by(transcript_id) %>%
-        summarise(trans_length = sum(width))
-    
-    trans_len <- as.data.frame(trans_len)
-    return(trans_len)
+  strGTF <- as.data.frame(gtfObject)
+  strGTF_ex <- strGTF[strGTF$type == "exon", ]
+
+  if (nrow(strGTF_ex) == 0) {
+    return(data.frame(transcript_id = character(),
+                      trans_length = numeric()))
+  }
+  trans_len <- stats::aggregate(width ~ transcript_id,
+                                data = strGTF_ex,
+                                FUN = sum)
+
+  colnames(trans_len)[2] <- "trans_length"
+
+  return(trans_len)
 }
 
-#' Count Exons per Transcript (Internal Function)
+#' Calculate Exon Count per Transcript
 #'
 #' @param gtfObject A GRanges object.
-#' @return A data.frame with transcript_id and exon count.
-#' @importFrom dplyr %>% group_by summarise
+#' @return A data.frame with transcript_id and exons count.
 #' @noRd
 calculateExonCount <- function(gtfObject) {
-    transcript_id <- exon_number <- NULL
-    
-    strGTF <- as.data.frame(gtfObject)
-    strGTF_ex <- strGTF[strGTF$type %in% "exon", ]
-    
-    exons_n <- strGTF_ex %>%
-        group_by(transcript_id) %>%
-        summarise(exons = max(as.numeric(as.character(exon_number))))
-    
-    exons_n <- as.data.frame(exons_n)
-    return(exons_n)
+  strGTF <- as.data.frame(gtfObject)
+  strGTF_ex <- strGTF[strGTF$type == "exon", ]
+
+  if (nrow(strGTF_ex) == 0) return(data.frame())
+  exons_n <- stats::aggregate(type ~ transcript_id,
+                              data = strGTF_ex,
+                              FUN = length)
+
+  colnames(exons_n)[2] <- "exons"
+  return(exons_n)
 }

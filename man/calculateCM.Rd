@@ -20,7 +20,7 @@ containing \verb{$toolCombinations} (a list of 0/1 prediction vectors) and
 
 \item{metricsData}{An optional data frame where rows are metric names and
 columns are tool combination names (typically the output of
-\code{BestToolCombination()}). If provided, \code{metricToExtract} is looked up
+\code{bestToolCombination()}). If provided, \code{metricToExtract} is looked up
 here for threshold-based filtering and printing. Defaults to \code{NULL}.}
 
 \item{printMetricThresholds}{Logical. If \code{TRUE}, prints the value of
@@ -62,8 +62,8 @@ mockCombinationSummary <- list(
     `ToolB+ToolC` = sample(c(0,1), n_seq, replace=TRUE, prob=c(0.5,0.5))
   )
 )
-# b) Mock output from BestToolCombination()
-mockMetricsData <- BestToolCombination(
+# b) Mock output from bestToolCombination()
+mockMetricsData <- bestToolCombination(
   combinationSummaryList = mockCombinationSummary
 )
 

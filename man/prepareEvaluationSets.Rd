@@ -28,7 +28,7 @@ A list containing elements filtered to include only sequences from
 Filters coding potential results to include only sequences present in
 provided test sets. It annotates each sequence as non-coding (nc) or
 protein-coding (cds), creating a summary object ready for various evaluation
-functions (e.g., \code{BestTool}, \code{BestToolAtleast}).
+functions (e.g., \code{bestTool}, \code{bestToolAtleast}).
 }
 \examples{
 # --- 1. Create mock data mimicking package outputs ---

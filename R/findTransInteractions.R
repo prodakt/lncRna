@@ -1,7 +1,6 @@
-#' Find Potential trans-Regulatory Interactions
 #'
 #' Estimates trans-interactions between lncRNAs and target RNAs based on
-#' expression correlation. This function requires the `Hmisc` and `reshape2`
+#' expression correlation. This function requires the `Hmisc` and `tidyr`
 #' packages.
 #'
 #' @param exprMatrix A numeric matrix or data.frame of expression values.
@@ -19,7 +18,7 @@
 #'   lncRNA ID, target RNA ID, r-value, and p-value.
 #' @export
 #' @importFrom Hmisc rcorr
-#' @importFrom reshape2 melt
+#' @importFrom tidyr pivot_longer
 #' @importFrom utils write.table
 #'
 #' @examples
@@ -46,41 +45,54 @@ findTransInteractions <- function(exprMatrix, corMethod = "pearson", rval = 0.7,
                                   pval = 0.05, lncRnaList = NULL,
                                   tarRnaList = NULL, fullCorMatrixFile = NULL) {
 
-    if (!is.matrix(exprMatrix) && !is.data.frame(exprMatrix)) {
-        stop("'exprMatrix' must be a matrix or a data.frame.")
-    }
+  if (!is.matrix(exprMatrix) && !is.data.frame(exprMatrix)) {
+    stop("'exprMatrix' must be a matrix or a data.frame.")
+  }
 
-    if (is.null(lncRnaList)) {
-        lncRnaList <- rownames(exprMatrix)
-    }
-    if (is.null(tarRnaList)) {
-        tarRnaList <- rownames(exprMatrix)
-    }
+  if (is.null(lncRnaList)) {
+    lncRnaList <- rownames(exprMatrix)
+  }
+  if (is.null(tarRnaList)) {
+    tarRnaList <- rownames(exprMatrix)
+  }
 
-    exprMatrixFiltered <- exprMatrix[rownames(exprMatrix) %in% c(as.character(lncRnaList), as.character(tarRnaList)), ]
+  exprMatrixFiltered <- exprMatrix[rownames(exprMatrix) %in% c(as.character(lncRnaList), as.character(tarRnaList)), ]
 
-    sim_matrix <- Hmisc::rcorr(t(as.matrix(exprMatrixFiltered)), type = corMethod)
+  sim_matrix <- Hmisc::rcorr(t(as.matrix(exprMatrixFiltered)), type = corMethod)
 
-    if (!is.null(fullCorMatrixFile)) {
-        utils::write.table(as.data.frame(sim_matrix$r), fullCorMatrixFile, quote = FALSE)
-    }
+  if (!is.null(fullCorMatrixFile)) {
+    utils::write.table(as.data.frame(sim_matrix$r), fullCorMatrixFile, quote = FALSE)
+  }
 
-    trans_res <- reshape2::melt(sim_matrix$r)
-    p <- reshape2::melt(sim_matrix$P)
+  trans_res <- as.data.frame(sim_matrix$r)
+  trans_res$lncRNAId <- rownames(trans_res)
+  trans_res <- as.data.frame(tidyr::pivot_longer(
+    trans_res,
+    cols = -"lncRNAId",
+    names_to = "targetRNAId",
+    values_to = "rValue"
+  ))
 
-    trans_res$pValue <- p$value
+  p_df <- as.data.frame(sim_matrix$P)
+  p_df$lncRNAId <- rownames(p_df)
+  p_df <- as.data.frame(tidyr::pivot_longer(
+    p_df,
+    cols = -"lncRNAId",
+    names_to = "targetRNAId",
+    values_to = "pValue"
+  ))
 
-    colnames(trans_res) <- c("lncRNAId", "targetRNAId", "rValue", "pValue")
+  trans_res$pValue <- p_df$pValue
 
-    trans_res <- trans_res[trans_res$lncRNAId %in% lncRnaList, ]
-    trans_res <- trans_res[trans_res$targetRNAId %in% tarRnaList, ]
+  trans_res <- trans_res[trans_res$lncRNAId %in% lncRnaList, ]
+  trans_res <- trans_res[trans_res$targetRNAId %in% tarRnaList, ]
 
-    trans_res <- trans_res[which(trans_res$pValue < pval), ]
-    trans_res <- trans_res[which(abs(trans_res$rValue) >= rval), ]
+  trans_res <- trans_res[which(trans_res$pValue < pval), ]
+  trans_res <- trans_res[which(abs(trans_res$rValue) >= rval), ]
 
-    trans_res <- trans_res[!is.na(trans_res$lncRNAId), ]
+  trans_res <- trans_res[!is.na(trans_res$lncRNAId), ]
 
-    message("Number of trans lncRNA vs. target genes interactions: ", nrow(trans_res))
+  message("Number of trans lncRNA vs. target genes interactions: ", nrow(trans_res))
 
-    return(trans_res)
+  return(trans_res)
 }
