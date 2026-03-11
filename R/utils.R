@@ -30,10 +30,13 @@ handleToolSelection <- function(availableTools, selectedTools = NULL) {
                 final_selected_tools <- availableTools
                 message("All tools selected.\n")
             } else {
-                indices <- suppressWarnings(as.integer(strsplit(input, "[ ,]+")[[1]]))
-                valid_indices <- indices[!is.na(indices) & indices > 0 &
-                                             indices <= length(availableTools)]
-                final_selected_tools <- availableTools[valid_indices]
+              input_parts <- strsplit(input, "[ ,]+")[[1]]
+              numeric_parts <- input_parts[grepl("^[0-9]+$", input_parts)]
+              indices <- as.integer(numeric_parts)
+
+              valid_indices <- indices[indices > 0 &
+                                         indices <= length(availableTools)]
+              final_selected_tools <- availableTools[valid_indices]
             }
         } else {
             # Default non-interactive behavior: select all tools
