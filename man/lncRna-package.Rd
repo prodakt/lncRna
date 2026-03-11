@@ -30,6 +30,7 @@ Other contributors:
   \item Monika Gawronska \email{gawronska572@gmail.com} (\href{https://orcid.org/0009-0001-2677-6371}{ORCID}) [contributor]
   \item Wiktor Babis \email{wiktorbabis@gmail.com} (\href{https://orcid.org/0009-0006-3648-3413}{ORCID}) [contributor]
   \item Stefano Pascarella \email{stefano.pascarella@uniroma1.it} (\href{https://orcid.org/0000-0002-6822-4022}{ORCID}) [contributor]
+  \item Hugo Gruson \email{hugo.gruson+R@normalesup.org} (\href{https://orcid.org/0000-0002-4094-1476}{ORCID}) [contributor]
 }
 
 }
