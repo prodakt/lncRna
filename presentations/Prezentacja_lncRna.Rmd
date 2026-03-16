@@ -1,0 +1,403 @@
+---
+title: "lncRna: A Comprehensive Pipeline for lncRNA Identification and Functional Analysis"
+author: "Jan Paweł Jastrzębski i Zespół"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+<style>
+.main-container {
+  max-width: 95% !important;
+  margin: auto;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333333;
+  background-color: #fcfcfc;
+}
+
+h1, h2, h3 {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-top: 30px;
+}
+
+h1 {
+  border-bottom: 2px solid #18bc9c;
+  padding-bottom: 10px;
+}
+
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    $('body').append('<div id="toggle-toc-btn" style="position:fixed; top:15px; left:15px; z-index:10000; cursor:pointer; font-size:24px; color:#2c3e50; background:rgba(255,255,255,0.8); padding:2px 10px; border-radius:5px; border:1px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.1);">☰</div>');
+    
+    $('#toggle-toc-btn').click(function() {
+        var tocCol = $('#TOC').parent();
+        var contentCol = $('.toc-content');
+        
+        if (tocCol.is(':visible')) {
+            tocCol.hide();
+            contentCol.removeClass('col-sm-8 col-md-9').addClass('col-sm-12 col-md-12');
+        } else {
+            tocCol.show();
+            contentCol.removeClass('col-sm-12 col-md-12').addClass('col-sm-8 col-md-9');
+        }
+    });
+});
+</script>
+
+```{r setup, include=FALSE}
+# Ten blok ładuje biblioteki i przygotowane wcześniej środowisko, aby prezentacja działała błyskawicznie.
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(lncRna)
+library(plotly)
+# save.image(file = "lncRna_tutorial_env.RData")
+load("lncRna_tutorial_env.RData")
+```
+
+## 1. Wstęp i Tło Problemu
+
+Jedynie około 2% genomowego DNA ssaków ulega transkrypcji do mRNA kodującego białka. W obrębie pozostałej, dominującej części genomu – określanej niegdyś mianem „genetycznych śmieci” lub „ciemnej materii” – znajduje się wiele obszarów ulegających transkrypcji do różnych form niekodujących cząsteczek RNA (ncRNA). Najbardziej zróżnicowaną pod względem struktury oraz funkcji, a zarazem najliczniejszą grupą wśród nich są długie niekodujące RNA (lncRNA).
+
+Obecnie klasyfikowanie transkryptów do tej klasy opiera się głównie na analizie cech strukturalnych, a nie na biologicznych funkcjach tych cząsteczek. Powszechnie przyjmuje się arbitralne ramy: lncRNA to transkrypty dłuższe niż 200 nukleotydów, pozbawione otwartej ramki odczytu (ORF). Definicja bazująca na stałym punkcie odcięcia wynika z laboratoryjnej i bioinformatycznej wygody, co niestety prowadzi do licznych nieścisłości.
+
+### Skala problemu: Przewidywania kontra Rzeczywistość
+W referencyjnych bazach danych panuje ogromna zmienność i niekonsekwencja w adnotacjach transkryptów lncRNA. Znakomita większość niekodujących transkryptów zdeponowanych np. w bazie RefSeq posiada status „PREDICTED” – pochodzą one z automatycznego procesu adnotacji i wciąż wymagają weryfikacji laboratoryjnej.
+
+Aby dobrze zrozumieć proporcje i aktualny stan wiedzy: u ssaków stosunek zweryfikowanych sekwencji w bazie RefSeq wynosi zaledwie 432 ncRNA do ponad 48 tysięcy mRNA. Transkrypty, które nie przechodzą z sukcesem weryfikacji, są masowo usuwane z kolejnych wersji genomów referencyjnych.
+
+Powoduje to ogromne utrudnienia w analizach genetycznych. Błędna klasyfikacja sekwencji powoduje niedokładności lub wręcz całkowite wypaczenie wyników badań, zaburzając na przykład odczyty poziomów ekspresji genów czy analizy istotności statystycznej w danych wysokoprzepustowych (RNA-seq).
+
+### Dlaczego powielanie metodyki to błąd?
+
+Powszechną praktyką w badaniach nad lncRNA jest bezpośrednie przenoszenie metodyki i parametrów filtracji z wcześniej opublikowanych artykułów. Nasze analizy jednoznacznie dowiodły, że takie działanie skutkuje bardzo niską efektywnością. Optymalne ustawienia parametrów drastycznie różnią się w zależności od analizowanego transkryptomu, a kopiowanie wielostopniowego procesu między badaniami jedynie multiplikuje błędy.
+
+Co więcej, wybór poszczególnych metod do analizy potencjału kodowania jest często arbitralny. Podczas prób łączenia wyników z różnych narzędzi często okazywało się, że dają one sprzeczne, wykluczające się nawzajem wyniki. Brak rzetelnej oceny jakości przewidywania w takich badaniach sprawia, że dobór narzędzi staje się przypadkowy i łatwy do podważenia.
+
+### Rozwiązanie: Pakiet lncRna
+Z powodu ogromnej ilości dostępnych metod analizy potencjału kodowania i możliwości manipulacji zmiennymi, optymalizacja procesu jest niezwykle złożona. Odpowiedzią na tę potrzebę jest pakiet lncRna stworzony dla środowiska R.
+
+Biblioteka ta pozwala na łatwe i powtarzalne przeprowadzenie analizy błędu (obliczenie m.in. dokładności i precyzji) dla wielu narzędzi predykcyjnych jednocześnie. Dzięki temu badacz może niewielkim nakładem pracy, bazując na konkretnych danych kontrolnych dla swojego eksperymentu, dobrać optymalną ścieżkę konsensusową identyfikacji, zminimalizować ilość wyników fałszywie pozytywnych i płynnie przejść do zaawansowanej analizy funkcjonalnej (relacje cis i trans).
+
+---
+
+## 2. Przepływ pracy (Workflow) w pakiecie lncRna
+
+Poniżej przedstawiam kompletny potok analityczny pakietu `lncRna` na przykładzie danych transkryptomicznych u myszy domowej (*Mus musculus*).
+
+### 2.1 Wczytywanie Danych Wejściowych
+
+Pierwszym krokiem jest załadowanie wszystkich niezbędnych plików do środowiska R. Pakiet `lncRna` integruje dane z różnych etapów analizy transkryptomicznej:
+* **Dane strukturalne (GTF):** Wyniki mapowania (np. StringTie) oraz referencyjną adnotację genomu.
+* **Dane ilościowe:** Macierze zliczeń (counts) oraz zidentyfikowane geny/transkrypty o zróżnicowanej ekspresji (DEGs/DELs).
+* **Dane sekwencyjne (FASTA):** Znane sekwencje kodujące (CDS) i niekodujące (ncRNA), które posłużą nam jako zbiory referencyjne do oceny skuteczności predykcji.
+
+```{r load-data, eval=FALSE}
+# --- 1. Zdefiniowanie ścieżek do plików ---
+dataDir <- "data"
+stringtieGtfFile <- file.path(dataDir, "strintie_merged.gtf")
+refGtfFile <- file.path(dataDir, "Mus_musculus.GRCm39.107.gtf.gz")
+geneCountsFile <- file.path(dataDir, "gene_count_matrix.csv")
+transcriptCountsFile <- file.path(dataDir, "transcript_count_matrix.csv")
+degsFile <- file.path(dataDir, "DEGs.csv")
+delsFile <- file.path(dataDir, "DELs.csv")
+cdsFastaFile <- file.path(dataDir, "Mus_musculus.GRCm39.cds.all.fa.gz")
+ncRnaFastaFile <- file.path(dataDir, "Mus_musculus.GRCm39.ncrna.fa.gz")
+
+# --- 2. Wczytanie plików strukturalnych GTF ---
+stringtieGtf <- rtracklayer::import.gff(stringtieGtfFile)
+refGtf <- rtracklayer::import.gff(refGtfFile)
+
+# --- 3. Wczytanie macierzy ekspresji ---
+genesCounts <- read.csv(geneCountsFile, row.names = 1)
+rownames(genesCounts) <- gsub("\\|.*", "", rownames(genesCounts)) # Oczyszczanie nazw
+transcriptsCounts <- read.table(transcriptCountsFile, header = TRUE, sep = ",", row.names = 1)
+
+# --- 4. Wczytanie list genów o zróżnicowanej ekspresji ---
+degs <- read.csv2(degsFile, row.names = 1)
+dels <- read.csv2(delsFile, row.names = 1)
+
+# --- 5. Wczytanie sekwencji referencyjnych do budowy zbiorów testowych ---
+cdsReferenceSeqs <- seqinr::read.fasta(cdsFastaFile, seqtype = "DNA", as.string = TRUE)
+ncReferenceSeqs <- seqinr::read.fasta(ncRnaFastaFile, seqtype = "DNA", as.string = TRUE)
+
+```
+
+### 2.2 Wstępne Filtrowanie i Przygotowanie Danych
+
+Kolejnym krokiem jest ekstrakcja statystyk ze zmapowanego transkryptomu oraz weryfikacja znanych biotypów na podstawie genomu referencyjnego.
+
+```{r data-preparation-1, eval=FALSE}
+# --- 1. Wyekstrahuj statystyki transkryptów z pliku GTF StringTie ---
+transcriptStats <- getGtfStats(gtfObject = stringtieGtf)
+
+# --- 2. Zidentyfikuj znane biotypy z referencyjnego GTF ---
+knownBiotypes <- getBiotypes(refGtf = refGtf, level = "transcript")
+```
+
+Przegląd dostępnych biotypów w naszym pliku referencyjnym prezentuje się następująco:
+
+```{r biotypes_visualisation, eval=TRUE}
+table(knownBiotypes$transcript_biotype)
+```
+
+Na tej podstawie izolujemy ID znanych lncRNA oraz genów kodujących białka (mRNA), które posłużą nam do czyszczenia danych:
+
+```{r data-preparation-2, eval=FALSE}
+# Wyizoluj ID znanych lncRNA oraz genów kodujących białka (mRNA)
+knownLncRnaIds <- knownBiotypes[knownBiotypes$transcript_biotype == "lncRNA", "transcript_id"]
+knownPcRnaIds <- knownBiotypes[knownBiotypes$transcript_biotype %in% "protein_coding",]$transcript_id
+```
+
+```{r known-pc-visualisation, eval=TRUE, echo=FALSE, results='asis'}
+cat("Liczba zaadnotowanych transkryptów kodujących białka (mRNA) odrzuconych z analizy: **", length(knownPcRnaIds), "**\n\n", sep="")
+```
+
+Ostatnim etapem tej sekcji jest nałożenie filtrów strukturalnych i ekspresyjnych. Zgodnie z najlepszymi praktykami odrzucamy sekwencje krótkie (<200 nt), jednoeksonowe oraz te o znikomej ekspresji:
+
+```{r data-preparation-3, eval=FALSE}
+# --- 3. Filtruj transkrypty na podstawie cech i ekspresji ---
+# a) Usuń znane transkrypty kodujące białka
+potentialLncRnaTranscripts <- transcriptStats[!(transcriptStats$transcript_id %in% knownPcRnaIds), ]
+
+# b) Filtruj po długości (>200 nt) i liczbie eksonów (>1)
+potentialLncRnaTranscriptsIds <- potentialLncRnaTranscripts[
+  potentialLncRnaTranscripts$exons > 1 & potentialLncRnaTranscripts$trans_length >= 200, 
+]$transcript_id
+
+# c) Zidentyfikuj transkrypty z wystarczającą ekspresją (np. suma zliczeń > 10)
+expressedTranscriptIds <- rownames(transcriptsCounts[rowSums(transcriptsCounts) > 10, ])
+
+# Finalna lista potencjalnych lncRNA (część wspólna po wszystkich filtrach)
+potentialLncRnaIds <- potentialLncRnaTranscripts$transcript_id[
+  potentialLncRnaTranscripts$transcript_id %in% expressedTranscriptIds
+]
+```
+
+Po zastosowaniu wszystkich powyższych restrykcji, otrzymujemy czystą pulę potencjalnych lncRNA gotowych do dalszej analizy:
+
+```{r final-filtering-result, eval=TRUE, echo=FALSE, results='asis'}
+cat("Znaleziono **", length(potentialLncRnaIds), "** potencjalnych lncRNA po filtrowaniu.\n\n", sep="")
+```
+
+---
+
+## 3. Przygotowanie Zestawów Treningowych i Testowych
+
+Aby móc obiektywnie ocenić skuteczność poszczególnych narzędzi bioinformatycznych (takich jak CPC2 czy PLEK) i wybrać optymalną ścieżkę, musimy dysponować sprawdzonymi zestawami danych referencyjnych.
+
+W tym etapie dzielimy znane sekwencje kodujące (CDS) oraz niekodujące (ncRNA) na zbiory treningowe i testowe.
+
+```{r create-test-sets, eval=FALSE}
+# Ustawienie ziarna dla pełnej odtwarzalności losowania
+set.seed(12345) 
+
+# Podział sekwencji referencyjnych (60% trening, 40% test)
+cdsSets <- createTrainTestSets(sequences = cdsReferenceSeqs, percentTrain = 0.6, prefix = "cds")
+ncSets <- createTrainTestSets(sequences = ncReferenceSeqs, percentTrain = 0.6, prefix = "nc")
+```
+
+Dzięki temu uzyskujemy pulę sekwencji, których faktyczny potencjał kodujący jest nam znany:
+
+```{r show-test-sets, eval=TRUE, echo=FALSE, results='asis'}
+cat("* **", length(cdsSets$cds.test), "** znanych sekwencji kodujących (CDS) testowych\n")
+cat("* **", length(ncSets$nc.test), "** znanych sekwencji niekodujących (ncRNA) testowych\n\n")
+```
+
+Następnie łączymy nasze wyfiltrowane potencjalne lncRNA ze zbiorami testowymi. Taki połączony zbiór posłuży nam w kolejnym etapie do wykonania predykcji potencjału kodującego we wszystkich wybranych narzędziach zewnętrznych.
+
+```{r prepare-fasta, eval=FALSE}
+# Wczytanie zmapowanego transkryptomu w formacie FASTA
+transcriptome <- seqinr::read.fasta(file.path(dataDir, "merged_transtriptome.fa.gz"), seqtype = "DNA", as.string = TRUE)
+
+# Wybór sekwencji do predykcji (nasi kandydaci + sekwencje testowe)
+seqsToPredict <- c(
+  transcriptome[names(transcriptome) %in% potentialLncRnaIds],
+  cdsReferenceSeqs[names(cdsReferenceSeqs) %in% cdsSets$cds.test],
+  ncReferenceSeqs[names(ncReferenceSeqs) %in% ncSets$nc.test]
+)
+```
+
+```{r show-prediction-set, eval=TRUE, echo=FALSE, results='asis'}
+total_seqs <- length(potentialLncRnaIds) + length(cdsSets$cds.test) + length(ncSets$nc.test)
+cat("Łącznie do zewnętrznych narzędzi przewidujących potencjał kodujący użyto **", total_seqs, "** sekwencji.\n\n", sep="")
+```
+
+---
+
+## 4. Analiza Potencjału Kodującego i Ocena Narzędzi
+
+To serce pakietu `lncRna`. Biorąc pod uwagę, że różne programy do przewidywania potencjału kodującego opierają się na odmiennych algorytmach, często dają one wykluczające się wyniki. Dobór odpowiednich narzędzi nie powinien być przypadkowy. Pakiet pozwala na zagregowanie rezultatów z wielu programów, a następnie precyzyjną ocenę ich skuteczności.
+
+### 4.1 Agregacja wyników i wizualizacja
+
+W pierwszej kolejności wczytujemy wyniki z popularnych narzędzi bioinformatycznych za pomocą funkcji `aggregateCodPot`.
+
+```{r codpot-analysis, eval=FALSE}
+# --- 1. Wczytaj i połącz wyniki z narzędzi ---
+codpotResults <- aggregateCodPot(
+  CPC2_outfile      = file.path(dataDir, "lncCodPot_MMus/CPC2_Mm_lnc.txt.txt"),
+  FEELnc_outfile    = file.path(dataDir, "lncCodPot_MMus/FEELnc_codpot_RF.txt"),
+  CNCI_outfile      = file.path(dataDir, "lncCodPot_MMus/CNCI.index"),
+  CPAT_outfile      = file.path(dataDir, "lncCodPot_MMus/CPAT_Mm_lnc.txt"),
+  CPAT_cutoff       = 0.64,
+  PLEK_outfile      = file.path(dataDir, "lncCodPot_MMus/PLEK_Mm_lnc.txt"),
+  LncFinder_outfile = file.path(dataDir, "lncCodPot_MMus/LncFinder_results_more5.csv")
+)
+```
+
+Aby unaocznić problem, z którym mierzą się badacze (czyli jak bardzo wyniki z różnych programów potrafią się wykluczać), możemy w jednej linijce wygenerować Diagram Venna pokazujący części wspólne predykcji poszczególnych narzędzi:
+
+```{r codpot-venn, eval=TRUE, fig.width=8, fig.height=8, message=FALSE, warning=FALSE}
+# Wizualizacja zgodności narzędzi
+  plotVennCodPot(codPot = codpotResults)
+
+```
+
+### 4.2 Ocena wydajności pojedynczych narzędzi
+
+Kolejnym krokiem jest skonfrontowanie tych wyników z naszymi zbiorami testowymi (znanymi CDS i ncRNA). Przygotowujemy dane do oceny wydajności i sprawdzamy, jak radzi sobie każde narzędzie z osobna.
+
+```{r evaluate-single, eval=FALSE}
+# --- 2. Przygotuj dane do oceny wydajności narzędzi (w oparciu o zbiory testowe) ---
+singleToolPerformance <- prepareEvaluationSets(
+  codPotList = codpotResults,
+  ncTest = ncSets$nc.test,
+  cdsTest = cdsSets$cds.test
+)
+
+# --- 3. Ocena wydajności pojedynczych narzędzi ---
+selectedTools <- c("CPC2", "PLEK", "FEELnc", "CPAT", "CNCI", "LncFinder")
+bestToolResults <- BestTool(summaryList = singleToolPerformance, tools = selectedTools)
+```
+
+Poniższa tabela prezentuje twarde dane statystyczne (m.in. czułość, specyficzność, precyzję) dla każdego z ewaluowanych programów:
+
+```{r show-single-eval, eval=TRUE, echo=FALSE}
+# Wyświetlamy estetyczną tabelę z wynikami
+knitr::kable(bestToolResults, caption = "Wydajność pojedynczych narzędzi predykcyjnych", digits = 4)
+```
+
+### 4.3 Ocena kombinacji narzędzi
+
+Zamiast polegać na jednym programie, pakiet `lncRna` testuje wszystkie możliwe scenariusze i kombinacje oprogramowania, aby wyłonić ścieżkę o najwyższej skuteczności:
+
+```{r evaluate-combinations, eval=FALSE}
+# --- 4. Ocena wydajności dla wszystkich kombinacji narzędzi ---
+combPerformance <- evaluateToolCombinations(summaryList = singleToolPerformance)
+bestToolCombResults <- BestToolCombination(combinationSummaryList = combPerformance)
+
+# --- 5. Oblicz macierze pomyłek dla najlepszych kombinacji (Precision > 0.9) ---
+allCms <- calculateCM(
+  combinationSummaryList = combPerformance,
+  metricsData = bestToolCombResults,
+  printMetricThresholds = TRUE,
+  threshold = 0.9,
+  returnOnlyHigh = TRUE,
+  metricToExtract = "Precision"
+)
+```
+Na podstawie twardych danych identyfikujemy optymalny zestaw. Poniżej przedstawiamy statystyki dla 3 najlepszych kombinacji, na które zdecydowaliśmy się w naszym eksperymencie:
+
+```{r show-comb-eval, eval=TRUE, echo=FALSE}
+# Wyświetlamy tylko top 3 kombinacje dla zachowania czytelności
+knitr::kable(head(bestToolCombResults, 3), caption = "Top 3 kombinacje narzędzi o najwyższej precyzji", digits = 4)
+```
+
+Dzięki temu badacz otrzymuje potężne, zautomatyzowane zestawienie siły użytych metod. Poniżej widoczne są dynamicznie wygenerowane wykresy (radarowe i zegarowe), pozwalające błyskawicznie zidentyfikować optymalną kombinację dla naszych konkretnych danych:
+
+```{r generate-plots, eval=TRUE, fig.width=10, fig.height=10, message=FALSE, warning=FALSE}
+# Generujemy interaktywny wykres radarowy
+plotRadarMetrics(cmList = allCms[1:min(2, length(allCms))], layout = "multiple", displayArea = TRUE)
+
+
+# Generujemy wykres zegarowy
+plotClockMetrics(cmList = allCms[1:min(2, length(allCms))], layout = "multiple")
+```
+
+## 5. Analiza Funkcjonalna i Interakcji
+
+Ostatecznym celem identyfikacji długich niekodujących RNA jest zrozumienie ich roli w organizmie. Ponieważ lncRNA nie posiadają otwartej ramki odczytu (nie tworzą funkcjonalnych białek), ich działanie opiera się na regulacji innych cząsteczek. W pakiecie `lncRna` domykamy cykl analityczny poprzez identyfikację powiązań fizycznych (*cis*) oraz korelacji poziomów ekspresji (*trans*).
+
+### 5.1 Identyfikacja i adnotacja sieci regulacyjnych
+
+W pierwszej kolejności filtrujemy ostateczną listę lncRNA (łącząc te przewidziane z wysoką pewnością przez nasz konsensus narzędzi z tymi już zaadnotowanymi). Następnie poszukujemy genów docelowych w ich sąsiedztwie genomowym oraz analizujemy silne korelacje w macierzy ekspresji.
+
+Odkryte w ten sposób relacje są automatycznie adnotowane funkcjonalnie przy użyciu API narzędzia gProfiler.
+
+```{r functional-analysis, eval=FALSE}
+# --- 1. Zidentyfikuj ostateczną listę lncRNA (konsensus z min. 5 narzędzi) ---
+sumsDf <- as.data.frame(do.call(cbind, singleToolPerformance$tools))
+predictedLncRnaIds <- singleToolPerformance$seqIDs[rowSums(sumsDf) >= 5]
+finalLncRnaTranscriptIds <- unique(c(predictedLncRnaIds, knownLncRnaIds))
+
+# --- 2. Analiza interakcji Cis ---
+cisInteractionTable <- findCisInteractions(
+  FEELncClassesFile = file.path(dataDir, "lncCodPot_MMus/FEELnc_Mm_classes.txt"),
+  lncRnas = finalLncRnaTranscriptIds,
+  lncRnaLevel = "transcript",
+  mRnaLevel = "gene",
+  maxDist = 10000,
+  mRnas = rownames(degs)
+)
+
+# Adnotacja funkcjonalna gProfiler dla Cis
+cisGostResults <- gprofiler2::gost(query = unique(cisInteractionTable$targetRNAId), organism = "mmusculus", user_threshold = 0.1, evcodes = TRUE)
+cisInteractionsProcessed <- annotateInteractions(gostResult = cisGostResults$result, interactionTable = cisInteractionTable, type = "cis")
+
+# --- 3. Analiza interakcji Trans ---
+transInteractionTable <- findTransInteractions(
+  exprMatrix = genesCounts,
+  rval = 0.95,
+  lncRnaList = rownames(dels),
+  tarRnaList = rownames(degs)
+)
+
+# Adnotacja funkcjonalna gProfiler dla Trans
+transGostResults <- gprofiler2::gost(query = unique(transInteractionTable$targetRNAId), organism = "mmusculus", evcodes = TRUE)
+transInteractionsProcessed <- annotateInteractions(gostResult = transGostResults$result, interactionTable = transInteractionTable, type = "trans")
+
+# --- 4. Łączenie wyników w kompleksową tabelę ---
+combinedInteractionsTable <- do.call(rbind, list(cisInteractionsProcessed, transInteractionsProcessed))
+```
+
+Dzięki temu jednolitemu procesowi, zamiast luźnych identyfikatorów zyskujemy pełen kontekst biologiczny. Zauważmy, jak precyzyjnie poszczególne lncRNA zostały przypisane do konkretnych mechanizmów molekularnych:
+
+```{r show-interactions, eval=TRUE, echo=FALSE}
+# Wyświetlamy estetyczną tabelę dla widowni (wybrane kolumny dla zwiększenia czytelności na rzutniku)
+if(exists("combinedInteractionsTable")) {
+  display_cols <- c("lncRNAId", "intersection", "type", "term_name")
+  knitr::kable(head(combinedInteractionsTable[, display_cols], 6), 
+               caption = "Fragment tabeli adnotowanych interakcji (Cis/Trans)",
+               col.names = c("lncRNA ID", "Target (mRNA)", "Typ", "Funkcja GO"))
+}
+```
+
+### 5.2 Wizualizacja danych (Sankey Plot)
+
+Najlepszym sposobem na przedstawienie tak skomplikowanej sieci zależności nie są tabele, lecz wizualizacje kaskadowe. Pakiet `lncRna` dysponuje funkcjami renderującymi interaktywne wykresy Sankeya.
+
+Poniższy wykres obrazuje odkryty przez nas przepływ regulacyjny: od lewej widzimy zidentyfikowane lncRNA, w centrum geny kodujące białka (targety), na które one oddziałują, a po prawej stronie – ostateczne procesy biologiczne, w które ten szlak jest zaangażowany (m.in. powiązane z mechanizmami stresu).
+
+```{r sankey-plot, eval=TRUE, fig.width=12, fig.height=8, message=TRUE, warning=FALSE}
+# Generowanie interaktywnego wykresu Sankeya
+  # Funkcja z pakietu rysująca zależności na podstawie terminów GO
+  plotSankeyInteractions(interactionData = combinedInteractionsTable, groupBy = "term", selectIds  = "response to stress", showLabels = TRUE)
+  plotSankeyInteractions(interactionData = combinedInteractionsTable, groupBy = "type", selectIds = "cis",  showLabels = TRUE)
+  plotSankeyInteractions(interactionData = combinedInteractionsTable, groupBy = "target",selectIds = c("ENSMUSG00000020893", "ENSMUSG00000024810", "ENSMUSG00000017697") , showLabels = TRUE)
+
+```
