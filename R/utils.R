@@ -1,7 +1,8 @@
 #' Handle Tool Selection and Validation (Internal Helper)
 #'
 #' A reusable helper function to manage the selection of tools for analysis.
-#' It supports both user-provided lists and an interactive selection mode.
+#' It supports both user-provided lists, an interactive selection mode,
+#' and numeric ranges (e.g., 1:5 or 1-5).
 #'
 #' @param availableTools A character vector of all tool names available for
 #'   selection.
@@ -13,62 +14,65 @@
 #'   valid tools are selected.
 #' @noRd
 handleToolSelection <- function(availableTools, selectedTools = NULL) {
-
-    final_selected_tools <- character(0)
-
-    if (is.null(selectedTools)) {
-        if (interactive()) {
-            message("Available tools:\n")
-            tool_menu <- paste0(seq_along(availableTools), ": ", availableTools)
-            message(paste(tool_menu, collapse = "\n"), "\n")
-
-            input <- readline(
-                "Enter tool numbers to analyze (e.g., '1 3'), or press Enter for all: "
-            )
-
-            if (input == "") {
-                final_selected_tools <- availableTools
-                message("All tools selected.\n")
-            } else {
-              input_parts <- strsplit(input, "[ ,]+")[[1]]
-              numeric_parts <- input_parts[grepl("^[0-9]+$", input_parts)]
-              indices <- as.integer(numeric_parts)
-
-              valid_indices <- indices[indices > 0 &
-                                         indices <= length(availableTools)]
-              final_selected_tools <- availableTools[valid_indices]
-            }
-        } else {
-            # Default non-interactive behavior: select all tools
-            final_selected_tools <- availableTools
+  
+  final_selected_tools <- character(0)
+  
+  if (is.null(selectedTools)) {
+    if (interactive()) {
+      message("Available tools:\n")
+      tool_menu <- paste0(seq_along(availableTools), ": ", availableTools)
+      message(paste(tool_menu, collapse = "\n"), "\n")
+      
+      input <- readline(
+        "Enter tool numbers to analyze (e.g., '1, 3, 1:8'), or press Enter for all: "
+      )
+      
+      input <- trimws(input)
+      
+      if (input == "") {
+        final_selected_tools <- availableTools
+        message("All tools selected.\n")
+      } else {
+        input_parts <- strsplit(input, "[ ,]+")[[1]]
+        indices <- c()
+        
+        for (part in input_parts) {
+          if (grepl("^[0-9]+$", part)) {
+            indices <- c(indices, as.integer(part))
+            
+          } else if (grepl("^[0-9]+[:-][0-9]+$", part)) {
+            bounds <- as.integer(strsplit(part, "[:-]")[[1]])
+            indices <- c(indices, seq(bounds[1], bounds[2]))
+            
+          } else {
+            warning(sprintf("Ignored invalid input part: '%s'", part), call. = FALSE)
+          }
         }
+        
+        indices <- unique(indices)
+        
+        valid_indices <- indices[indices > 0 & indices <= length(availableTools)]
+        final_selected_tools <- availableTools[valid_indices]
+      }
     } else {
-        # Validate user-provided tool names
-        unmatched <- setdiff(selectedTools, availableTools)
-        if (length(unmatched) > 0) {
-            warning("The following tools were not found and will be ignored: ",
-                    paste(unmatched, collapse = ", "), call. = FALSE)
-        }
-        final_selected_tools <- intersect(selectedTools, availableTools)
+      final_selected_tools <- availableTools
     }
-
-    if (length(final_selected_tools) == 0) {
-        warning("No valid tools were selected for analysis.", call. = FALSE)
+  } else {
+    # Validate user-provided tool names
+    unmatched <- setdiff(selectedTools, availableTools)
+    if (length(unmatched) > 0) {
+      warning("The following tools were not found and will be ignored: ",
+              paste(unmatched, collapse = ", "), call. = FALSE)
     }
-
-    return(final_selected_tools)
+    final_selected_tools <- intersect(selectedTools, availableTools)
+  }
+  
+  if (length(final_selected_tools) == 0) {
+    warning("No valid tools were selected for analysis.", call. = FALSE)
+  }
+  
+  return(final_selected_tools)
 }
-
-#' Calculate Confusion Matrix Metrics (Internal Function)
-#'
-#' @param predictions A numeric or integer vector of predicted labels (0 or 1).
-#' @param reference A numeric or integer vector of true labels (0 or 1).
-#' @param cm_table An optional 2x2 table representing the confusion matrix.
-#'
-#' @return A named numeric vector of performance metrics. Returns NULL if
-#'   inputs are invalid.
-#' @importFrom stats binom.test mcnemar.test
-#' @noRd
 calculateMetrics <- function(predictions = NULL, reference = NULL, cm_table = NULL) {
 
   if (is.null(cm_table)) {

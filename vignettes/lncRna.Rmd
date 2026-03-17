@@ -151,9 +151,12 @@ allCms <- calculateCM(
 
 ##  Radar and Clock Plots
 
-Radar and Clock plots provide a holistic view of tool performance across multiple metrics.
+Fourfold, Radar and Clock plots provide a holistic view of tool performance across multiple metrics.
 
 ```{r viz-performance, fig.width=10, fig.height=6}
+# Fourfold plot of tool combinations
+plotFourfoldCm(cmList = allCms, plotTitle = "Fourfold tool combination plots")
+
 # Comparison of top combinations (Radar Plot)
 methodsToPlot <- names(allCms)[1:min(3, length(allCms))]
 plotRadarMetrics(cmList = allCms, methods = methodsToPlot, plotTitle = "Top Methods Comparison")
