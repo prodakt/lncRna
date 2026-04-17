@@ -92,10 +92,9 @@ evaluateToolsThresholds <- function(summaryList, tools = NULL) {
     # Calculate "at least n" indicators
     agreement_thresholds <- list()
     num_selected <- length(selected_tools)
-        for (n in seq_len(num_selected)) {
-            agreement_thresholds[[paste0('atl', n)]] <-
-                as.integer(sums_selected >= n)
-
+    for (n in seq_len(num_selected)) {
+        agreement_thresholds[[paste0('atl', n)]] <-
+            as.integer(sums_selected >= n)
     }
 
     # --- 4. Assemble Output List ---
