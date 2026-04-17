@@ -57,3 +57,4 @@ To get started with `lncRna`, please read the package vignette which contains a 
 ```r
 library(lncRna)
 vignette("lncRna")
+```
